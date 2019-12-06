@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+    <meta charset="UTF-8"></meta>
+    <title>测试</title>
+</head>
+<body>
+<form id="form" action="/uploadMuti" method="POST" enctype="multipart/form-data" οnsubmit="return upload();">
+    <input type="file" name="file" multiple="multiple"/>
+    <br/>
+    <input type="submit" value="提交"/>
+</form>
+</body>
+<script>
+    function upload() {
+        $("#form").ajaxSubmit(function(message) {
+ 
+        });
+        return false;
+    }
+</script>
+</html>

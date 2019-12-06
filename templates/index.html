@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	<link rel="stylesheet" type="text/css" href="js/layui/css/modules/layui-icon-extend/iconfont.css"/>
+	<link rel="stylesheet" type="text/css" href="js/pace/pace-theme-flash.min.css"/>
+	<script src="js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+	<title>lng燃气管理系统</title>
+</head>
+<body class="layui-layout-body">
+	<div class="layui-layout layui-layout-admin">
+		<div class="layui-header">
+			<div class="layui-logo">lng燃气管理系统 <i id="animation-left-nav" class="layui-icon layui-icon-shrink-right"></i></div>
+			<ul class="layui-nav layui-layout-right">
+				<li class="weather">
+					<div id="tp-weather-widget"></div>
+						<script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script>
+						<script>tpwidget("init", {
+							"flavor": "slim",
+							"location": "WX4FBXXFKE4F",
+							"geolocation": "enabled",
+							"language": "zh-chs",
+							"unit": "c",
+							"theme": "chameleon",
+							"container": "tp-weather-widget",
+							"bubble": "enabled",
+							"alarmType": "badge",
+							"color": "#F47837",
+							"uid": "UC6AD9E048",
+							"hash": "76465b415261736ddd08da3f7f9b24d0"
+						});
+						tpwidget("show");</script>
+				</li>
+				<li class="layui-nav-item">
+					<a href="javascript:;">
+						<i class="layui-icon layui-icon-username headsmIcon"></i>
+						<span id="userName">黄利峰</span><span class="layui-nav-more"></span>
+					</a>
+					<!-- dl class="layui-nav-child">
+						<dd class="navLi"><a href="javascript:void(0)" tab-id="1" path="user.do?action=goUserDetailPage">基本资料</a></dd>
+						<dd class="navLi"><a href="javascript:void(0)" tab-id="2" path="user.do?action=goUpdatePassPage">密码设置</a></dd>
+					</dl -->
+				</li>
+				<li class="tuichu">
+					 <a id="loginOut" href="javascript:;" title="退出">
+						<i class="iconfont layui-extend-tuichu"></i>
+					 </a>
+				</li>
+			</ul> 
+		</div>
+		<div class="layui-side layui-bg-black layui-side-menu">
+			<div class="layui-side-scroll">
+				<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+				<ul id="leftSideNav" class="layui-nav layui-nav-tree" lay-fliter="leftSideNav"></ul>
+			</div>
+		</div>
+		<!-- iframe -->
+		<div class="content-body">
+			<!-- 内容主体区域 -->
+			<div class="layui-tab-brief" lay-filter="mainTab" lay-allowClose="true">
+				<ul class="layui-tab-title">
+					<li class="layui-this"><i class="layui-icon">&#xe68e;</i>首页</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<iframe id="mainIframe" src="common.do?action=goWeclomePage" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<!--  div class="layui-footer">
+			© 2018 版权所有 Copyright@2018 Sandy.wm All Rights Reserved.
+		</div-->
+	</div>
+</body>
+</html>
