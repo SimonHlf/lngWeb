@@ -1,0 +1,307 @@
+body{
+	background:#f2f2f2;
+	color:#666;
+}
+.disabledBg{
+	background:#f1f1f1;
+	color:#bbb;
+}
+.roleList{display:none;}
+#addMod{display:none;}
+.saveMod{
+	margin-left:15px;
+}
+.modListTit{
+	height:39px;
+	border:1px solid #eee;
+}
+.modListTit li{
+	float:left;
+	line-height:40px;
+	text-align:center;
+	box-sizing:border-box;
+	font-weight:600;
+	position:relative;
+}
+.noSelAll li.orderNumWid{
+	width:5%;
+	border-right:1px solid #eee;
+	text-align:center;
+	font-weight:600;
+}
+.tongpaiColor{color:#db9076;}
+.yinpaiColor{color:#aeb2cd;}
+.jinpaiColor{color:#e1c100;}
+.zuanshiColor{color:#27c7f2;}
+.noSelAll li.mainModWid{
+	width:30%;
+	border-right:1px solid #eee;
+}
+.noSelAll li.modLevelWid{
+	width:10%;
+	border-right:1px solid #eee;
+}
+.noSelAll li.sonModWid{
+	width:65%;
+}
+.hasSelAll li.selAllModWid{
+	width:5%;
+	border-right:1px solid #eee;
+	/*height:40px;*/
+}
+.hasSelAll li.mainModWid{
+	width:20%;
+	border-right:1px solid #eee;
+}
+.hasSelAll li.modLevelWid{
+	width:10%;
+	border-right:1px solid #eee;
+}
+.hasSelAll li.sonModWid{
+	width:65%;
+}
+#listModCon{
+	border-left:1px solid #eee;
+	border-right:1px solid #eee;
+}
+#listModCon ul{
+	border-bottom:1px solid #eee;
+	position:relative;
+}
+#listModCon ul:nth-of-type(2n){
+	background: #f1f1f1;
+}
+#listModCon li{
+	float:left;
+	box-sizing:border-box;
+}
+.hasPosAbso{
+	height:100%;
+	position:absolute;
+	top:0px;
+}
+.flexBox{
+	display:-webkit-flex;
+	-webkit-justify-content:center;
+	-webkit-align-items:center;
+	display:-moz-flex;
+	-moz-justify-content:center;
+	-moz-align-items:center;
+	display:-ms-flex;
+	-ms-justify-content:center;
+	-ms-align-items:center;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+.posL{
+	left:0px;
+}
+.posL1{
+	left:5%;
+}
+.posL2{
+	left:25%;
+}
+.hasMargL{
+	margin-left:35%;
+	min-height:40px;
+}
+#listModCon li p{
+	float:left;
+	/* width:25%; */
+	height:40px;
+	line-height:40px;
+	box-sizing:border-box;
+	/* overflow:hidden; */
+	position:relative;
+	padding: 0 20px;
+}
+#listModCon li p.hasTxtAlign{
+	text-align:center;
+}
+#listModCon li p:nth-of-type(4n){
+	border-right:none;
+}
+#listModCon li span.modMainNameSpan{
+	height:100%;
+} 
+.noSelAll li span.modMainNameSpan{
+	width:70%;
+}
+.noSelAll li span.modMainNameSpan b,
+.hasSelAll li span.modMainNameSpan b{
+	display:block;
+	width:100%;
+	max-width:100%;
+	font-weight:normal;
+}
+#listModCon li i.layui-icon-edit,
+#listModCon li i.layui-icon-delete,
+#listModCon li i.layui-icon-add-1{
+	font-size:22px;
+	cursor:pointer;
+	color:#666;
+}
+#listModCon li i.layui-icon-edit:hover,
+#listModCon li i.layui-icon-add-1:hover{
+	color:#009688;
+}
+#listModCon li i.layui-icon-delete:hover{
+	color:#f00;
+}
+#listModCon li .setMainMod{
+	top:50%;
+	height:22px;
+	margin-top:-11px;
+	right:10px;
+}
+.noSelAll li .seSonMod{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/*width:100%;
+	height:100%;
+	left:0;
+	top:0px;
+	 display: flex;
+	justify-content: center;
+	align-items: center; */
+}
+#listModCon li .seSonMod i{
+	color:#666;
+	font-size:22px;
+	margin-left: 2px;
+}
+#listModCon li .seSonMod:hover,
+#listModCon li .seSonMod:hover i{
+	color: #009688;
+}
+.icon-svg{
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+   font-size:28px;
+   float:left;
+   margin-top:6px;
+  /* margin-left:25%;*/
+}
+.specZuan{
+	font-size:24px;
+	margin-top:1px;
+}
+/* 缂栬緫瀛愭ā鍧�*/
+.editSonModNameCon .comEditDiv{
+	width:320px;
+	height:35px;
+	line-height:35px;
+	margin:10px auto 0;
+}
+.editSonModNameCon span,.addEditMainModWrap span{float:left;}
+.editSonModNameCon input,.addEditMainModWrap input[type="text"]{
+	height:34px;
+	line-height:34px;
+	float:left;
+	border:none;
+	border-bottom:1px solid #ccc;
+	padding-left:10px;
+}
+.editSonModNameCon input{
+	width:200px;
+}
+.addEditMainModWrap input[type="text"]{
+	width:260px;
+}
+.editSonModNameCon span.margLSpan{
+	margin-left:28px;
+}
+.addEditMainModWrap .comAddEditDiv{
+	width:450px;
+	height:35px;
+	line-height:35px;
+	margin:10px auto 0;
+}
+.margLSpan_url{
+	margin-left:10px;
+}
+.margLSpan_order{
+	margin-left:14px;
+}
+.margLSpan_level{
+	margin-top:3px;
+}
+.margLSpan_show{
+	margin-left:28px;
+	display:inline-block;
+	margin-top:3px;
+}
+/* 妯℃嫙checkbox鏍峰紡 */
+#listModCon li p strong{
+	font-weight:normal;
+	display:block;
+	width:82%;
+	max-width:82%;
+	height:100%;
+	margin-left:34px;
+}
+#listModCon li p span.likeCheckSpan,
+.hasSelAll li.selAllModWid span.likeCheckSpan,
+.selAllModWid span.likeCheckSpan{
+	width:16px;
+	height:16px;
+	line-height:16px;
+	border:1px solid #d2d2d2;
+	border-radius:2px;
+	background:#fff;
+	-webkit-transition:.1s linear;
+	transition:.1s linear;
+	display:block;
+}
+.disabledBg span.likeCheckSpan{
+	background:#f1f1f1 !important;
+}
+#listModCon li p span.likeCheckSpan{
+	margin:11px 0 0 10px;
+	float:left;
+}
+#listModCon li p span.likeCheckSpan b,
+.hasSelAll li.selAllModWid span.likeCheckSpan b,
+.selAllModWid span.likeCheckSpan b{
+	color:#fff;
+	font-size:12px;
+	margin-left:2px;
+}
+.disabledBg span.likeCheckSpan b{
+	color:#f1f1f1 !important;
+}
+#listModCon li p span.hasActive,
+.hasSelAll li.selAllModWid span.hasActive,
+.selAllModWid span.hasActive{
+	border-color:#5FB878 !important;
+	background:#5FB878 !important;
+}
+#listModCon li p span.hasActive b,
+.hasSelAll li.selAllModWid span.hasActive b,
+.selAllModWid span.hasActive b{
+	color:#fff !important;
+}
+.hasAlign{
+	text-align:center;
+}
+#outDateTips{
+	margin-left:15px;
+	color:#F47837;
+	font-weight:600;
+}
+.oddBg{
+	background:#ffefe6;
+}
+.oddBg_sp{  
+	background:#f1f1f1;
+}
+.disColor{
+	color:#ccc;
+}

@@ -5,77 +5,223 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="stylesheet" type="text/css" href="js/layui/css/layui.css"/>
-	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	<link rel="stylesheet" type="text/css" href="css/login.css"/>
 	<link rel="stylesheet" type="text/css" href="js/layui/css/modules/layui-icon-extend/iconfont.css"/>
 	<link rel="stylesheet" type="text/css" href="js/pace/pace-theme-flash.min.css"/>
 	<script src="js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 	<title>lng燃气管理系统</title>
+	<style>
+		body{background:#f2f2f2;}
+	</style>
 </head>
 <body class="layui-layout-body">
-	<div class="layui-layout layui-layout-admin">
-		<div class="layui-header">
-			<div class="layui-logo">lng燃气管理系统 <i id="animation-left-nav" class="layui-icon layui-icon-shrink-right"></i></div>
-			<ul class="layui-nav layui-layout-right">
-				<li class="weather">
-					<div id="tp-weather-widget"></div>
-						<script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script>
-						<script>tpwidget("init", {
-							"flavor": "slim",
-							"location": "WX4FBXXFKE4F",
-							"geolocation": "enabled",
-							"language": "zh-chs",
-							"unit": "c",
-							"theme": "chameleon",
-							"container": "tp-weather-widget",
-							"bubble": "enabled",
-							"alarmType": "badge",
-							"color": "#F47837",
-							"uid": "UC6AD9E048",
-							"hash": "76465b415261736ddd08da3f7f9b24d0"
-						});
-						tpwidget("show");</script>
-				</li>
-				<li class="layui-nav-item">
-					<a href="javascript:;">
-						<i class="layui-icon layui-icon-username headsmIcon"></i>
-						<span id="userName">黄利峰</span><span class="layui-nav-more"></span>
-					</a>
-					<!-- dl class="layui-nav-child">
-						<dd class="navLi"><a href="javascript:void(0)" tab-id="1" path="user.do?action=goUserDetailPage">基本资料</a></dd>
-						<dd class="navLi"><a href="javascript:void(0)" tab-id="2" path="user.do?action=goUpdatePassPage">密码设置</a></dd>
-					</dl -->
-				</li>
-				<li class="tuichu">
-					 <a id="loginOut" href="javascript:;" title="退出">
-						<i class="iconfont layui-extend-tuichu"></i>
-					 </a>
-				</li>
-			</ul> 
-		</div>
-		<div class="layui-side layui-bg-black layui-side-menu">
-			<div class="layui-side-scroll">
-				<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-				<ul id="leftSideNav" class="layui-nav layui-nav-tree" lay-fliter="leftSideNav"></ul>
+	<div class="layadmin-user-login layadmin-user-display-show">
+		<div class="layadmin-user-login-main">
+		  <div class="layadmin-user-login-box layadmin-user-login-header">
+			<h2>lng燃气管理系统</h2>
+			<p>Lng Management System</p>
+		  </div>
+		  <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+			<div class="layui-form-item">
+			  <label class="layadmin-user-login-icon iconfont icon-zhanghao"></label>
+			  <input type="text" id="account" placeholder="请输入账号" maxlength="12" autocomplete="off" class="layui-input">
 			</div>
-		</div>
-		<!-- iframe -->
-		<div class="content-body">
-			<!-- 内容主体区域 -->
-			<div class="layui-tab-brief" lay-filter="mainTab" lay-allowClose="true">
-				<ul class="layui-tab-title">
-					<li class="layui-this"><i class="layui-icon">&#xe68e;</i>首页</li>
-				</ul>
-				<div class="layui-tab-content">
-					<div class="layui-tab-item layui-show">
-						<iframe id="mainIframe" src="common.do?action=goWeclomePage" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
-					</div>
+			<div class="layui-form-item">
+			  <label class="layadmin-user-login-icon iconfont icon-mima" for="LAY-user-login-password"></label>
+			  <input type="password" id="password" placeholder="请输入密码" maxlength="16" autocomplete="off" class="layui-input">
+			</div>
+			<div class="layui-form-item">
+			  <div class="layui-row">
+				<div class="vercodeInpWrap">
+				  <label class="layadmin-user-login-icon iconfont icon-vercode" for="LAY-user-login-vercode"></label>
+				  <input type="text" id="inputCode" maxlength="4" placeholder="请输入图形验证码" autocomplete="off" class="layui-input">
 				</div>
+				<div class="vercodeWrap">
+				  <div style="margin-left: 10px;">
+					<img id="sessCode" src="getVerify" alt="请输入验证码" title="看不清换一张" width="130" style="cursor:pointer;"/>
+				  </div>
+				</div>
+			  </div>
 			</div>
+			<div class="rememberWrap layui-clear">
+				<label for="rememberInp">
+					<span><i class="layui-icon layui-icon-ok"></i></span>
+					<input id="rememberInp" type="checkbox" />
+					<p>记住密码</p>
+				</label>
+			</div>
+			<div class="layui-form-item">
+			  <button id="button" class="layui-btn layui-btn-fluid">登录</button>
+			</div>
+		  </div>
 		</div>
-		<!-- footer -->
-		<!--  div class="layui-footer">
-			© 2018 版权所有 Copyright@2018 Sandy.wm All Rights Reserved.
-		</div-->
+		<input id="roleIdInp" type="hidden"/>
+		<div class="layui-trans layadmin-user-login-footer">
+		  <p>© 2019 版权所有 Copyright@2018 Sandy.wm All Rights Reserved.</p>
+		</div>
 	</div>
+	<input id="roleIdInp" type="hidden"/>
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src="js/jquery.base64.js"></script>
+	<script src="js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		layui.config({
+			base: '/js/frame/js/'
+		}).extend({ //设定组件别名
+		    common:  'common'// 表示模块文件的名字
+		}).use(['layer','form','common'],function(){
+			var layer = layui.layer,
+				form = layui.form,
+				common = layui.common;
+			$("#button").on('click',function(){
+				login();
+			});
+			$("#sessCode").on('click',function(){
+				common.vercode();
+			});
+			$(function(){
+				$("#account").on("keypress",function(){
+					enterPress(event);
+				});
+				$("#password").on("keypress",function(){
+					enterPress(event);
+				});
+				$("#inputCode").on("keypress",function(){
+					enterPress(event);
+				});
+				getCookie();
+			});
+			$("#rememberInp").on('click',function(){
+				var checkStatus = $(this).prop("checked");
+				if(checkStatus){
+					$("#rememberInp").parent().addClass('active');
+				}else{
+					$("#rememberInp").parent().removeClass('active');
+				}
+			});
+			function login(){
+				var account = $.trim($("#account").val());
+				var password = $.trim($("#password").val());
+				var vCode = $.trim($("#inputCode").val());
+				var checkStatus = $("#rememberInp").prop("checked");
+				if(account == ""){
+					layer.msg("账号不能为空", {icon:5,anim:6,time:1000});
+					$("#account").focus().addClass("layui-form-danger");
+				}else if(password == ""){
+					layer.msg("密码不能为空", {icon:5,anim:6,time:1000});
+					$("#password").focus().addClass("layui-form-danger");
+				}else if(vCode == ""){
+					layer.msg("验证码不能为空", {icon:5,anim:6,time:1000});
+					$("#inputCode").focus().addClass("layui-form-danger");
+				}else{
+					layer.load();
+					$.ajax({
+					    type:"get",
+					    dataType:"json",
+					    url:"/superLogin",
+					    data:{account:account,password:password,inputCode:vCode},
+					    success:function (json){
+					    	layer.closeAll('loading');
+							if(json.code == 200){
+								if(checkStatus){
+									//添加cookie 
+									setCookie(); 
+								}else{
+									var account = $.cookie("account"); //获取cookie中的用户名 
+									var pwd = $.cookie("pwd"); //获取cookie中的登陆密码 
+									if(account && pwd){
+										$.cookie("account",'');
+										$.cookie("pwd", ''); 
+									}
+								}
+								var roleList = json.datas;
+								if(roleList.length == 1){//一种身份
+									window.location.href = "goPage/goWelcomePage?roleId=" + roleList[0].roleId;
+								}else if(roleList.length > 1){//多种身份
+									listRole(roleList);				        			
+								}
+								//window.location.href = 'goWelcomePage?roleId=' + json.da 
+							}else if(json.code == 10002){
+								layer.msg("参数不能为空", {icon:5,anim:6,time:1200});
+							}else if(json.code == 20002){
+								layer.msg("账号不存在或密码错误", {icon:5,anim:6,time:1200});
+							}else if(json.code == 20006){
+								layer.msg("验证码错误", {icon:5,anim:6,time:1200});
+							}else if(json.code == 40001){
+								layer.msg("系统繁忙，请稍后重试", {icon:5,anim:6,time:1200});
+							}
+					    }
+					});
+				}
+			}
+			function listRole(list){
+				layui.use('form',function(){
+					var html = '';
+					var form = layui.form;
+					html += '<div class="layui-form" style="width:90%;margin:0 auto;">';
+					html += '<div class="layui-input-inline">';
+					for(i=0; i<list.length; i++){
+						html += '<input type="radio" name="roleSel" value="'+ list[i].roleId +'" title="'+ list[i].roleName +'">';
+					}
+					html += '</div></div>';
+					$("#roleIdInp").val("");
+					layer.open({
+						title : '系统检测到您当前账户绑有多重身份，请选择一种身份登录',
+						skin:'layui-layer-molv',
+						type : 1, 
+						content:html, 
+						area : ['470px','200px'],
+						btn : ['进入系统','取消'],
+						yes: function(index, layero){
+							goPage();
+						}
+					});
+					form.on('radio', function(data){
+						$("#roleIdInp").val(data.value); 
+						//$("#roleNameInp").val(data.elem.title);
+					}); 
+					form.render();
+				});
+			}
+			//多重身份下的页面跳转
+			function goPage(){
+				var roleId =  $("#roleIdInp").val();
+				if(roleId == ""){
+					layer.msg("请选择一个身份进入系统");
+				}else{
+					window.location.href = "goPage/goWelcomePage?roleId=" + roleId;
+				}
+			}
+			//回车事件
+			function enterPress(e){
+				var e = e || window.event;
+				if(e.keyCode == 13){
+					login();
+				}
+			}
+		});
+
+		function setCookie(){
+			var account = $("#account").val(); //获取用户名信息 
+			var pwd = $("#password").val(); //获取登陆密码信息 
+			var checked = $("#rememberInp").prop("checked");//获取“是否记住密码”复选框
+			if(checked){ //判断是否选中了“记住密码”复选框 
+				$.cookie("account",account);//调用jquery.cookie.js中的方法设置cookie中的用户名 
+				$.cookie("pwd",$.base64.encode(pwd));//调用jquery.cookie.js中的方法设置cookie中的登陆密码，并使用base64（jquery.base64.js）进行加密 
+			}
+		}
+		function getCookie(){
+			var account = $.cookie("account"); //获取cookie中的用户名 
+			var pwd = $.cookie("pwd"); //获取cookie中的登陆密码 
+			if(account && pwd){//密码存在的话把“记住用户名和密码”复选框勾选住 
+				$("#account").val(account); 
+				$("#password").val($.base64.decode(pwd)); 
+				$("#rememberInp").prop("checked",true);
+				$("#rememberInp").parent().addClass('active');
+			} 
+		}
+	</script>
+	
 </body>
 </html>
