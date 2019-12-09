@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/modManager.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
@@ -19,7 +20,7 @@
 							<a id="addMod" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加模块</a>
 							<div class="roleList clearfix fr">
 								<input id="roleIdInp" type="hidden" value="0"/>
-								<div id="roleLists" class="fl layui-form"></div>
+								<div id="userLists" class="fl layui-form"></div>
 								<button class="layui-btn saveMod fl">保存</button>
 							</div>
 						</div>
@@ -35,30 +36,317 @@
 		<script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var specUserId = '';
+			var specUserId = '',globalModId=0,madIdArray=[];
 			layui.use(['layer','form'],function(){
 				var layer = layui.layer,
 					form = layui.form;
+					
+				//管理员身份下选择角色
+				form.on('select(listUserSel)', function(data){
+					var value = data.value;
+					value == '' ? $('#roleIdInp').val(0) : $('#roleIdInp').val(value);
+					specUserId = value;
+					page.loadModuleList();
+				});
 				var page = {
+					data : {
+						inpMainModName_cn : '',
+						inpMainModUrl : '',
+						globalIndex : 0,
+						globalMainModId : [] //用于存放所有主模块Id
+					},
 					init : function(){
+						this.loadUserList();
 						this.loadModuleList();
+						this.bindEvent();
+					},
+					bindEvent : function(){
+						$('.saveMod').on('click',function(){
+							if($('#roleIdInp').val() == 0){
+								layer.msg('请选择您要绑定的用户', {icon:5,anim:6,time:1500});
+								return;
+							}
+							madIdArray.length = 0;
+							$('.sonModSelInp').each(function(i){
+								var checkStatus = $('.sonModSelInp').eq(i).prop('checked');
+								if(checkStatus){
+									madIdArray.push($('.sonModSelInp').eq(i).val());
+								}
+							});
+							$('#madIdListInp').val(madIdArray.join(','));
+							if($('#madIdListInp').val() == ''){
+								layer.msg('请选择您要绑定的模块', {icon:5,anim:6,time:1000});
+							}else{
+								layer.load();
+								var field = {specUserId:$('#roleIdInp').val(),selMaIdStr:$('#madIdListInp').val()};
+								console.log( field )
+								$.ajax({
+									type:"post",
+									dataType:"json",
+									data:field,
+									url : '/mod/setAbility',
+									success:function (json){
+										layer.closeAll("loading");
+										if(json.code == 200){
+											layer.msg('绑定模块成功',{icon:1,time:1000},function(){
+												$('#madIdListInp').val('');
+											});
+										}else if(json.code == 1000){
+											layer.msg('服务器错误', {icon:5,anim:6,time:1200});
+										}else if(json.code == 50003){
+											layer.msg('当前模块已被此用户绑定', {icon:5,anim:6,time:1500});
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无给用户绑定模块权限', {icon:5,anim:6,time:1500});
+										}
+									}
+								});
+							}
+						});
+					},
+					loadUserList : function(){
+						var _this = this;
+						$.ajax({
+						    type:"get",
+							data : {uId:'',roleId:''},
+						    url:"/super/queryUser",
+						    success:function (json){
+								if(json.code == 200){
+									_this.renderUserList(json.datas);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误', {icon:5,anim:6,time:1200});
+								}else if(json.code == 50001){
+									$('#userLists').html('<p class="noUserTxt">暂无用户，请先去用户管理添加用户</p>');
+								}
+						    }
+						});
+					},
+					renderUserList : function(list){
+						var strHtml = '';
+						strHtml += '<div class="layui-input-inline">';
+						strHtml += '<select id="listUserSel" lay-filter="listUserSel"><option value="">请选择用户</option>';		 	
+						for(var i=0;i<list.length;i++){
+							strHtml += '<option value="'+ list[i].userId +'">'+ list[i].realName +'</option>';
+						}
+						strHtml += '</select></div>';
+						$('#userLists').html(strHtml);
+						form.render();
 					},
 					loadModuleList : function(){
 						var _this = this;
+						layer.load();
 						$.ajax({
 						    type:"get",
 							data : { specUserId:specUserId },
 						    dataType:"json",
-						    url:"/mod/getModuleDetail",
+						    url:"/mod/getAllModuleData",
 						    success:function (json){
 						    	layer.closeAll('loading');
-								console.log(
+								if(json.code == 200){
+									console.log(json)
+									var modList = json.datas;
+									getModuleList(modList);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 50001){
+									layer.msg('暂无数据');
+								}else if(json.code == 70001){
+									layer.msg('暂无访问权限');
+								}
 						    }
 						});
 					}
 				};
 				page.init();
+
+				//全选动作、左侧主模块选择选动作、右侧所有子模块选择动作（页面初始化就加载一次，然后每次选择身份后会加载一次）
+				function inpCheckboxSel(){
+					//全选
+					$('#selAllModInp').click(function(){
+						var checkStatus = this.checked;
+						$('.comModInp').each(function(i){
+							this.checked = checkStatus;
+							if(checkStatus){
+								$(this).prev().addClass('hasActive');
+								if($(this).attr('actNameEng') == 'list'){
+									$(this).attr('disabled','disabled');
+									$(this).next().addClass('disColor');
+								}
+							}else{
+								$(this).prev().removeClass('hasActive');
+								if($(this).attr('actNameEng') == 'list'){
+									$(this).removeAttr('disabled');
+									$(this).next().removeClass('disColor');
+								}
+							}
+						});
+						if(checkStatus){
+							$(this).prev().addClass('hasActive');
+						}else{
+							$(this).prev().removeClass('hasActive');
+						}
+					});
+					//左侧主模块动作
+					$('.singleRowSelInp').each(function(i){
+						var canUseFlag = $('.singleRowSelInp').eq(i).attr('canUseFlag');
+						var aInp = $('input[name=singleRowSelAllMod_'+ canUseFlag +']').eq(i).parent().parent().find('.sonModWid input');
+						$(this).click(function(){
+							var rowMainModId = $(this).attr('rowMainModId');
+							var totalLen = $('input[name=singleRowSelAllMod_'+ canUseFlag +']').length;
+							var hasCheckedLen = $('input[name=singleRowSelAllMod_'+ canUseFlag +']:checked').length;
+							var checkStatus = this.checked;
+							aInp.prop('checked',checkStatus);
+							if(checkStatus){
+								$(this).prev().addClass('hasActive');
+								aInp.prev().addClass('hasActive');
+								if($('.listSonMod_'+rowMainModId).length > 0){
+									$('.listSonMod_'+rowMainModId).attr('disabled','disabled');
+								}
+							}else{
+								$(this).prev().removeClass('hasActive');
+								aInp.prev().removeClass('hasActive');
+								if($('.listSonMod_'+rowMainModId).length > 0){
+									$('.listSonMod_'+rowMainModId).removeAttr('disabled');
+								}
+							}
+							if(hasCheckedLen == totalLen){
+								$('#selAllModInp').prop('checked',true).prev().addClass('hasActive');
+							}else{
+								$('#selAllModInp').prop('checked',false).prev().removeClass('hasActive');
+							}
+						});
+
+					});
+					//右侧所有子模块动作
+					$('.sonModSelInp').each(function(i){
+						var canUseFlag = $('.sonModSelInp').eq(i).attr('canUseFlag');
+						$(this).click(function(){
+							var parent = $(this).parent().parent();
+							var parInp = parent.parent().find('.selAllModWid input');
+							var totalRowLen = parent.find('p').length;
+							var hasCheckedLen_row = parent.find($('input[name=sonInpCheck_'+ canUseFlag +']:checked')).length;
+							var totalLen = $('input[name=sonInpCheck_'+ canUseFlag +']').length;
+							var hasCheckedLen = $('input[name=sonInpCheck_'+ canUseFlag +']:checked').length;
+							var checkStatus = this.checked;
+							if(checkStatus){
+								$(this).prev().addClass('hasActive');
+							}else{
+								$(this).prev().removeClass('hasActive');
+							}
+							if(hasCheckedLen_row == totalRowLen){
+								parInp.prop('checked',true);
+								parInp.prev().addClass('hasActive');
+							}else{
+								parInp.prop('checked',false);
+								parInp.prev().removeClass('hasActive');
+							}
+							if(hasCheckedLen == totalLen){
+								$('#selAllModInp').prop('checked',true).prev().addClass('hasActive');
+							}else{
+								$('#selAllModInp').prop('checked',false).prev().removeClass('hasActive');
+							}
+						});
+					});
+				}
+				
+				function getModuleList(modList){
+					var strHtml = '';
+					strHtml += '<ul id="modTit" class="hasSelAll modListTit clearfix">';
+					strHtml +='<li class="selAllModWid" style="height:40px;">';
+					strHtml += '<span class="likeCheckSpan" style="margin:11px auto 0;"><b class="layui-icon layui-icon-ok" style="margin-left:1px;"></b></span>';
+					strHtml +='<input type="checkbox" id="selAllModInp" class="inpRadCheck"/></li>';
+					strHtml += '<li class="mainModWid">主模块名</li><li class="sonModWid">子模块名</li></ul>';
+					//模拟表格内容
+					strHtml += '<div id="listModCon" class="hasSelAll">';
+					for(var i=0;i<modList.length;i++){
+						page.data.globalMainModId.push(modList[i].modId);
+						strHtml += '<ul class="noDisUl clearfix">';
+						if(modList[i].mainBindFlag == 1 && $('#roleIdInp').val() != 0){
+							strHtml += '<li class="selAllModWid hasPosAbso posL flexBox">';
+							strHtml += '<span class="likeCheckSpan hasActive"><b class="layui-icon layui-icon-ok"></b></span>';
+							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'" value="'+ i +'" name="singleRowSelAllMod_'+ modList[i].mainBindFlag +'" canUseFlag="'+ modList[i].mainBindFlag +'" class="singleRowSelInp inpRadCheck comModInp" checked/></li>';
+						}else{
+							strHtml += '<li class="selAllModWid hasPosAbso posL flexBox">';
+							strHtml += '<span class="likeCheckSpan"><b class="layui-icon layui-icon-ok"></b></span>';
+							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'" value="'+ i +'" name="singleRowSelAllMod_'+ modList[i].mainBindFlag +'" canUseFlag="'+ modList[i].mainBindFlag +'" class="singleRowSelInp inpRadCheck comModInp" ></li>';
+						}
+						//主模块名字
+						strHtml += '<li class="mainModWid hasAlign hasPosAbso posL1"><span class="modMainNameSpan flexBox"><b class="ellip">'+ modList[i].modName +'</b></span></li>';
+						//子模块名
+						strHtml += '<li class="sonModWid sonModNames hasMargL">';
+						if(modList[i].modSubList.length > 0){
+							for(var j=0;j<modList[i].modSubList.length;j++){
+								strHtml += '<p>';
+								//存在checkbox 左侧子模块  //bindFlag 用于判断当前身份是否选中
+								var actNameEng = modList[i].modSubList[j].maEng.substring(0,4);
+								var disabFlag = modList[i].modSubList[j].disabledFlag;
+								if(modList[i].modSubList[j].selFlag){
+									strHtml += '<span class="likeCheckSpan hasActive"><b class="layui-icon layui-icon-ok"></b></span>';
+									if(actNameEng == 'list'){
+										if(disabFlag){
+											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked disabled/>';
+										}else{
+											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';
+										}
+									}else{
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';	
+									}
+									if(actNameEng == 'list' && disabFlag){
+										strHtml += '<strong class="ellip disColor">'+ modList[i].modSubList[j].maChi +'</strong>';
+									}else{
+										strHtml += '<strong class="ellip">'+ modList[i].modSubList[j].maChi +'</strong>';
+									}
+								}else{
+									strHtml += '<span class="likeCheckSpan"><b class="layui-icon layui-icon-ok"></b></span>';
+									if(actNameEng == 'list'){
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';
+									}else{
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';	
+									}
+									strHtml += '<strong class="ellip">'+ modList[i].modSubList[j].maChi+'</strong>';
+								}
+								strHtml += '</p>';
+							}
+						}
+						strHtml += '</li>';
+						strHtml += '</ul>';
+						
+					}
+					strHtml += '</div>';
+					$('#moduleList').html(strHtml);
+					form.render();
+					inpCheckboxSel();
+					$('.comModInp').each(function(i){
+						var checkStatus = $('.sonModSelInp').eq(i).prop('checked');
+						if(checkStatus){
+							$('#selAllModInp').prev().addClass('hasActive');
+						}else{
+							$('#selAllModInp').prev().removeClass('hasActive');
+						}
+					});
+				};
 			});
+			function checkStatusInp(obj,modOrder,actNameEng){
+				var checkStatus = $(obj).prop('checked');
+				if(checkStatus){//选中
+					if(actNameEng != 'list' && $('.listSonMod_' + modOrder).length > 0){
+						//选择了当前主模块下的其他子模块 自动让list子模块选中并且disabled
+						$('.listSonMod_' + modOrder).prop('checked',true);
+						$('.listSonMod_' + modOrder).prev().addClass('hasActive');
+						$('.listSonMod_' + modOrder).next().addClass('disColor');
+						$('.listSonMod_' + modOrder).attr('disabled','disabled');
+					}
+				}else{//取消选中的时候
+					var len = $('.otherSonMod_'+ modOrder +':checked').length;
+					if(actNameEng == 'list'){
+						$('.listSonMod_' + modOrder).prop('checked',false);
+					}
+					if(len == 0 && actNameEng != 'list' && $('.listSonMod_' + modOrder).length > 0){
+						//检测当前除了list之外取消选中如果为0且存在list子模块 将list设置未选中但是去除disabled
+						$('.listSonMod_' + modOrder).removeAttr('disabled');
+						$('.listSonMod_' + modOrder).next().removeClass('disColor');
+					}
+				}
+			}
 		</script>
 	</body>
 </html>
