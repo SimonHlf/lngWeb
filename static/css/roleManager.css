@@ -1,0 +1,122 @@
+.fl{float: left;}
+.lists li{
+	float:left;
+	width:160px;
+	cursor:pointer;
+	position: relative;
+	margin:0 0 20px 20px;
+}
+.roleList li:first-child{
+	cursor:default;
+}
+.lists li .topRoleName{
+	height:50px;
+	line-height:50px;
+	text-align:center;
+	background:#22b8aa;
+	font-size:18px;
+	color:#fff;
+	font-weight:600;
+	border-radius:6px 6px 0 0;
+}
+.roleProfile{
+	height:80px;
+	background:#ebebeb;
+	text-align:center;
+	padding-top:10px;
+	border-radius:0 0 6px 6px;
+}
+.roleProfile strong{
+	font-size:16px;
+	font-weight:normal;
+	display:block;
+}
+.roleProfile p{
+	font-size:14px;
+}
+.smFunDiv{
+	width:100%;
+	height:100%;
+	line-height:140px;
+	position:absolute;
+	left:0;
+	top:0;
+	background:rgba(13,10,49,.7);
+	text-align:center;
+	display:none;
+	border-radius:6px;
+}
+.lists li:hover .smFunDiv{
+	display:block;
+}
+.smFunDiv a:first-child i{
+	font-size:24px;
+	color:#fff;
+}
+.smFunDiv a:last-child{
+	margin-left:5px;
+}
+.smFunDiv a:last-child i{
+	font-size:28px;
+	color:#fff;
+}
+.smFunDiv a:first-child:hover i{
+	color:#f60;
+}
+.smFunDiv a:last-child:hover i{
+	color:#f00;
+}
+.comRoleDiv{
+	width:380px;
+	height:35px;
+	line-height:35px;
+	margin:20px auto 0;
+	font-size: 14px;
+}
+.comRoleDiv input{
+	width:265px;
+	height:34px;
+	border:none;
+	border-bottom:1px solid #ccc;
+	float:left;
+	line-height:35px;
+	margin-left:5px;
+	outline: none;
+}
+.addEidtBtnWrap{
+	height: 32px;
+	margin-top:25px;
+}
+.addEidtBtnWrap a{
+	float: left;
+	padding: 0 20px;
+	height: 32px;
+	line-height: 32px;
+	border-radius: 2px;
+	display: block;
+	font-size: 14px;
+	text-decoration: none;
+}
+.addEidtBtnWrap a.saveBtn{
+	background: #009688;
+	color: #fff;
+	margin:0 15px 0 100px;
+}
+.addEidtBtnWrap a.saveBtn:hover{
+	opacity: .8;
+}
+.addEidtBtnWrap a.cancelBtn{
+	border:1px solid #009688;
+	height: 30px;
+	color: #333;
+}
+.comRoleDiv:last-child span{
+	margin-left:-8px;
+}
+.layui-layer-btn .layui-layer-btn0{
+	background:#009688 !important;
+	border-color:#009688 !important;
+}
+.layui-layer-molv .layui-layer-btn .layui-layer-btn1{
+	background:#fff !important;
+}

@@ -1,3 +1,13 @@
 .itemDivs{
 	float: left;
 }
+.autoDiv{
+	width: 95%;
+	margin:10px auto;
+}
+.canUseAcc{
+	color:#01AAED;
+}
+.canNotUseAcc{
+	color:#FF5722;
+}

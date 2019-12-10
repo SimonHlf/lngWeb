@@ -4,8 +4,8 @@
  */
 var noGradInfo = '';//根据科目联动年级时用到 存在年级 清空 不存在有值 noGradInfo
 //自定义模块
-layui.define(['form'],function(exports){
-	var $ = layui.jquery,form=layui.form;
+layui.define(['form','table'],function(exports){
+	var form=layui.form,table=layui.table;
     var obj = {
     	getId : function(id){
     		return document.getElementById(id);
@@ -28,8 +28,6 @@ layui.define(['form'],function(exports){
 					if(json.code == 200){
 						if(loadOpt == 'selLoad'){
 							_this.createRoleSel(json.datas);	
-						}else if(loadOpt == 'tableLoad'){
-							_this.loadRoleTabList(json.datas);
 						}
 					}else if(json.code == 1000){
 						layer.msg('服务器错误');

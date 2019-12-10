@@ -123,6 +123,7 @@
 					    data:{account:account,password:password,inputCode:vCode},
 					    success:function (json){
 					    	layer.closeAll('loading');
+							console.log( json )
 							if(json.code == 200){
 								if(checkStatus){
 									//添加cookie 
