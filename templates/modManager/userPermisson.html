@@ -248,6 +248,7 @@
 				}
 				
 				function getModuleList(modList){
+					console.log(modList)
 					var strHtml = '';
 					strHtml += '<ul id="modTit" class="hasSelAll modListTit clearfix">';
 					strHtml +='<li class="selAllModWid" style="height:40px;">';
@@ -282,12 +283,12 @@
 									strHtml += '<span class="likeCheckSpan hasActive"><b class="layui-icon layui-icon-ok"></b></span>';
 									if(actNameEng == 'list'){
 										if(disabFlag){
-											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked disabled/>';
+											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked disabled/>';
 										}else{
-											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';
+											strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modOrder+'" canUseFlag="'+ modList[i].modOrder +'" class="sonModSelInp inpRadCheck comModInp  listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';
 										}
 									}else{
-										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';	
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'" checked/>';	
 									}
 									if(actNameEng == 'list' && disabFlag){
 										strHtml += '<strong class="ellip disColor">'+ modList[i].modSubList[j].maChi +'</strong>';
@@ -297,9 +298,9 @@
 								}else{
 									strHtml += '<span class="likeCheckSpan"><b class="layui-icon layui-icon-ok"></b></span>';
 									if(actNameEng == 'list'){
-										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+  modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="sonModSelInp inpRadCheck comModInp listSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';
 									}else{
-										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+ modList[i].modSubList[j].selFlag +'" canUseFlag="'+ modList[i].modSubList[j].selFlag +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';	
+										strHtml += '<input type="checkbox" actNameEng="'+ actNameEng +'" onclick="checkStatusInp(this,'+ modList[i].modOrder +',\''+ actNameEng +'\')" name="sonInpCheck_'+  modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="sonModSelInp inpRadCheck comModInp otherSonMod_'+ modList[i].modOrder +'" value="'+ modList[i].modSubList[j].maId +'">';	
 									}
 									strHtml += '<strong class="ellip">'+ modList[i].modSubList[j].maChi+'</strong>';
 								}

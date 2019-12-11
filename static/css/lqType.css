@@ -10,9 +10,10 @@
 }
 .addEditItem span.itemTit{
 	float: left;
+	font-size: 14px;
 }
 .addEditItem input{
-	width:300px;
+	width:360px;
 	height:34px;
 	border:none;
 	border-bottom:1px solid #ccc;
@@ -20,6 +21,7 @@
 	line-height:35px;
 	margin-left:5px;
 	outline: none;
+	font-size: 14px;
 }
 .addEditItem_spec{
 	position: relative;
