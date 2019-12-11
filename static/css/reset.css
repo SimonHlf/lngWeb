@@ -1,0 +1,20 @@
+@charset "utf-8";
+/* CSS Document */
+
+/** 清除内外边距 **/
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,dl,dt,dd,input,select,textarea{margin:0;padding:0;}
+
+/** 设置默认字体 **/
+body{font:12px/1.5 "Microsoft YaHei",Verdana,Tahoma,Arial,Helvetica,sans-serif;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+
+/** 重置图片元素 **/
+img{border:none;vertical-align:top;}
+
+/** 重置列表元素 **/
+li{list-style:none;}
+
+/** 重置超链接元素 **/
+a{text-decoration:none;color:#333;}
+
+/** 去除textarea的resize属性 **/
+textarea{resize:none;}

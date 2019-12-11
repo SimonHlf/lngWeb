@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/modules/layui-icon-extend/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
+		<title>添加编辑液质类型</title>
+	</head>
+	<body class="addEditBody">
+		<div class="addEditItem">
+			<span class="itemTit"><em style="color:#f00;font-style:normal;">*</em>液质类型名称：</span>
+			<input id="inpLqTypeName" autocomplete="off" type="text" placeholder="请输入液质名称(20字以内)" maxlength="20">
+		</div>
+		<div class="addEditItem_spec layui-form">
+			<span class="itemTit">图片：</span>
+			<a id="addImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
+				<i class="iconfont icon-add"></i>
+				<img id="thumbnailImg"/>
+			</a>
+			<span class="viewBigImg">查看原图</span>
+		</div>
+		<div class="addEidtBtnWrap layui-clear">
+			<a class="saveBtn" href="javascript:void(0)">保存</a>
+			<a class="cancelBtn" href="javascript:void(0)">取消</a>
+		</div>
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var globalOpts = parent.globalOpts;
+			var lqId = parent.lqId;
+			var succUrl = '';
+			layui.use(['layer','upload','form'],function(){
+				var layer = layui.layer,form = layui.form,upload = layui.upload;
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.uploadImg();
+						if(globalOpts == 'editBtn'){
+							this.loadlqTypeInfo();
+						}
+					},
+					uploadImg : function(){
+						upload.render({
+						    elem: '#addImgBtn'
+						    ,url: '/upload/uploadSingle'
+							,method : 'post'
+						    ,accept : 'images'
+							,auto: true
+							,before: function(obj){
+								layer.load();
+						    }
+						    ,done: function(res){
+								layer.closeAll('loading');
+							    $('#thumbnailImg').show().attr('src','/temp/' + res.datas);
+							    $('.viewBigImg').show();
+								console.log(res.datas)
+							    succUrl = res.datas;
+						    }
+						});
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('.cancelBtn').on('click',function(){
+							var index= parent.layer.getFrameIndex(window.name);
+							parent.addFlag = false;
+							parent.layer.close(index);
+						});
+						//添加图片
+						$('.viewBigImg').on('click',function(){
+							if(globalOpts == 'addBtn'){
+								window.open('/temp/' + succUrl);
+							}else{
+								window.open('../' + succUrl);
+							}
+						});
+						$('.saveBtn').on('click',function(){
+							var inpRoleName = $.trim($("#inpLqTypeName").val()),
+								index= parent.layer.getFrameIndex(window.name);
+							if(inpRoleName == ""){
+								layer.msg("液质类型名称不能为空", {icon:5,anim:6,time:1000});
+							}else{
+								//var reg = /^[\u4E00-\u9FA5]+$/; 
+								var url = "",type = '';
+								if(globalOpts == "addBtn"){//表示增加角色
+									var field = {name : inpRoleName,yzImg :succUrl};
+									url = "/gasType/addGasType";
+									type = 'post';
+								}else{//表示编辑角色
+									var field = {id : lqId,name : inpRoleName,yzImg : succUrl};
+									url = "/gasType/updateGasType";
+									type = 'put';
+								}
+								layer.load('1');
+								$.ajax({
+									type:type,
+									dataType:"json",
+									data :field,
+									url:url,
+									success:function (json){
+										layer.closeAll('loading');
+										if(json.code == 200){
+											if(globalOpts == "addBtn"){//表示增加角色
+												layer.msg("添加液质类型成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.layer.close(index);
+												});
+											}else{
+												layer.msg("编辑液质类型成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.lqId = '';
+													parent.layer.close(index);
+												});
+											}
+										}else if(json.code == 50001){
+											layer.msg("保存失败，当前液质类型名称不存在", {icon:5,anim:6,time:2000});
+										}else if(json.code == 50003){
+											layer.msg("当前液质类型名称存在，请重新编辑", {icon:5,anim:6,time:1500});
+										}else if(json.code == 1000){
+											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+										}else if(json.code == 10002){
+											layer.msg("参数不能为空", {icon:5,anim:6,time:1000});
+										}else if(json.code == 70001){
+											layer.msg("抱歉，您暂无权限增加编辑液质类型", {icon:5,anim:6,time:1000});
+										}
+									}
+								});
+							}
+						});
+					},
+					loadlqTypeInfo : function(){
+						$.ajax({
+							type:'GET',
+							dataType:"json",
+							data :{id:lqId},
+							url:'/gasType/queryGasType',
+							success:function (json){
+								layer.closeAll('loading');
+								if(json.code == 200){
+									$('#inpLqTypeName').val(json.datas[0].name);
+									succUrl = json.datas[0].yz_img.replace('_small','');
+									$('#thumbnailImg').show().attr('src','../' + json.datas[0].yz_img);
+									$('.viewBigImg').show();
+								}else if(json.code == 50001){
+									layer.msg("未找到当前液质类型", {icon:5,anim:6,time:2000});
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+								}
+							}
+						});
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>

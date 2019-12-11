@@ -1,0 +1,100 @@
+.addEditBody{
+	padding: 10px;
+}
+.addEditItem{
+	height: 35px;
+	line-height: 35px;
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 20px;
+}
+.addEditItem span.itemTit{
+	float: left;
+}
+.addEditItem input{
+	width:300px;
+	height:34px;
+	border:none;
+	border-bottom:1px solid #ccc;
+	float:left;
+	line-height:35px;
+	margin-left:5px;
+	outline: none;
+}
+.addEditItem_spec{
+	position: relative;
+	margin-bottom: 30px;
+}
+.addEditItem_spec span.itemTit{
+	width: 102px;
+	height: 100%;
+	font-size: 14px;
+	color: #333;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+.addImgBtn,
+.addEditItem_spec img{
+	width: 100px;
+	height: 100px;
+	text-align: center;
+	line-height: 100px;
+}
+.addImgBtn{
+	display: block;
+	position: relative;
+	margin-left:107px;
+	border:1px solid #ccc;
+}
+.addEditItem_spec img{
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+}
+.addImgBtn i{
+	font-size: 30px;
+	color: #666;
+	position: relative;
+	z-index: 1;
+}
+.viewBigImg{
+	position: absolute;
+	left: 240px;
+	top: 44px;
+	font-size: 14px;
+	color: #009f95;
+	cursor: pointer;
+	display: none;
+}
+.viewBigImg:hover{
+	color: #F47837;
+}
+.addEidtBtnWrap a{
+	float: left;
+	padding: 0 20px;
+	height: 32px;
+	line-height: 32px;
+	border-radius: 2px;
+	display: block;
+	font-size: 14px;
+	text-decoration: none;
+}
+.addEidtBtnWrap a.saveBtn{
+	background: #009f95;
+	color: #fff;
+	margin:0 15px 0 180px;
+}
+.addEidtBtnWrap a.saveBtn:hover{
+	opacity: .8;
+}
+.addEidtBtnWrap a.cancelBtn{
+	border:1px solid #ccc;
+	height: 30px;
+	color: #333;
+}

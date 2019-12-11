@@ -95,6 +95,8 @@
 												layer.msg("角色名称存在，请重新编辑", {icon:5,anim:6,time:1000});
 											}else if(json.code == 1000){
 												layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+											}else if(json.code == 10002){
+												layer.msg("参数不能为空", {icon:5,anim:6,time:1000});
 											}else if(json.code == 70001){
 												layer.msg("抱歉，您暂无权限增加编辑角色", {icon:5,anim:6,time:1000});
 											}

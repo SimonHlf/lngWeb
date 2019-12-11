@@ -43,7 +43,7 @@
 					</a>
 					<dl class="layui-nav-child">
 						<dd class="navLi"><a href="javascript:void(0)" tab-id="5" path="goPerInfoPage">基本资料设置</a></dd>
-						<dd class="navLi"><a href="javascript:void(0)" tab-id="6" path="user.do?action=goUpdatePassPage">密码设置</a></dd>
+						<dd class="navLi"><a href="javascript:void(0)" tab-id="6" path="goUpPassPage">密码设置</a></dd>
 					</dl>
 				</li>
 				<li class="tuichu">
@@ -73,7 +73,7 @@
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show">
-						<iframe id="mainIframe" src="goPerInfoPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+						<iframe id="mainIframe" src="goUserManagerPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
 					</div>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 			var page = {
 				init : function(){
 					this.bindEvent();
-					element.init();
+					element.init();					
 				},
 				bindEvent : function(){
 					$("#loginOut").on('click',function(){

@@ -18,6 +18,7 @@ layui.define(['form','table'],function(exports){
 		//获取角色list select/table
 		getRoleList : function(roleId,loadOpt){
 			var _this = this;
+			layer.load();
 			$.ajax({
 			    type:"get",
 				data : { roleId:roleId },

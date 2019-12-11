@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>液质类型管理</title>
+		<style>
+			.layui-table-cell{height: auto !important;}
+		</style>
+	</head>
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">液质类型管理</span>
+						<a id="addLqType" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加液质</a>
+					</div>
+					<div class="layui-card-body">
+						<div id="gasTypeList" class="gasTypeList">
+							<table id="lqTypeTable" class="layui-table" lay-filter="lqTypeTable"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var globalOpts = "addBtn",addFlag = false,lqId='';
+			layui.use(['layer','table'],function(){
+				var layer = layui.layer,table = layui.table;
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.loadLqTypeList();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#addLqType').on('click',function(){
+							globalOpts = 'addBtn';
+							_this.commonLayer();
+						});
+					},
+					loadLqTypeList : function(){
+						var _this = this;
+						layer.load();
+						var field = {id:lqId};
+						table.render({
+							elem: '#lqTypeTable',
+							height: 'full-150',
+							url : '/gasType/queryGasType',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas
+								}
+							},
+							where:field,
+							page : false,
+							even : true,
+							text: {none : '暂无相关数据'},
+							cellMinWidth : 200,
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'name', title: '液质类型名称',align:'center'},
+									{field : 'yz_img', title: '图片',align:'center',templet : function(d){
+										return '<img src="../'+ d.yz_img +'"/>'
+									}},
+									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
+										return '<a href="javascript:void(0)" lqId="'+ d.id +'" lay-event="editLqType" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								layer.closeAll('loading');
+							}
+						});
+					},
+					commonLayer : function(){
+						var title = '';
+						globalOpts == 'addBtn' ? title = '添加' : title = '编辑';
+						addFlag = true;
+						var _this = this;
+						layer.open({
+							title : title + '液质类型',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../lqTypeManager/addEditLqType.html',
+							end : function(){
+								if(addFlag){
+									_this.loadLqTypeList();
+								}
+							}
+						});
+					},
+				};
+				table.on('tool(lqTypeTable)',function(obj){
+					if(obj.event == 'editLqType'){
+						globalOpts = 'editBtn';
+						lqId = $(this).attr('lqId');
+						page.commonLayer();
+					}
+				});
+				page.init();
+			});
+		</script>
+	</body>
+</html>

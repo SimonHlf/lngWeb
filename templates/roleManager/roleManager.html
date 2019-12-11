@@ -43,7 +43,7 @@
 					},
 					getRoleList : function(){
 						var _this = this;
-						layer.load('1');
+						layer.load();
 						$.ajax({
 						    type:"get",
 							data : { roleId:roleId },
@@ -127,7 +127,7 @@
 					},
 					commonLayer : function(){
 						var title = '';
-						globalOpts == 'addBtn' ? title = '添加' : '编辑';
+						globalOpts == 'addBtn' ? title = '添加' : title = '编辑';
 						addFlag = true;
 						var _this = this;
 						layer.open({

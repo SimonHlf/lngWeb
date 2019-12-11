@@ -42,8 +42,8 @@
 						<span id="userName">黄利峰</span><span class="layui-nav-more"></span>
 					</a>
 					<dl class="layui-nav-child">
-						<dd class="navLi"><a href="javascript:void(0)" tab-id="1" path="user.do?action=goUserDetailPage">基本资料设置</a></dd>
-						<dd class="navLi"><a href="javascript:void(0)" tab-id="2" path="user.do?action=goUpdatePassPage">密码设置</a></dd>
+						<dd class="navLi"><a href="javascript:void(0)" tab-id="1" path="goPerInfoPage">基本资料设置</a></dd>
+						<dd class="navLi"><a href="javascript:void(0)" tab-id="2" path="goUpPassPage">密码设置</a></dd>
 					</dl>
 				</li>
 				<li class="tuichu">
@@ -68,15 +68,11 @@
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show">
-						<iframe id="mainIframe" src=""  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+						<iframe id="mainIframe" src="goLqTypePage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- footer -->
-		<!--  div class="layui-footer">
-			© 2018 版权所有 Copyright@2018 Sandy.wm All Rights Reserved.
-		</div-->
 	</div>
 	
 	<script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
@@ -122,13 +118,11 @@
 				//动态获取平台模块
 				createModList : function(){
 					var _this = this;
-					layer.load();
 					$.ajax({
 					    type:"get",
 					    dataType:"json",
 					    url:"/mod/getModuleData",
 					    success:function (json){
-					    	layer.closeAll('loading');
 							if(json.code == 200){
 								_this.renderModuleList(json.datas);
 							}else if(json.code == 1000){
@@ -147,7 +141,7 @@
 							modItem += '<li class="layui-nav-item"><a href="javascript:void(0)"><i class="iconfont layui-extend-guanli"></i>系统设置</a>';
 							modItem += '<dl class="layui-nav-child">';
 							for(var j=0;j<list[i].modSubList.length;j++){
-								modItem += '<dd class="navLi"><a href="javascript:void(0)" path="'+ list[i].modSubList[j].maEng +'" tab-id="'+ i +'">'+ list[i].modSubList[j].maChi +'</a></dd>';
+								modItem += '<dd class="navLi"><a href="javascript:void(0)" path="'+ list[i].modSubList[j].maEng +'" tab-id="'+ (j+100) +'">'+ list[i].modSubList[j].maChi +'</a></dd>';
 							}
 							modItem += '</dl></li>';
 						}else{
