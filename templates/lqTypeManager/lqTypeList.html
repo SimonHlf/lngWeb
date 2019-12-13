@@ -72,7 +72,10 @@
 										return '<img src="../'+ d.yz_img +'"/>';
 									}},
 									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
-										return '<a href="javascript:void(0)" lqId="'+ d.id +'" lay-event="editLqType" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										var str = '';
+										str += '<a href="javascript:void(0)" lay-event="viewBigImg" yzImg="'+ d.yz_img +'" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看原图</a>';
+										str += '<a href="javascript:void(0)" lqId="'+ d.id +'" lay-event="editLqType" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										return str;
 									}}
 								]
 							],
@@ -107,6 +110,9 @@
 						globalOpts = 'editBtn';
 						lqId = $(this).attr('lqId');
 						page.commonLayer();
+					}else if(obj.event == 'viewBigImg'){
+						var yzImgSrc = $(this).attr('yzImg');
+						window.open('../' + yzImgSrc);
 					}
 				});
 				page.init();

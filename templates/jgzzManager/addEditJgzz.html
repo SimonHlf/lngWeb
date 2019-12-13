@@ -21,11 +21,11 @@
 			<a class="cancelBtn" href="javascript:void(0)">取消</a>
 		</div>
 		
-		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts;
-			var jgzzId = parent.jgzzId;
+			var jgzzId = parent.testId;
 			var validStatus = '';
 			layui.use(['form','layer'],function(){
 				var layer = layui.layer,form = layui.form;
@@ -55,11 +55,11 @@
 								//var reg = /^[\u4E00-\u9FA5]+$/; 
 								var url = "",type = '';
 								if(globalOpts == "addBtn"){
-									var field = {name : inpRoleName,validStatus :validStatus};
+									var field = {name : inpRoleName,validstatus :validStatus};
 									url = "/qual/addQual";
 									type = 'post';
 								}else{
-									var field = {id : jgzzId,name : inpRoleName,validStatus : validStatus};
+									var field = {qId : jgzzId,name : inpRoleName,validstatus : validStatus};
 									url = "/qual/updateQual";
 									type = 'put';
 								}
@@ -85,13 +85,13 @@
 												});
 											}
 										}else if(json.code == 50001){
-											layer.msg("保存失败，当前液进港资质名称不存在", {icon:5,anim:6,time:2000});
+											layer.msg("保存失败，当前进港资质名称不存在", {icon:5,anim:6,time:2000});
 										}else if(json.code == 50003){
-											layer.msg("当前液质类型名称存在，请重新编辑", {icon:5,anim:6,time:1500});
+											layer.msg("当前进港资质名称存在，请重新编辑", {icon:5,anim:6,time:1500});
 										}else if(json.code == 1000){
 											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
 										}else if(json.code == 70001){
-											layer.msg("抱歉，您暂无权限增加编辑液质类型", {icon:5,anim:6,time:1000});
+											layer.msg("抱歉，您暂无权限增加编辑进港资质类型", {icon:5,anim:6,time:1500});
 										}
 									}
 								});
@@ -102,20 +102,21 @@
 					loadJgzzInfo : function(){
 						layer.load('1');
 						$.ajax({
-							type:'GET',
+							type:'get',
 							dataType:"json",
 							data :{id:jgzzId},
 							url:'/qual/queryQual',
 							success:function (json){
 								layer.closeAll('loading');
 								if(json.code == 200){
-									console.log( json )
+									console.log(json)
 									$('#inpJgzzName').val(json.datas[0].name);
 									$('input[name=validStatus]').each(function(i){
 										if($('input[name=validStatus]').eq(i).val() == json.datas[0].validStatus){
 											$('input[name=validStatus]').eq(i).attr('checked',true);
 										}
 									});
+									validStatus = json.datas[0].validStatus;
 									form.render();
 								}else if(json.code == 50001){
 									layer.msg("未找到当前进港资质", {icon:5,anim:6,time:2000});

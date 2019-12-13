@@ -7,3 +7,7 @@
 .addEditBody{
 	padding: 10px;
 }
+.filterWrap{
+	height: 30px;
+	line-height: 30px;
+}

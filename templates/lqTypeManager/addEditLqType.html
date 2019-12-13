@@ -13,7 +13,7 @@
 			<input id="inpLqTypeName" autocomplete="off" type="text" placeholder="请输入液质名称(20字以内)" maxlength="20">
 		</div>
 		<div class="addEditItem_spec layui-form">
-			<span class="itemTit">图片：</span>
+			<span class="itemTit"><em style="color:#f00;font-style:normal;">*</em>图片：</span>
 			<a id="addImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
 				<i class="iconfont icon-add"></i>
 				<img id="thumbnailImg"/>
@@ -79,6 +79,8 @@
 								index= parent.layer.getFrameIndex(window.name);
 							if(inpRoleName == ""){
 								layer.msg("液质类型名称不能为空", {icon:5,anim:6,time:1000});
+							}else if(succUrl == ''){
+								layer.msg("请上传液质类型图片", {icon:5,anim:6,time:1000});
 							}else{
 								//var reg = /^[\u4E00-\u9FA5]+$/; 
 								var url = "",type = '';

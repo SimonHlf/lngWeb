@@ -187,7 +187,7 @@
 					//左侧主模块动作
 					$('.singleRowSelInp').each(function(i){
 						var canUseFlag = $('.singleRowSelInp').eq(i).attr('canUseFlag');
-						var aInp = $('input[name=singleRowSelAllMod_'+ canUseFlag +']').eq(i).parent().parent().find('.sonModWid input');
+						var aInp = $('input[name=sonInpCheck_'+ canUseFlag +']');
 						$(this).click(function(){
 							var rowMainModId = $(this).attr('rowMainModId');
 							var totalLen = $('input[name=singleRowSelAllMod_'+ canUseFlag +']').length;
@@ -263,11 +263,11 @@
 						if(modList[i].mainBindFlag == 1 && $('#roleIdInp').val() != 0){
 							strHtml += '<li class="selAllModWid hasPosAbso posL flexBox">';
 							strHtml += '<span class="likeCheckSpan hasActive"><b class="layui-icon layui-icon-ok"></b></span>';
-							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'" value="'+ i +'" name="singleRowSelAllMod_'+ modList[i].mainBindFlag +'" canUseFlag="'+ modList[i].mainBindFlag +'" class="singleRowSelInp inpRadCheck comModInp" checked/></li>';
+							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'" name="singleRowSelAllMod_'+ modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="singleRowSelInp inpRadCheck comModInp" checked/></li>';
 						}else{
 							strHtml += '<li class="selAllModWid hasPosAbso posL flexBox">';
 							strHtml += '<span class="likeCheckSpan"><b class="layui-icon layui-icon-ok"></b></span>';
-							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'" value="'+ i +'" name="singleRowSelAllMod_'+ modList[i].mainBindFlag +'" canUseFlag="'+ modList[i].mainBindFlag +'" class="singleRowSelInp inpRadCheck comModInp" ></li>';
+							strHtml += '<input type="checkbox" rowMainModId="'+ modList[i].modId +'"  name="singleRowSelAllMod_'+ modList[i].modOrder +'" canUseFlag="'+ modList[i].modOrder +'" class="singleRowSelInp inpRadCheck comModInp" ></li>';
 						}
 						//主模块名字
 						strHtml += '<li class="mainModWid hasAlign hasPosAbso posL1"><span class="modMainNameSpan flexBox"><b class="ellip">'+ modList[i].modName +'</b></span></li>';

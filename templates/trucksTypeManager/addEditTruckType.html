@@ -6,7 +6,130 @@
 		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
 		<title>添加编辑槽车类型</title>
 	</head>
-	<body class="addEditBody">
-		111
+	<body class="addEditBody"> 
+		<div class="addEditItem">
+			<span class="itemTit"><em style="color:#f00;font-style:normal;">*</em>车辆种类名称：</span>
+			<input id="truckTypeName" autocomplete="off" type="text" placeholder="请输入车辆种类名称(30字以内)" maxlength="30">
+		</div>
+		<div class="addEditItem layui-form" style="margin-top:-10px;">
+			<span class="itemTit" style="margin-top:3px;"><em style="color:#f00;font-style:normal;">*</em>车辆类型：</span>
+			<input type="radio" name="trucksType" value="1" title="普货车" lay-filter="trucksType"/>
+			<input type="radio" name="trucksType" value="2" title="危货车" lay-filter="trucksType"/>
+		</div>
+		<div class="addEidtBtnWrap layui-clear">
+			<a class="saveBtn" href="javascript:void(0)">保存</a>
+			<a class="cancelBtn" href="javascript:void(0)">取消</a>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var globalOpts = parent.globalOpts;
+			var truckTypeId = parent.truckTypeId;
+			var trucksType = '';
+			layui.use(['form','layer'],function(){
+				var layer = layui.layer,form = layui.form;
+				form.on('radio(trucksType)', function(data){
+					trucksType = data.value;
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+						if(globalOpts == 'editBtn'){
+							this.loadTurckTypeInfo();
+						}
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('.cancelBtn').on('click',function(){
+							var index= parent.layer.getFrameIndex(window.name);
+							parent.addFlag = false;
+							parent.layer.close(index);
+						});
+						$('.saveBtn').on('click',function(){
+							var inpRoleName = $.trim($("#truckTypeName").val()),
+								index= parent.layer.getFrameIndex(window.name);
+							if(inpRoleName == ""){
+								layer.msg("槽车种类名称不能为空", {icon:5,anim:6,time:1200});
+							}else if(trucksType == ''){
+								layer.msg("请选择车辆类型", {icon:5,anim:6,time:1200});
+							}else{
+								//var reg = /^[\u4E00-\u9FA5]+$/; 
+								var url = "",type = '';
+								if(globalOpts == "addBtn"){
+									var field = {name : inpRoleName,type :trucksType};
+									url = "/trucksType/addTrucksType";
+									type = 'post';
+								}else{
+									var field = {id : truckTypeId,name : inpRoleName,type : trucksType};
+									url = "/trucksType/updateTrucksType";
+									type = 'put';
+								}
+								layer.load('1');
+								$.ajax({
+									type:type,
+									dataType:"json",
+									data :field,
+									url:url,
+									success:function (json){
+										layer.closeAll('loading');
+										if(json.code == 200){
+											if(globalOpts == "addBtn"){//表示增加角色
+												layer.msg("添加槽车类型成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.layer.close(index);
+												});
+											}else{
+												layer.msg("编辑槽车类型成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.truckTypeId = '';
+													parent.layer.close(index);
+												});
+											}
+										}else if(json.code == 50001){
+											layer.msg("保存失败，当前槽车种类名称不存在", {icon:5,anim:6,time:2000});
+										}else if(json.code == 50003){
+											layer.msg("当前槽车种类名称存在，请重新编辑", {icon:5,anim:6,time:1500});
+										}else if(json.code == 1000){
+											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+										}else if(json.code == 70001){
+											layer.msg("抱歉，您暂无权限增加编辑槽车类型", {icon:5,anim:6,time:1500});
+										}
+									}
+								});
+							}
+						});
+						
+					},
+					loadTurckTypeInfo : function(){
+						layer.load('1');
+						$.ajax({
+							type:'GET',
+							dataType:"json",
+							data :{id:truckTypeId},
+							url:'/trucksType/queryTrucksType',
+							success:function (json){
+								layer.closeAll('loading');
+								if(json.code == 200){
+									$('#truckTypeName').val(json.datas[0].name);
+									$('input[name=trucksType]').each(function(i){
+										if($('input[name=trucksType]').eq(i).val() == json.datas[0]. type){
+											$('input[name=trucksType]').eq(i).attr('checked',true);
+										}
+									});
+									trucksType = json.datas[0]. type;
+									form.render();
+								}else if(json.code == 50001){
+									layer.msg("未找到当前槽车类型", {icon:5,anim:6,time:2000});
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+								}
+							}
+						});
+					}
+				};
+				page.init();
+			});
+		</script>
 	</body>
 </html>

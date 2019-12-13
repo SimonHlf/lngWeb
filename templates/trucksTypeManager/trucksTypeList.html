@@ -14,7 +14,7 @@
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
 						<span class="itemDivs">槽车类型管理</span>
-						<a id="addTruckTypeBtn" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加液质</a>
+						<a id="addTruckTypeBtn" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加槽车类型</a>
 					</div>
 					<div class="layui-card-body">
 						<table id="trucksTypeTab" class="layui-table" lay-filter="trucksTypeTab"></table>
@@ -84,13 +84,20 @@
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
 									{field : 'name', title: '槽车名称',align:'center'},
-									{field : 'addTime', title: '添加时间',align:'center'},
+									{field : 'type', title: '车辆类型',align:'center',templet : function(d){
+										if(d.type == 1){
+											return '<span class="canUseAcc">普货车</span>';
+										}else{
+											return '<span class="canNotUseAcc">危货车</span>';
+										}
+									}},
 									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
 										return '<a href="javascript:void(0)" truckTypeId="'+ d.id +'" lay-event="editJgzz" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
 									}}
 								]
 							],
 							done : function(res, curr, count){
+								console.log(res)
 								layer.closeAll('loading');
 							}
 						});
