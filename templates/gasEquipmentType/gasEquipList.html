@@ -6,15 +6,15 @@
 		<link rel="stylesheet" type="text/css" href="../css/gasSourceType.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
-		<title>气源类型列表</title>
+		<title>燃气设备类型管理</title>
 	</head>
 	<body style="background:#f2f2f2;">
 		<div class="layui-fluid" style="margin-top:15px;">
 			<div class="layui-row">
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
-						<span class="itemDivs">气源类型管理</span>
-						<a id="addGasType" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加气源</a>
+						<span class="itemDivs">燃气设备类型管理</span>
+						<a id="addGasType" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加燃气设备类型</a>
 					</div>
 					<div class="layui-card-body">
 						<div id="gasTypeList" class="gasTypeList"></div>
@@ -26,7 +26,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var globalOpts = "addBtn",addFlag = false,gasTypeName = '',gasId='';
+			var globalOpts = "addBtn",addFlag = false,gasEquipName = '',gasEquipId='';
 			layui.use(['layer'],function(){
 				var layer = layui.layer;
 				var page = {
@@ -47,12 +47,12 @@
 						addFlag = true;
 						var _this = this;
 						layer.open({
-							title : title + '气源类型',
+							title : title + '燃气设备类型',
 							type: 2,
 							skin:'layui-layer-molv', //样式类名
 							closeBtn: 0, //不显示关闭按钮
 							area : ['400px','180px'],
-							content: '../gasTypeManager/addEditGasType.html',
+							content: '../gasEquipmentType/addEditGasEquip.html',
 							end : function(){
 								if(addFlag){
 									_this.loadGasTypeList();
@@ -65,9 +65,9 @@
 						layer.load();
 						$.ajax({
 						    type:"get",
-							data : { id:gasId },
+							data : { id:gasEquipId },
 						    dataType:"json",
-						    url:"/qyType/queryGasType",
+						    url:"/rqType/queryRqType",
 						    success:function (json){
 						    	layer.closeAll('loading');
 								if(json.code == 200){
@@ -75,7 +75,7 @@
 								}else if(json.code == 1000){
 									layer.msg('服务器错误');
 								}else if(json.code == 50001){
-									$('#gasTypeList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>暂无气源类型</p></div>");
+									$('#gasTypeList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>暂无燃气设备类型</p></div>");
 								}
 						    }
 						});
@@ -85,21 +85,21 @@
 							var strHtml = '';
 							strHtml += '<ul class="layui-clear">';
 							for(var i=0;i<list.length;i++){
-								strHtml += '<li><div class="gasName">'+ list[i].name +'</div><p class="editGasName"><a gasId="'+ list[i].id +'" gasName="'+ list[i].name +'" opts="editBtn" class="editGasType" href="javascript:void(0)"><i class="layui-icon layui-icon-edit"></i>编辑</a></p></li>';
+								strHtml += '<li><div class="gasName">'+ list[i].name +'</div><p class="editGasName"><a gasEquipId="'+ list[i].id +'" gasEquipName="'+ list[i].name +'" opts="editBtn" class="editGasType" href="javascript:void(0)"><i class="layui-icon layui-icon-edit"></i>编辑</a></p></li>';
 							}
 							strHtml += '</ul>';
 							$('#gasTypeList').html(strHtml);
 							this.bindEvent_multi();
 						}else{
-							$('#gasTypeList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>暂无气源类型</p></div>");
+							$('#gasTypeList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>暂无燃气设备类型</p></div>");
 						}
 					},
 					bindEvent_multi : function(){
 						var _this = this;
 						$('.editGasType').on('click',function(){
-							gasTypeName = $(this).attr('gasName');
+							gasEquipName = $(this).attr('gasEquipName');
 							globalOpts = $(this).attr("opts");
-							gasId = $(this).attr("gasId");
+							gasEquipId = $(this).attr("gasEquipId");
 							_this.commonLayer(globalOpts);
 						});
 					}

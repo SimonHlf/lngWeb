@@ -4,16 +4,16 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/roleManager.css"/>
-		<title>添加编辑气源类型</title>
+		<title>添加编辑车头品牌</title>
 	</head>
 	<body>
 		<div class="addEditRoleCon">
 			<div class="comRoleDiv">
-				<span class="fl"><em style="color:#f00;font-style:normal;">*</em>气源类型名称：</span>
-				<input id="inpGasTypeName" autocomplete="off" type="text" placeholder="请输入气源名称(20字以内)" maxlength="20">
+				<span class="fl"><em style="color:#f00;font-style:normal;">*</em>车头品牌：</span>
+				<input id="inpBrandName" autocomplete="off" type="text" placeholder="请输入车头品牌(20字以内)" maxlength="20">
 			</div>
 			<div class="addEidtBtnWrap layui-clear">
-				<a class="saveBtn" href="javascript:void(0)"  style="margin:0 15px 0 140px">保存</a>
+				<a class="saveBtn" href="javascript:void(0)" style="margin:0 15px 0 140px">保存</a>
 				<a class="cancelBtn" href="javascript:void(0)">取消</a>
 			</div>
 		</div>
@@ -22,15 +22,15 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts;
-			var gasId = parent.gasId;
-			var gasTypeName = parent.gasTypeName;
+			var brandId = parent.brandId;
+			var brandName = parent.brandName;
 			layui.use(['layer'],function(){
 				var layer = layui.layer;
 				var page = {
 					init : function(){
 						this.bindEvent();
 						if(globalOpts == 'editBtn'){
-							this.loadGasTypeInfo();
+							this.loadBrandInfo();
 						}
 					},
 					bindEvent : function(){
@@ -40,20 +40,20 @@
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){
-							var inpRoleName = $.trim($("#inpGasTypeName").val()),
+							var inpRoleName = $.trim($("#inpBrandName").val()),
 								index= parent.layer.getFrameIndex(window.name);
 							if(inpRoleName == ""){
-								layer.msg("气源类型名称不能为空", {icon:5,anim:6,time:1000});
+								layer.msg("车头名称不能为空", {icon:5,anim:6,time:1000});
 							}else{
 								//var reg = /^[\u4E00-\u9FA5]+$/; 
 								var url = "",type = '';
 								if(globalOpts == "addBtn"){//表示增加气源类型
 									var field = {name : inpRoleName};
-									url = "/qyType/addqyType";
+									url = "/tHeadPp/addTHeadPp";
 									type = 'post';
 								}else{//表示编辑气源类型
-									var field = {id : gasId,name : inpRoleName};
-									url = "/qyType/updateQyType";
+									var field = {id : brandId,name : inpRoleName};
+									url = "/tHeadPp/updateTHeadPp";
 									type = 'put';
 								}
 								layer.load('1');
@@ -66,33 +66,31 @@
 										layer.closeAll('loading');
 										if(json.code == 200){
 											if(globalOpts == "addBtn"){//表示增加角色
-												layer.msg("添加气源类型成功",{icon:1,time:1000},function(){
+												layer.msg("添加车头品牌成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
 													parent.layer.close(index);
 												});
 											}else{
-												layer.msg("编辑气源类型成功",{icon:1,time:1000},function(){
+												layer.msg("编辑车头品牌成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
-													parent.gasId = '';
+													parent.brandId = '';
 													parent.layer.close(index);
 												});
 											}
 										}else if(json.code == 50003){
-											layer.msg("气源类型名称存在，请重新编辑", {icon:5,anim:6,time:1500});
-										}else if(json.code == 50001){
-											layer.msg("保存失败，当前编辑气源类型不存在", {icon:5,anim:6,time:1500});
+											layer.msg("当前车头品牌名称存在，请重新编辑", {icon:5,anim:6,time:1500});
 										}else if(json.code == 1000){
 											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1200});
 										}else if(json.code == 70001){
-											layer.msg("抱歉，您暂无权限增加编辑气源类型", {icon:5,anim:6,time:1200});
+											layer.msg("抱歉，您暂无权限增加编辑车头品牌", {icon:5,anim:6,time:1500});
 										}
 									}
 								});
 							}
 						});
 					},
-					loadGasTypeInfo : function(){
-						$('#inpGasTypeName').val(gasTypeName);
+					loadBrandInfo : function(){
+						$('#inpBrandName').val(brandName);
 					}
 				};
 				page.init();

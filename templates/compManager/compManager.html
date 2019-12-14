@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/modules/layui-icon-extend/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>公司管理</title>
+	</head>
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">公司管理</span>
+						<a id="addCompBtn" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加公司</a>
+					</div>
+					<div class="layui-card-body">
+						<input type="hidden" id="checkStaInp" value="-1" />
+						<div class="filterWrap layui-form layui-clear">
+							<div class="filterItem">
+								<input type="radio" name="validStatus" value="-1" title="全部" lay-filter="checkStaFilter" checked/>
+								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
+								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
+							</div>
+							<div class="filterItem">
+								<input id="compName" type="text" class="layui-input" placeholder="请输入公司名称" autocomplete="off" />
+								<a class="clearBtn" href="javascript:void(0)" title="清空"><i class="layui-icon layui-icon-close"></i></a>
+								<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
+							</div>
+							<div class="filterItem">
+								<p>
+									<span class="currStaSpan passBg"></span>
+									<span>表示审核通过</span>
+								</p>
+								<p>
+									<span class="currStaSpan noPassBg"></span>
+									<span>表示审核未通过</span>
+								</p>
+							</div>
+						</div>
+						<table id="compTable" class="layui-table" lay-filter="compTable"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var typeId = '',checkFlag = false,compId = '',checkSta='',globalOpts = '',addEditFlag = false;
+			layui.use(['layer','table','form'],function(){
+				var layer = layui.layer,table = layui.table,form = layui.form;
+				form.on('radio(checkStaFilter)', function(data){
+					$('#checkStaInp').val(data.value);
+					page.loadCompList();
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.loadCompList();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#addCompBtn').on('click',function(){
+							globalOpts = 'addBtn';
+							_this.commonLayer('');
+						});
+						$('#queryBtn').on('click',function(){
+							_this.loadCompList();
+						});
+					},
+					commonLayer : function(compName){
+						addEditFlag = true;
+						var title = globalOpts == 'addBtn' ?　'添加公司' : '编辑公司[' + compName + ']';
+						var fullScreenIndex = layer.open({
+							title : title,
+							type: 2,
+							closeBtn: 1, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../compManager/addEditComp.html',
+							end : function(){
+								if(addEditFlag){
+									page.loadCompList();
+								}
+							},
+							cancel: function () {
+								addEditFlag = false;
+							}
+						});
+						layer.full(fullScreenIndex);
+					},
+					loadCompList : function(){
+						var _this = this;
+						layer.load();
+						var checkStaInp = $('#checkStaInp').val(),
+							compName = $.trim($('#compName').val());
+						var field = {typeId:typeId,name:compName,checkSta:checkStaInp};
+						table.render({
+							elem: '#compTable',
+							height: 'full-150',
+							url : '/company/queryCompany',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas,
+									"count":res.count
+								}
+							},
+							where:field,
+							page : true,
+							limit:20,
+							even : true,
+							text: {none : '暂无相关数据'},
+							limits:[10,20,30,40],
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'name', title: '公司名称',width:'160',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										str += '<span>'+ d.name +'</span>';
+										return str;
+									}},
+									{field : 'lxName', title: '联系人',width:'120',align:'center'},
+									{field : 'lxTel', title: '联系电话',width:'150',align:'center'},
+									{field : 'companyType', title: '公司类型',width:'120',align:'center',templet : function(d){
+										return d.companyType.name;
+									}},
+									{field : 'address', title: '公司地址',width:'260',align:'center'},
+									{field : 'province', title: '所在省',width:'120',align:'center'},
+									{field : 'city', title: '所在市',width:'120',align:'center'},
+									{field : 'county', title: '所在县/区',width:'120',align:'center'},
+									{field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
+									{field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
+									{field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
+									{field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
+									{field : '', title: '操作', fixed: 'right',width:'220', align:'center',templet : function(d){
+										var strHtml = '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="editComp" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										if(d.checkStatus == 0){
+											strHtml += '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="compVerify" checkSta="0" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+										}else if(d.checkStatus == 1){//审核通过
+											strHtml += '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="compVerify_spec" checkSta="2" class="layui-btn layui-btn-danger layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为不通过</a>';
+										}else if(d.checkStatus == 2){//审核未通过
+											strHtml += '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="compVerify_spec" checkSta="1" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为通过</a>';
+										}
+										return strHtml;
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								layer.closeAll('loading');
+							}
+						});
+					}
+				};
+				table.on('tool(compTable)',function(obj){
+					if(obj.event == 'compVerify'){
+						checkFlag = true;
+						compId = $(this).attr('compId'),
+						checkSta = $(this).attr('checkSta');
+						compName = $(this).attr('compName');
+						layer.open({
+							title : '审核公司[' + compName + ']',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../compManager/verifyComp.html',
+							end : function(){
+								if(checkFlag){
+									page.loadCompList();
+								}
+							}
+						});
+					}else if(obj.event == 'editComp'){//编辑公司信息
+						globalOpts = 'editBtn';
+						compId = $(this).attr('compId'),
+						compName = $(this).attr('compName');
+						page.commonLayer(compName);
+					}else if(obj.event == 'compVerify_spec'){
+						compId = $(this).attr('compId'),
+						checkSta = $(this).attr('checkSta');
+						compName = $(this).attr('compName');
+						var title = '';
+						checkSta == '1' ? title = '<span style="color:green;">通过</span>' : title = '<span style="color:red;">不通过</span>';
+						layer.confirm('确认要将公司[<span style="color:#009688;">' + compName + '</span>]的审核状态变更为' + title + '?', {
+						  title:'变更公司审核状态提示',
+						  skin: 'layui-layer-molv',
+						  btn: ['确定','取消'] //按钮
+						},function(){
+							layer.load();
+							var field = {id:compId,checkSta:checkSta};
+							$.ajax({
+								type:'PUT',
+								dataType:"json",
+								data :field,
+								url:'/company/updateCompByStatus',
+								success:function (json){
+									layer.closeAll('loading');
+									if(json.code == 200){
+										layer.msg("变更公司审核状态成功",{icon:1,time:1000},function(){
+											page.loadCompList();
+										});
+									}else if(json.code == 50001){
+										layer.msg("保存失败，当前公司不存在", {icon:5,anim:6,time:2000});
+									}else if(json.code == 1000){
+										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									}else if(json.code == 70001){
+										layer.msg("抱歉，您暂无权限修改公司审核状态", {icon:5,anim:6,time:1500});
+									}
+								}
+							});
+						});
+					}
+				});
+				page.init();
+			});
+		</script>
+	</body>
+</html>

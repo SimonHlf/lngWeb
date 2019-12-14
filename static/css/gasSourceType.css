@@ -19,6 +19,8 @@
 	color: #fff;
 	padding: 0 5px;
 	text-align: center;
+	word-break:break-all;
+	word-wrap:break-word; 
 }
 .editGasName{
 	height: 40px;

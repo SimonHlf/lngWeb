@@ -78,7 +78,6 @@
 							}else{
 								layer.load();
 								var field = {specUserId:$('#roleIdInp').val(),selMaIdStr:$('#madIdListInp').val()};
-								console.log( field )
 								$.ajax({
 									type:"post",
 									dataType:"json",
@@ -141,7 +140,6 @@
 						    success:function (json){
 						    	layer.closeAll('loading');
 								if(json.code == 200){
-									console.log(json)
 									var modList = json.datas;
 									getModuleList(modList);
 								}else if(json.code == 1000){
@@ -248,7 +246,6 @@
 				}
 				
 				function getModuleList(modList){
-					console.log(modList)
 					var strHtml = '';
 					strHtml += '<ul id="modTit" class="hasSelAll modListTit clearfix">';
 					strHtml +='<li class="selAllModWid" style="height:40px;">';
