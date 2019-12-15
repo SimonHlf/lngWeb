@@ -15,7 +15,6 @@
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
 						<span class="itemDivs">公司管理</span>
-						<a id="addCompBtn" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加公司</a>
 					</div>
 					<div class="layui-card-body">
 						<input type="hidden" id="checkStaInp" value="-1" />
@@ -50,7 +49,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var typeId = '',checkFlag = false,compId = '',checkSta='',globalOpts = '',addEditFlag = false;
+			var typeId = '',checkFlag = false,compId = '',checkSta='',globalOpts = '',addEditFlag = false,compName='';
 			layui.use(['layer','table','form'],function(){
 				var layer = layui.layer,table = layui.table,form = layui.form;
 				form.on('radio(checkStaFilter)', function(data){
@@ -64,21 +63,20 @@
 					},
 					bindEvent : function(){
 						var _this = this;
-						$('#addCompBtn').on('click',function(){
-							globalOpts = 'addBtn';
-							_this.commonLayer('');
-						});
 						$('#queryBtn').on('click',function(){
 							_this.loadCompList();
 						});
+						$('.clearBtn').on('click',function(){
+							$('#compName').val('');
+							_this.loadCompList();
+						});
 					},
-					commonLayer : function(compName){
+					commonLayer : function(){
 						addEditFlag = true;
-						var title = globalOpts == 'addBtn' ?　'添加公司' : '编辑公司[' + compName + ']';
 						var fullScreenIndex = layer.open({
-							title : title,
+							title : '',
 							type: 2,
-							closeBtn: 1, //不显示关闭按钮
+							closeBtn: 0, //不显示关闭按钮
 							area : ['500px','300px'],
 							content: '../compManager/addEditComp.html',
 							end : function(){
@@ -143,7 +141,7 @@
 									{field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
 									{field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
 									{field : '', title: '操作', fixed: 'right',width:'220', align:'center',templet : function(d){
-										var strHtml = '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="editComp" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										var strHtml = '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" checkSta="'+ d.checkStatus +'" lay-event="viewCheckComp" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看</a>';
 										if(d.checkStatus == 0){
 											strHtml += '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" lay-event="compVerify" checkSta="0" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
 										}else if(d.checkStatus == 1){//审核通过
@@ -180,11 +178,12 @@
 								}
 							}
 						});
-					}else if(obj.event == 'editComp'){//编辑公司信息
+					}else if(obj.event == 'viewCheckComp'){//编辑公司信息
 						globalOpts = 'editBtn';
 						compId = $(this).attr('compId'),
 						compName = $(this).attr('compName');
-						page.commonLayer(compName);
+						checkSta = $(this).attr('checkSta');
+						page.commonLayer();
 					}else if(obj.event == 'compVerify_spec'){
 						compId = $(this).attr('compId'),
 						checkSta = $(this).attr('checkSta');

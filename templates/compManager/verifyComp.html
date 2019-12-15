@@ -54,6 +54,7 @@
 										layer.closeAll('loading');
 										if(json.code == 200){
 											layer.msg("变更公司审核状态成功",{icon:1,time:1000},function(){
+												parent.checkSta = checkSta;
 												parent.checkFlag = true;
 												parent.layer.close(index);
 											});
