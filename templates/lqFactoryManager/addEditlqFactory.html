@@ -148,35 +148,32 @@
 						    ,multiple: true
 							,number: 5
 							,before: function(obj){
-								
+								layer.load();
 						    }
 						   ,choose : function(obj){
 								var files = obj.pushFile();
 								var len = _this.getJsonLength(files);
+								console.log(maxNum + '选取后')
+								console.log(len + '选取length')
 							    obj.preview(function(index,file,res){
-									if( (parseInt(len)) > 5){
+									if( parseInt(len) + maxNum > 5){
 									   layer.msg('最多只能上传5张液质报告图');
-									   $.each(files,function(_key){
-										   var key = _key;
-										   var value = files[_key];
-										   if(_key == index)
-										   {  //删除
-											   delete files[_key];
-										   }
-										});
 									    canUpFlag = false;
 									}else{
 										canUpFlag = true;
-										
+									}
+									for(var key in files){
+										delete files[key];
 									}
 							    });
 						   }
 							,done: function(res){
+								layer.closeAll('loading');
 								if(res.code == 200){
 									if(canUpFlag){
-										console.log(res)
+										//console.log(res)
 										var str = '';
-										str += '<li><a href="javascript:void(0)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span>查看原图</span></li>';
+										str += '<li><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span>查看原图</span></li>';
 										$('#yzBgImgListUl').append(str);
 										maxNum = $('#yzBgImgListUl li').length;
 										if($('#yzBgImgListUl li').length >= 5){
@@ -258,7 +255,16 @@
 					}
 				};
 				page.init();
+				
 			});
+			function deleteImg(obj){
+				$(obj).parent().remove();
+				maxNum = $('#yzBgImgListUl li').length;
+				console.log($('#yzBgImgListUl li').length)
+				if(maxNum < 5){
+					$('#addYzbgImgBtn').show();
+				}
+			}
 		</script>
 	</body>
 </html>
