@@ -158,3 +158,95 @@ body.hasMargTop{
 	color: #fff;
 	font-size: 14px;
 }
+.itemImgBox{
+	position: relative;
+	float: left;
+}
+.addImgBtn,
+.itemImgBox img{
+	text-align: center;
+	line-height: 86px;
+}
+.addImgBtn{
+	width: 84px;
+	height: 84px;
+	display: block;
+	position: relative;
+	border:1px solid #ccc;
+}
+.itemImgBox img{
+	width: 86px;
+	height: 86px;
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+}
+.addImgBtn i{
+	font-size: 30px;
+	color: #666;
+	position: relative;
+	z-index: 1;
+}
+.viewBigImg{
+	width: 80px;
+	position: absolute;
+	left: 100px;
+	top: 36px;
+	font-size: 14px;
+	color: #009f95;
+	cursor: pointer;
+	display: none;
+}
+.viewBigImg:hover,
+.yzbgImgList li span:hover{
+	color: #F47837;
+}
+.itemImgBox .yzbgImgList img{
+	display: block;
+}
+.yzbgImgList li{
+	float: left;
+	margin-right: 15px;
+	position: relative;
+}
+.yzbgImgList li a{
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+}
+.yzbgImgList li a i{
+	color: #fff;
+	font-size: 20px;
+}
+.yzbgImgList li img{
+	width: 86px;
+	height: 86px;
+}
+#addYzbgImgBtn.addImgBtn{
+	float: left;
+}
+.yzbgImgList li span{
+	width: 100%;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	margin-top: 5px;
+	color: #009f95;
+}
+.yzbgListItem{
+	position: relative;
+}
+.tipsTxt{
+	position: absolute;
+	left: 34px;
+	top: 32px;
+	font-size: 12px;
+	color: #999;
+}
