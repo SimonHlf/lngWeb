@@ -29,10 +29,13 @@
 		<script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var globalOpts = "addBtn",globalModId=0,madIdArray=[];
+			var globalOpts = "addBtn",globalModId=0,madIdArray=[],isHasSonMod = 0;
 			layui.use(['layer','form'],function(){
 				var layer = layui.layer,
 					form = layui.form;
+				form.on('radio(isHasSonModFilter)',function(data){
+					isHasSonMod = data.value;
+				});
 				var page = {
 					data : {
 						inpMainModName_cn : '',
@@ -77,14 +80,14 @@
 							addEditMainModCon += '<div class="addEditMainModWrap layui-form">';
 							addEditMainModCon += '<div class="comAddEditDiv"><span class="fl">主模块中文名字：</span><input id="inpMainModName_cn" autoComplete="off" type="text" placeholder="请输入模块中文名字(20字以内)" maxlength="20"></div>';
 							addEditMainModCon += '<div class="comAddEditDiv"><span class="margLSpan_url fl">主模块动作Url：</span><input id="inpMainModUrl" autoComplete="off" type="text" placeholder="请输入模块动作url"></div>';
-							
+							addEditMainModCon += '<div class="comAddEditDiv"><span class="fl">是否有子模块：</span><input type="radio" name="validStatus" value="0" title="否" lay-filter="isHasSonModFilter" checked/><input type="radio" name="validStatus" value="1" title="是" lay-filter="isHasSonModFilter"/></div>';
 							addEditMainModCon += '</div>';
 							_this.data.globalIndex = layer.open({
 								title : '添加主模块',
 								type: 1,
 								skin:'layui-layer-molv', //样式类名
 								closeBtn: 0, //不显示关闭按钮
-								area : ['500px','200px'],
+								area : ['500px','240px'],
 								content: addEditMainModCon,
 								btn : ['确定','取消'],
 								btnAlign:'c',
@@ -110,7 +113,7 @@
 								type: 2,
 								skin:'layui-layer-molv', //样式类名
 								closeBtn: 1, //不显示关闭按钮
-								area : ['500px','200px'],
+								area : ['500px','240px'],
 								btn : ['确定','取消'],
 								btnAlign:'c',
 								content: '../modManager/editMainModName.html',
@@ -119,6 +122,7 @@
 									if(body.find('#isHasData').val() == 1){//表示有数据
 										_this.data.inpMainModName_cn = body.find('#inpMainModName_cn').val();
 										_this.data.inpMainModUrl = body.find('#inpMainModUrl').val();
+										isHasSonMod = body.find('#isHasSonMod').val();
 										_this.addEditMainModFun(modId);
 									}else{
 										layer.close(index);
@@ -255,10 +259,10 @@
 								var url = '';
 								if(globalOpts == 'addBtn'){//表示增加主模块
 									url = '/mod/addMod';
-									var field = {modName:inpMainModName_cn,modUrl:inpMainModUrl};
+									var field = {modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
 								}else if(globalOpts == 'editBtn'){//表示编辑主模块
 									url = '/mod/upMod';
-									var field = {modId:modId,modName:inpMainModName_cn,modUrl:inpMainModUrl};
+									var field = {modId:modId,modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
 								}
 								layer.load();
 								$.ajax({

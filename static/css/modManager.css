@@ -305,3 +305,6 @@ body{
 .noUserTxt{
 	color: #999;
 }
+.layui-form-radio{
+	margin:0px 10px 0 0;
+}

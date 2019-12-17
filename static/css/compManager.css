@@ -78,6 +78,11 @@
 	float: left;
 	margin-right: 20px;
 }
+.itemDet_1{
+	width: 490px;
+	float: left;
+	margin-right: 20px;
+}
 body.hasMargTop{
 	margin-top: 40px;
 }

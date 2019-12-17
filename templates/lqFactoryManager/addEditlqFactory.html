@@ -6,112 +6,174 @@
 		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
 		<title>添加编辑液厂</title>
 	</head>
-	<body>
-		<div class="addEditWrap layui-form layui-clear">
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>液厂名称</label>
-				<div class="layui-input-block">
-					<input id="factoryName" type="text" placeholder="请输入液厂名称(35字以内)" maxlength="35" readonly autocomplete="off" class="layui-input"/>
-				</div>		
+	<body class="hasMargTop">
+		<div id="layuiTab" class="layui-tab" lay-filter="compFilter">
+			<div class="compTabNav  layui-tab-brief">
+				<ul class="layui-tab-title">
+					<li class="layui-this">液厂基本信息</li>
+					<li class="tradeLi">贸易商列表</li>
+				</ul> 
+				<a class="closeBtns" href="javascript:void(0)" opts="closeGlobal"><i class="layui-icon layui-icon-close"></i></a>
 			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>液质类型</label>
-				<div id="compTypeWrap" class="layui-input-block">
-					<input type="hidden" id="lqTypeInp" />
-					<select id="lqTypeSel" lay-filter="lqTypeSel">
-						<option value="">请选择液质类型</option>
-					</select>
-				</div>		
-			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label"><span class="mustItem">*</span>选择地区</label>
-				<input type="hidden" id="provInp" />
-				<div class="itemDet">
-					<select name="province" lay-filter="province">
-						<option value="">请选择省</option>
-					</select>
-				</div>
-				<div class="itemDet">
-					<input type="hidden" id="cityInp" />
-					<select name="city" lay-filter="city" disabled></select>
-				</div>
-				<div class="itemDet">
-					<input type="hidden" id="countyInp" />
-					<select name="area" lay-filter="area" disabled></select>
-				</div>
-			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label">液厂联系人</label>
-				<div class="layui-input-block">
-					<input id="lxrNameInp" type="text" placeholder="请输入公司联系人(6字以内)" readonly maxlength="6" autocomplete="off" class="layui-input"/>
-				</div>		
-			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label">手机号码</label>
-				<div class="layui-input-block">
-					<input id="phoneNumInp" type="text" placeholder="请输入手机号码" readonly maxlength="11" autocomplete="off" class="layui-input"/>
-				</div>		
-			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label">液厂地址</label>
-				<div class="layui-input-block">
-					<input id="facAddInp" type="text" placeholder="请输入液厂所在地址" readonly maxlength="50" autocomplete="off" class="layui-input"/>
-				</div>		
-			</div>
-			<div class="layui-form-item" style="margin-bottom: 25px;">
-				<label class="layui-form-label">液厂封面图</label>
-				<div id="zzImg" class="itemImgBox">
-					<a id="addFacImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
-						<i class="iconfont icon-add"></i>
-						<img id="facThumb"/>
-					</a>
-					<span class="viewBigImg">查看原图</span>
-				</div>
-			</div>
-			<div class="layui-form-item yzbgListItem">
-				<label class="layui-form-label">液质报告图</label>
-				<span class="tipsTxt">最多上传五张</span>
-				<div class="yzbgImgList">
-					<ul id="yzBgImgListUl">
-						<!-- <li>
-							<a href="javascript:void(0)" title="删除">
-								<i class="layui-icon layui-icon-delete"></i>
+			<div class="layui-tab-content">
+				<!-- 液厂基本信息 -->
+				<div id="basicInfo" class="layui-form layui-tab-item layui-show">
+					<div class="addEditWrap layui-form layui-clear">
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label"><span class="mustItem">*</span>液厂名称</label>
+							<div class="layui-input-block">
+								<input id="factoryName" type="text" placeholder="请输入液厂名称(35字以内)" maxlength="35" autocomplete="off" class="layui-input"/>
+							</div>		
+						</div>
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label"><span class="mustItem">*</span>液质类型</label>
+							<div id="compTypeWrap" class="layui-input-block">
+								<input type="hidden" id="lqTypeInp" />
+								<select id="lqTypeSel" lay-filter="lqTypeSel">
+									<option value="">请选择液质类型</option>
+								</select>
+							</div>		
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label"><span class="mustItem">*</span>选择地区</label>
+							<input type="hidden" id="provInp" />
+							<div class="itemDet_1">
+								<select id="provinceSel" name="province" lay-filter="province">
+									<option value="">请选择省</option>
+								</select>
+							</div>
+							<!--div class="itemDet">
+								<input type="hidden" id="cityInp" />
+								<select id="citySel" name="city" lay-filter="city" disabled></select>
+							</div>
+							<div class="itemDet">
+								<input type="hidden" id="countyInp" />
+								<select id="areaSel" name="area" lay-filter="area" disabled></select>
+							</div-->
+						</div>
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label">液厂联系人</label>
+							<div class="layui-input-block">
+								<input id="lxrNameInp" type="text" placeholder="请输入公司联系人(6字以内)" maxlength="6" autocomplete="off" class="layui-input"/>
+							</div>		
+						</div>
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label">手机号码</label>
+							<div class="layui-input-block">
+								<input id="phoneNumInp" type="text" placeholder="请输入手机号码" maxlength="11" autocomplete="off" class="layui-input"/>
+							</div>		
+						</div>
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label">液厂地址</label>
+							<div class="layui-input-block">
+								<input id="facAddInp" type="text" placeholder="请输入液厂所在地址" maxlength="50" autocomplete="off" class="layui-input"/>
+							</div>		
+						</div>
+						<div class="layui-form-item" style="margin-bottom: 25px;">
+							<label class="layui-form-label">液厂封面图</label>
+							<div id="zzImg" class="itemImgBox">
+								<a id="addFacImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
+									<i class="iconfont icon-add"></i>
+									<img id="facThumb"/>
+								</a>
+								<span class="viewBigImg">查看原图</span>
+							</div>
+						</div>
+						<div class="layui-form-item yzbgListItem">
+							<label class="layui-form-label">液质报告图</label>
+							<span class="tipsTxt">最多上传五张</span>
+							<div class="yzbgImgList">
+								<ul id="yzBgImgListUl"></ul>
+							</div>
+							<a id="addYzbgImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
+								<i class="iconfont icon-add"></i>
 							</a>
-							<img src="../images/11.png"/>
-							<span>查看原图</span>
-						</li> -->
-					</ul>
+						</div>
+						
+						<div class="layui-form-item addEditItem">
+							<label class="layui-form-label"></label>
+							<div class="layui-input-block" style="width:75%;text-align:center;">
+								<button type="button" id="saveBtn" class="layui-btn" style="width:150px;margin-left:0px;">保存液厂信息</button>
+								<button type="button" id="cancelBtn" class="layui-btn layui-btn-primary">取消</button>
+							</div>
+						</div>
+						
+					</div>
 				</div>
-				<a id="addYzbgImgBtn" title="添加图片" class="addImgBtn" href="javascript:void(0)">
-					<i class="iconfont icon-add"></i>
-				</a>
-			</div>
-			
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"></label>
-				<div class="layui-input-block" style="width:75%;text-align:center;">
-					<button type="button" id="saveBtn" class="layui-btn" style="width:150px;margin-left:0px;">保存液厂信息</button>
-					<button type="button" id="cancelBtn" class="layui-btn layui-btn-primary">取消</button>
+				<!-- 贸易商列表 -->
+				<div id="tradeList" class="layui-form layui-tab-item">
+					
 				</div>
+				
+				
 			</div>
-			
 		</div>
+		
 		
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var globalOpts = parent.globalOpts,gfId = parent.gfId,succFacUrl = '',maxNum = 0;
+			var globalOpts = parent.globalOpts,gfId = parent.gfId,succFacUrl = '',maxNum = 0,yzbgImg = '',checkSta=0,isSetFlag = false;
 			layui.config({
 				base: '../js/frame/js/'
 			}).extend({ //设定组件别名
 			    common:  'address'// 表示模块文件的名字
-			}).use(['form','layer','address','upload'],function(){
-				var form = layui.form,layer = layui.layer,address = layui.address(),upload = layui.upload;
+			}).use(['form','layer','address','upload','element'],function(){
+				var form = layui.form,layer = layui.layer,upload = layui.upload,element=layui.element;
+				form.on('select(lqTypeSel)',function(data){
+					data.value == '' ? $('#lqTypeInp').val('') : $('#lqTypeInp').val(data.value);
+				});
 				var page = {
 					init : function(){
 						this.uploadSingleImg();
 						this.uploadMultiImg();
+						this.loadLqType();
 						this.bindEvent();
+						if(globalOpts == 'addBtn'){
+							layui.address();
+							$('.tradeLi').hide();
+						}
+					},
+					//生成液质类型
+					loadLqType : function(){
+						var _this = this;
+						layer.load('1');
+						$.ajax({
+							type:"get",
+							data : { id:'' },
+							dataType:"json",
+							url:"/gasType/queryGasType",
+							success:function (json){
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderLqTypeHtml(json.datas);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 50001){
+									$('#lqTypeSel').next().remove();
+									$('#lqTypeSel').remove();
+									$('#lqTypeSel').append('<p style="color:#999;">暂无液质类型，请先添加</p>');
+								}
+							}
+						});
+					},
+					renderLqTypeHtml : function(list){
+						if(list.length > 0){
+							var strHtml = '';
+							strHtml += '<option value="">请选择液质类型</option>';
+							for(var i=0;i<list.length;i++){
+								strHtml += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+							}
+							$('#lqTypeSel').html(strHtml);
+							if(globalOpts == 'editBtn'){
+								this.loadLqFactInfo();
+							}
+							form.render();
+						}else{
+							$('#lqTypeSel').next().remove();
+							$('#lqTypeSel').remove();
+							$('#lqTypeSel').append('<p style="color:#999;">暂无液质类型，请先添加</p>');
+						}
 					},
 					uploadSingleImg : function(){
 						upload.render({
@@ -128,7 +190,6 @@
 							    $('#facThumb').show().attr('src','/temp/' + res.datas);
 							    $('.viewBigImg').show();
 							    succFacUrl = res.datas;
-								console.log(succFacUrl)
 						    }
 						});
 					},
@@ -140,7 +201,7 @@
 						return jsonLength;
 					},
 					uploadMultiImg : function(){
-						var _this = this;
+						var _this = this,files = null;
 						var canUpFlag = true;
 						upload.render({
 						    elem: '#addYzbgImgBtn'
@@ -151,19 +212,17 @@
 								layer.load();
 						    }
 						   ,choose : function(obj){
-								var files = obj.pushFile();
+								files = obj.pushFile();
 								var len = _this.getJsonLength(files);
-								console.log(maxNum + '选取后')
-								console.log(len + '选取length')
 							    obj.preview(function(index,file,res){
 									if( parseInt(len) + maxNum > 5){
 									   layer.msg('最多只能上传5张液质报告图');
+									   for(var key in files){
+									   	delete files[key];
+									   }
 									    canUpFlag = false;
 									}else{
 										canUpFlag = true;
-									}
-									for(var key in files){
-										delete files[key];
 									}
 							    });
 						   }
@@ -171,13 +230,16 @@
 								layer.closeAll('loading');
 								if(res.code == 200){
 									if(canUpFlag){
-										//console.log(res)
+										console.log(res)
 										var str = '';
-										str += '<li><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span>查看原图</span></li>';
+										str += '<li><input type="hidden" name="yzbgImgInp" value="'+ res.datas +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span onclick=viewYzbgBigImg(\'/temp/'+ res.datas +'\')>查看原图</span></li>';
 										$('#yzBgImgListUl').append(str);
 										maxNum = $('#yzBgImgListUl li').length;
 										if($('#yzBgImgListUl li').length >= 5){
 											$('#addYzbgImgBtn').hide();
+										}
+										for(var key in files){
+											delete files[key];
 										}
 									}
 									
@@ -187,12 +249,20 @@
 							}
 						  });
 					},
+					closeLayer : function(){
+						var index= parent.layer.getFrameIndex(window.name);
+						if(!isSetFlag){
+							parent.addEditFlag = false;
+						}
+						parent.layer.close(index);
+					},
 					bindEvent : function(){
 						var _this = this;
 						$('#cancelBtn').on('click',function(){
-							var index= parent.layer.getFrameIndex(window.name);
-							parent.addEditFlag = false;
-							parent.layer.close(index);
+							_this.closeLayer();
+						});
+						$('.closeBtns').on('click',function(){
+							_this.closeLayer();
 						});
 						//查看原图
 						$('.viewBigImg').on('click',function(){
@@ -206,11 +276,15 @@
 							var factoryName = $.trim( $('#factoryName').val() ),
 								lqTypeInp = $('#lqTypeInp').val(),
 								provInp = $('#provInp').val(),
-								cityInp = $('#cityInp').val(),
-								countyInp = $('#countyInp').val(),
+								//cityInp = $('#cityInp').val(),
+								//countyInp = $('#countyInp').val(),
 								lxrNameInp = $.trim($('#lxrNameInp').val()),
 								phoneNumInp = $.trim($('#phoneNumInp').val()),
-								facAddInp = $.trim( $('#facAddInp').val() );
+								facAddInp = $.trim( $('#facAddInp').val() ),
+								regPhone = /^1\d{10}$/,
+								yzbgImgInpLen = $('input[name=yzbgImgInp]').length,
+								tmpYzBgArr = [],
+								index= parent.layer.getFrameIndex(window.name);
 							if(factoryName == ''){
 								layer.msg('液厂名称不能为空');
 							}else if(lqTypeInp == ''){
@@ -220,12 +294,18 @@
 							}else if(phoneNumInp != '' && !regPhone.test(phoneNumInp) && phoneNumInp.length != 11){
 								layer.msg('手机号码格式不对，请重新填写');
 							}else{
+								if(yzbgImgInpLen > 0){
+									$('input[name=yzbgImgInp]').each(function(i){
+										tmpYzBgArr.push($('input[name=yzbgImgInp]').eq(i).val());
+									});
+									yzbgImg = tmpYzBgArr.join(',');
+								}
 								layer.load('1');
 								if(globalOpts == 'addBtn'){
-									var field = {name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:facImage,city:cityInp,county:countyInp,address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
+									var field = {name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:succFacUrl,city:'',county:'',address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
 									var url = '/gsf/addGasFactory',type='post';
 								}else{
-									var field = {gfId:gfId,typeId:compTypeInp,owerUserId:'',lxname:lxrNameInp,lxtel:phoneNumInp,bankName:bankName,bankAcc:bankAccName,bankNo:bankNo,province:provInp,city:cityInp,county:countyInp,address:compAddInp};
+									var field = {gfId:gfId,name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:succFacUrl,city:'',county:'',address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
 									var url = '/gsf/upGasFactory',type='put';
 								}
 								$.ajax({
@@ -235,35 +315,108 @@
 									url:url,
 									success:function (json){
 										layer.closeAll('loading');
+										//console.log(json)
 										if(json.code == 200){
-											var title = globalOpts == 'addBtn' ?　'添加公司成功' : '编辑公司成功';
+											var title = globalOpts == 'addBtn' ?　'添加液厂成功' : '编辑液厂信息成功';
 											layer.msg(title,{icon:1,time:1000},function(){
 												parent.addEditFlag = true;
-												parent.layer.close(index);
+												if(globalOpts == 'addBtn'){
+													parent.layer.close(index);
+												}else{
+													isSetFlag = true;
+												}
 											});
 										}else if(json.code == 1000){
 											layer.msg('服务器错误');
 										}else if(json.code == 50003){
-											layer.msg('当前公司已存在，不能重复添加');
-										}else if(json.code == 50003){
-											layer.msg('抱歉，您暂无权限添加编辑公司');
+											layer.msg('当前液厂已存在，不能重复添加');
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无权限添加编辑液厂信息');
+										}else if(json.code == 50001){
+											layer.msg('当前液厂信息不存在');
 										}
 									}
 								});
 							}
 						});
+					},
+					loadLqFactInfo : function(){
+						layer.load('1');
+						var _this = this;
+						$.ajax({
+						    type:"get",
+							data : { gfId:gfId},
+						    dataType:"json",
+						    url:"/gsf/getGasFactoryDetail",
+						    success:function (json){
+						    	layer.closeAll('loading');
+								if(json.code == 200){
+									//console.log(json)
+									_this.renderLqFacInfo(json.datas);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 50001){
+									layer.msg('当前液厂信息不存在！');
+								}
+						    }
+						});
+					},
+					renderLqFacInfo : function(list){
+						
+						$('#factoryName').val(list[0].name);
+						$('#provInp').val(list[0].province);
+						//$('#cityInp').val(list[0].city);
+						//$('#countyInp').val(list[0].county);
+						provVal = list[0].province;
+						/*if(list[0].city != ''){
+							cityVal = list[0].city;
+						}
+						if(list[0].county != ''){
+							countyVal = list[0].county;
+						}
+						
+						$('#citySel').attr('disabled',false);
+						$('#areaSel').attr('disabled',false);*/
+
+						$('#lqTypeSel').val(list[0].gasTypeId);
+						$('#lqTypeInp').val(list[0].gasTypeId);
+						
+						$('#lxrNameInp').val(list[0].lxName);
+						$('#phoneNumInp').val(list[0].lxTel);
+						$('#facAddInp').val(list[0].address);
+						if(list[0].facImage != ''){
+							succFacUrl = list[0].facImage.replace('_small','');
+							$('#facThumb').show().attr('src','../' + list[0].facImage);
+							$('.viewBigImg').show();
+						}
+						if(list[0].yzbg != ''){
+							var tmpYzBgImg_sm = list[0].yzbg.split(',');
+							var tmpYzBgImg = [],str = '';
+							maxNum = tmpYzBgImg_sm.length;
+							for(var i=0;i<tmpYzBgImg_sm.length;i++){
+								tmpYzBgImg.push( tmpYzBgImg_sm[i].replace('_small','') );
+								str += '<li><input type="hidden" name="yzbgImgInp" value="'+ tmpYzBgImg[i] +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="../' + tmpYzBgImg_sm[i] + '"/><span onclick=viewYzbgBigImg(\''+ tmpYzBgImg[i] +'\')>查看原图</span></li>';
+							}
+							$('#yzBgImgListUl').html(str);
+						}
+						
+						
+						form.render();
+						layui.address();
+						
 					}
 				};
 				page.init();
-				
 			});
 			function deleteImg(obj){
 				$(obj).parent().remove();
 				maxNum = $('#yzBgImgListUl li').length;
-				console.log($('#yzBgImgListUl li').length)
 				if(maxNum < 5){
 					$('#addYzbgImgBtn').show();
 				}
+			}
+			function viewYzbgBigImg(src){
+				window.open('../' + src);
 			}
 		</script>
 	</body>

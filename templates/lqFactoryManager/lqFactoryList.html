@@ -18,7 +18,6 @@
 					</div>
 					<div class="layui-card-body">
 						<div class="filter">
-							
 							<div class="filterItem" style="width:120px;margin-right:-2px;">
 								<div class="layui-input-inline layui-form">
 									<select id="ycSel" lay-filter="ycSel"> 
@@ -28,14 +27,16 @@
 								</div>
 							</div>
 							<div class="filterItem">
-								<div class="layui-input-inline">
+								<div class="layui-input-inline posRel">
 									<input id="ycPyInp" type="text" class="layui-input" placeholder="请输入液厂拼音码"/>
 									<input id="ycNameInp" type="text" class="layui-input" placeholder="请输入液厂名称"/>
+									<a class="clearBtn clearYcNameBtn" href="javascript:void(0)" title="清空"><i class="layui-icon layui-icon-close"></i></a>
 								</div>
 							</div>
 							<div class="filterItem">
+								<input type="hidden" id="lqTypeInp" />
 								<div class="layui-input-inline layui-form">
-									<select id="gasTypeSel" lay-filter="gasTypeSel"> 
+									<select id="lqTypeSel" lay-filter="lqTypeSel"> 
 										<option value="">请选择液质类型</option>
 								     </select>
 								</div>
@@ -53,6 +54,7 @@
 								<div class="layui-input-inline">
 									<input id="provPyInp" type="text" class="layui-input" placeholder="请输入省拼音码"/>
 									<input id="provNameInp" type="text" class="layui-input" placeholder="请输入省名称"/>
+									<a class="clearBtn clearProvBtn" href="javascript:void(0)" title="清空"><i class="layui-icon layui-icon-close"></i></a>
 								</div>
 							</div>
 							
@@ -72,8 +74,16 @@
 									<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
 								</div>
 							</div>
-							
-							
+							<div class="filterFlag">
+								<p>
+									<span class="currStaSpan passBg"></span>
+									<span>表示审核通过</span>
+								</p>
+								<p>
+									<span class="currStaSpan noPassBg"></span>
+									<span>表示审核未通过</span>
+								</p>
+							</div>
 						</div>
 						<table id="lqFactTab" class="layui-table" lay-filter="lqFactTab"></table>
 					</div>
@@ -84,11 +94,42 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var owerUserId = 0,checkStatus=-1,addEditFlag = false,globalOpts='',gfId=0;
-			layui.use(['layer','table'],function(){
-				var layer = layui.layer,table=layui.table;
+			var owerUserId = 0,checkStatus=-1,addEditFlag = false,globalOpts='',gfId=0,checkFlag=false;
+			layui.use(['layer','table','form'],function(){
+				var layer = layui.layer,form = layui.form,table=layui.table;
+				form.on('select(lqTypeSel)',function(data){
+					data.value == '' ? $('#lqTypeInp').val('') : $('#lqTypeInp').val(data.value);
+					page.loadLqFactoryList();
+				});
+				form.on('select(ycSel)',function(data){
+					if(data.value == 1){
+						$('#ycPyInp').show();
+						$('#ycNameInp').hide();
+					}else{
+						$('#ycPyInp').hide();
+						$('#ycNameInp').show();
+					}
+					$('#ycPyInp').val('');
+					$('#ycNameInp').val('');
+				});
+				form.on('select(provSel)',function(data){
+					if(data.value == 1){
+						$('#provPyInp').show();
+						$('#provNameInp').hide();
+					}else{
+						$('#provPyInp').hide();
+						$('#provNameInp').show();
+					}
+					$('#provPyInp').val('');
+					$('#provNameInp').val('');
+				});
+				form.on('select(checkSel)',function(data){
+					data.value == '' ? checkStatus = -1 : checkStatus = data.value;
+					page.loadLqFactoryList();
+				});
 				var page = {
 					init : function(){
+						this.loadLqTypeData();
 						this.loadLqFactoryList();
 						this.bindEvent();
 					},
@@ -98,14 +139,59 @@
 							globalOpts = 'addBtn';
 							_this.commonLayer();
 						});
+						$('#queryBtn').on('click',function(){
+							_this.loadLqFactoryList();
+						});
+						$('.clearYcNameBtn').on('click',function(){
+							$('#ycPyInp').val('');
+							$('#ycNameInp').val('');
+							_this.loadLqFactoryList();
+						});
+						$('.clearProvBtn').on('click',function(){
+							$('#provPyInp').val('');
+							$('#provNameInp').val('');
+							_this.loadLqFactoryList();
+						});
+					},
+					loadLqTypeData : function(){
+						var _this = this;
+						$.ajax({
+							type:"get",
+							data : { id:'' },
+							dataType:"json",
+							url:"/gasType/queryGasType",
+							success:function (json){
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderLqTypeHtml(json.datas);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 50001){
+									$('#lqTypeSel').append('<option value="">请选择液质类型</option>');
+								}
+							}
+						});
+					},
+					renderLqTypeHtml : function(list){
+						if(list.length > 0){
+							var strHtml = '';
+							strHtml += '<option value="">请选择液质类型</option>';
+							for(var i=0;i<list.length;i++){
+								strHtml += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+							}
+							$('#lqTypeSel').html(strHtml);
+							form.render();
+						}else{
+							$('#lqTypeSel').append('<option value="">请选择液质类型</option>');
+						}
 					},
 					commonLayer : function(){
 						addEditFlag = true;
-						var title = globalOpts == 'addBtn' ? '添加液厂' : '编辑液厂'
+						//var title = globalOpts == 'addBtn' ? '添加液厂' : '编辑液厂--' + facName
 						var fullScreenIndex = layer.open({
-							title : title,
+							title : '',
 							type: 2,
-							closeBtn: 1, //不显示关闭按钮
+							closeBtn: 0, //不显示关闭按钮
 							area : ['500px','300px'],
 							content: '../lqFactoryManager/addEditLqFactory.html',
 							end : function(){
@@ -121,7 +207,12 @@
 					},
 					//液厂list
 					loadLqFactoryList : function(){
-						var field = {name:'',namePy:'',gasTypeId:'',province:'',provincePy:'',checkStatus:checkStatus};
+						var ycNameInp = $.trim($('#ycNameInp').val()),
+							ycPyInp = $.trim($('#ycPyInp').val()),
+							lqTypeInp = $('#lqTypeInp').val(),
+							provPyInp = $('#provPyInp').val(),
+							provNameInp = $('#provNameInp').val();
+						var field = {name:ycNameInp,namePy:ycPyInp,gasTypeId:lqTypeInp,province:provNameInp,provincePy:provPyInp,checkStatus:checkStatus};
 						table.render({
 							elem: '#lqFactTab',
 							height: 'full-150',
@@ -141,20 +232,33 @@
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'name', title: '液厂名称',align:'center'},
+									{field : 'name', title: '液厂名称',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										str += '<span>'+ d.name +'</span>';
+										return str;
+									}},
 									{field : 'namePy', title: '拼音码',align:'center'},
 									{field : 'gasTypeName', title: '液质类型',align:'center'},
 									{field : 'lxName', title: '联系人',align:'center'},
-									{field : 'address', title: '液厂地址',align:'center'},
+									{field : 'province', title: '所在省份',align:'center'},
+									//	{field : 'address', title: '液厂地址',align:'center'},
 									{field : 'addTime', title: '添加时间',align:'center'},
 									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
 										var str = '';
-										if(d.validStatus == 0){
-											str += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="setAccStatus" facId="'+ d.gfId +'" accSta="1" name="'+ d.name +'" accStaTxt="无效"><i class="layui-icon layui-icon-set"></i>设为无效</a>';
-										}else if(d.validStatus == 1){
-											str += '<a class="layui-btn layui-bg-blue layui-btn-xs" lay-event="setAccStatus" facId="'+ d.gfId +'" accSta="0" name="'+ d.name +'" accStaTxt="有效"><i class="layui-icon layui-icon-set"></i>设为有效</a>';
+										str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" facName="'+ d.name +'" lay-event="editLqFacInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										if(d.checkStatus == 0){
+											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify" checkSta="0" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+										}else if(d.checkStatus == 1){//审核通过
+											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify_spec" checkSta="2" class="layui-btn layui-btn-danger layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为不通过</a>';
+										}else if(d.checkStatus == 2){//审核未通过
+											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify_spec" checkSta="1" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为通过</a>';
 										}
-										str += '<a href="javascript:void(0)" facId="'+ d.gfId +'" lay-event="editJgzz" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										
 										return str;
 									}}
 								]
@@ -166,6 +270,67 @@
 						});
 					}
 				};
+				table.on('tool(lqFactTab)',function(obj){
+					if(obj.event == 'editLqFacInfo'){
+						gfId = $(this).attr('gfId');
+						globalOpts = 'editBtn';
+						page.commonLayer();
+					}else if(obj.event == 'lqFacVerify'){
+						checkFlag = true;
+						gfId = $(this).attr('gfId'),
+						checkStatus = $(this).attr('checkSta');
+						lqFacName = $(this).attr('name');
+						layer.open({
+							title : '审核液厂--[' + lqFacName + ']',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../lqFactoryManager/verifyLqFac.html',
+							end : function(){
+								if(checkFlag){
+									page.loadCompList();
+								}
+							}
+						});
+					}else if(obj.event == 'lqFacVerify_spec'){
+						gfId = $(this).attr('gfId'),
+						checkStatus = $(this).attr('checkSta');
+						lqFacName = $(this).attr('name');
+						var title = '';
+						checkStatus == '1' ? title = '<span style="color:green;">通过</span>' : title = '<span style="color:red;">不通过</span>';
+						layer.confirm('确认要将液厂[<span style="color:#009688;">' + lqFacName + '</span>]的审核状态变更为' + title + '?', {
+						  title:'变更公司审核状态提示',
+						  skin: 'layui-layer-molv',
+						  btn: ['确定','取消'] //按钮
+						},function(){
+							layer.load();
+							var field = {gfId:gfId,checkStatus:checkStatus};
+							console.log(field)
+							$.ajax({
+								type:'PUT',
+								dataType:"json",
+								data :field,
+								url:'/gsf/checkGf',
+								success:function (json){
+									layer.closeAll('loading');
+									if(json.code == 200){
+										layer.msg("变更液厂审核状态成功",{icon:1,time:1000},function(){
+											checkStatus = -1;
+											page.loadLqFactoryList();
+										});
+									}else if(json.code == 50001){
+										layer.msg("修改失败，当前液厂不存在", {icon:5,anim:6,time:2000});
+									}else if(json.code == 1000){
+										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									}else if(json.code == 70001){
+										layer.msg("抱歉，您暂无权限修改液厂审核状态", {icon:5,anim:6,time:1500});
+									}
+								}
+							});
+						});
+					}
+				});
 				page.init();
 			});
 		</script>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
+		<title>添加编辑省份</title>
+		<style>
+			.provItem{height: 38px;line-height: 38px;margin-bottom: 15px;}
+			.itemTit{float: left;}
+			#provinceSel ~ .layui-form-select dl { max-height:190px; }
+		</style>
+	</head>
+	<body class="addEditBody">
+		<input type="hidden" id="provInp"/>
+		<div class="provItem layui-form">
+			<span class="itemTit"><em style="color:#f00;font-style:normal;">*</em>省份名称：</span>
+			<div style="width: 200px;float: left;">
+				<select id="provinceSel" name="province" lay-filter="province">
+					<option value="">请选择省</option>
+				</select>
+			</div>
+		</div>
+		<div class="addEditItem layui-form">
+			<input type="hidden" id="gasTypeInp" value="0"/>
+			<span class="itemTit" style="margin-top:3px;"><em style="color:#f00;font-style:normal;">*</em>气质类型：</span>
+			<input type="radio" name="gasTypeInp" value="0" title="其他气质" lay-filter="gasTypeFilter" checked/>
+			<input type="radio" name="gasTypeInp" value="1" title="海气" lay-filter="gasTypeFilter"/>
+		</div>
+		<div class="addEidtBtnWrap layui-clear">
+			<a class="saveBtn" href="javascript:void(0)" style="margin-left: 120px;">保存</a>
+			<a class="cancelBtn" href="javascript:void(0)">取消</a>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var globalOpts = parent.globalOpts;
+			var provId = parent.provId;
+			var gsType = parent.gasType,provName = parent.provName;
+			layui.config({
+				base: '../js/frame/js/'
+			}).extend({ //设定组件别名
+			    common:  'address'// 表示模块文件的名字
+			}).use(['layer','address','form'],function(){
+				var layer = layui.layer,form = layui.form;
+				form.on('radio(gasTypeFilter)',function(data){
+					 $('#gasTypeInp').val(data.value);
+				});
+				var page = {
+					init : function(){
+						layui.address();
+						this.bindEvent();
+						if(globalOpts == 'editBtn'){
+							this.loadProvInfo();
+						}
+					},
+					loadProvInfo : function(){
+						$('#provInp').val(provName);
+						provVal = provName;
+						$('#gasTypeInp').val(gsType);
+						$('input[name=gasTypeInp]').each(function(i){
+							if($('input[name=gasTypeInp]').eq(i).val() == gsType){
+								$('input[name=gasTypeInp]').eq(i).attr('checked',true);
+							}
+						});
+						form.render();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('.cancelBtn').on('click',function(){
+							var index= parent.layer.getFrameIndex(window.name);
+							parent.addFlag = false;
+							parent.layer.close(index);
+						});
+						$('.saveBtn').on('click',function(){
+							var provInp = $("#provInp").val(),
+								index= parent.layer.getFrameIndex(window.name);
+							if(provInp == ""){
+								layer.msg("请选择省份");
+							}else{
+								//var reg = /^[\u4E00-\u9FA5]+$/; 
+								var url = "",type = '';
+								if(globalOpts == "addBtn"){
+									var field = {province : provInp,gsType :$('#gasTypeInp').val()};
+									url = "/common/addProvince";
+									type = 'post';
+								}else{
+									var field = {provId : provId,provName : provInp,gsType :$('#gasTypeInp').val()};
+									url = "/common/upProvName";
+									type = 'put';
+								}
+								layer.load('1');
+								$.ajax({
+									type:type,
+									dataType:"json",
+									data :field,
+									url:url,
+									success:function (json){
+										layer.closeAll('loading');
+										console.log(json)
+										if(json.code == 200){
+											if(globalOpts == "addBtn"){//表示增加角色
+												layer.msg("添加省份成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.layer.close(index);
+												});
+											}else{
+												layer.msg("编辑省份气质类型成功",{icon:1,time:1000},function(){
+													parent.addFlag = true;
+													parent.provId = '';
+													parent.layer.close(index);
+												});
+											}
+										}else if(json.code == 10002){
+											layer.msg("保存失败，参数不能为空");
+										}else if(json.code == 50001){
+											layer.msg("保存失败，当前进省份名称不存在");
+										}else if(json.code == 50003){
+											layer.msg("当前进省份名称已存在，请重新编辑");
+										}else if(json.code == 1000){
+											layer.msg("系统错误，请重试");
+										}else if(json.code == 70001){
+											layer.msg("抱歉，您暂无权限增加编辑省份");
+										}
+									}
+								});
+							}
+						});
+					}
+				};
+				page.init()
+			});
+		</script>
+		
+	</body>
+</html> 

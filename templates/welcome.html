@@ -68,7 +68,7 @@
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show">
-						<iframe id="mainIframe" src="goLqFactoryPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+						<iframe id="mainIframe" src="goProvManagerPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
 					</div>
 				</div>
 			</div>
@@ -134,14 +134,14 @@
 				},
 				//生成模块列表DOM
 				renderModuleList : function(list){
-					console.log( list )
+					console.log(list)
 					var modItem = ''
 					for(var i=0;i<list.length;i++){
-						if(list[i].modSubList != undefined){
-							modItem += '<li class="layui-nav-item"><a href="javascript:void(0)"><i class="iconfont layui-extend-guanli"></i>系统设置</a>';
+						if(list[i].subModList.length != 0){
+							modItem += '<li class="layui-nav-item"><a href="javascript:void(0)"><i class="iconfont layui-extend-guanli"></i>'+ list[i].modName +'</a>';
 							modItem += '<dl class="layui-nav-child">';
-							for(var j=0;j<list[i].modSubList.length;j++){
-								modItem += '<dd class="navLi"><a href="javascript:void(0)" path="'+ list[i].modSubList[j].maEng +'" tab-id="'+ (j+100) +'">'+ list[i].modSubList[j].maChi +'</a></dd>';
+							for(var j=0;j<list[i].subModList.length;j++){
+								modItem += '<dd class="navLi"><a href="javascript:void(0)" path="'+ list[i].subModList[j].subModEng +'" tab-id="'+ (j+100) +'">'+ list[i].subModList[j].subModName+'</a></dd>';
 							}
 							modItem += '</dl></li>';
 						}else{

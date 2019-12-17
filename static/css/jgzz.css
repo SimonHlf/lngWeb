@@ -20,3 +20,49 @@
 #provNameInp{
 	display: none;
 }
+.clearBtn{
+	width: 30px;
+	height: 100%;
+	line-height: 38px;
+	position: absolute;
+	right: 0px;
+	top: 1px;
+	text-align: center;
+}
+.clearBtn i{
+	font-weight: bold;
+	color: #333;
+}
+.clearBtn:hover i{
+	color: #f00;
+}
+.filterFlag p,
+.filterFlag span{
+	line-height: 38px;
+	float: left;
+}
+.filterFlag p{
+	margin-right: 15px;
+}
+.filterFlag span.currStaSpan{
+	width:8px;
+	height:8px;
+	border-radius:50%;
+	margin:15px 5px 0 0;
+}
+.filterFlag span.passBg,
+.currCheckFlag.passBg{
+	background:#5FB878;
+}
+.filterFlag span.noPassBg,
+.currCheckFlag.noPassBg{
+	background:#f00;
+}
+.currCheckFlag{
+	width:8px;
+	height:8px;
+	border-radius:50%;
+	position:absolute;
+	left:5px;
+	top:10px;
+}

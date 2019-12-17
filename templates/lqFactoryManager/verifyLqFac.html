@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
-		<title>审核公司</title>
+		<title>审核液厂</title>
 	</head>
 	<body class="addEditBody">
 		<div class="addEditItem layui-form" style="margin-top:10px;">
@@ -20,8 +20,8 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var checkSta = parent.checkSta;
-			var compId = parent.compId;
+			var checkSta = parent.checkStatus;
+			var gfId = parent.gfId;
 			layui.use(['form','layer'],function(){
 				var layer = layui.layer,form = layui.form;
 				form.on('radio(verifyFilter)', function(data){
@@ -44,26 +44,26 @@
 								layer.msg("请选择审核状态", {icon:5,anim:6,time:1500});
 							}else{
 								layer.load();
-								var field = {id:compId,checkSta:checkSta};
+								var field = {gfId:gfId,checkStatus:checkSta};
 								$.ajax({
 									type:'PUT',
 									dataType:"json",
 									data :field,
-									url:'/company/updateCompByStatus',
+									url:'/gsf/checkGf',
 									success:function (json){
 										layer.closeAll('loading');
 										if(json.code == 200){
-											layer.msg("变更公司审核状态成功",{icon:1,time:1000},function(){
-												parent.checkSta = '';
+											layer.msg("变更液厂审核状态成功",{icon:1,time:1000},function(){
+												parent.checkStatus = -1;
 												parent.checkFlag = true;
 												parent.layer.close(index);
 											});
 										}else if(json.code == 50001){
-											layer.msg("保存失败，当前公司不存在", {icon:5,anim:6,time:2000});
+											layer.msg("保存失败，当前液厂不存在", {icon:5,anim:6,time:2000});
 										}else if(json.code == 1000){
 											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
 										}else if(json.code == 70001){
-											layer.msg("抱歉，您暂无权限修改公司审核状态", {icon:5,anim:6,time:1500});
+											layer.msg("抱歉，您暂无权限修改液厂审核状态", {icon:5,anim:6,time:1500});
 										}
 									}
 								});

@@ -8,14 +8,19 @@
 	</head>
 	<body style="background: #fff;">
 		<input id="isHasData" type="hidden" value="1"/>
+		<input id="isHasSonMod" type="hidden" value="0"/>
 		<div id="addEditWrap" class="addEditMainModWrap layui-form"></div>
 		
+		<script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 		layui.use(['layer','jquery','form'],function(){
 				var layer = layui.layer,
 					$ = layui.jquery,
 					form = layui.form;
+				form.on('radio(isHasSonModFilter)',function(data){
+					$('#isHasSonMod').val(data.value);
+				});
 				var page = {
 					init : function(){
 						this.onLoad();
@@ -42,9 +47,16 @@
 						});
 					},
 					loadEditModName : function(list){
+						console.log(list)
 						var strHtml = '';
 						strHtml += '<div class="comAddEditDiv"><span class="fl">模块中文名字：</span><input id="inpMainModName_cn" autoComplete="off" type="text" value="'+ list[0].modName +'" placeholder="请输入主模块中文名字(20字以内)" maxlength="20"></div>';
 						strHtml += '<div class="comAddEditDiv"><span class="margLSpan_url fl">模块动作Url：</span><input id="inpMainModUrl" autoComplete="off" type="text" value="'+ list[0].modUrl +'" placeholder="请输入主模块动作url"></div>';
+						if(list[0].modType == 0){
+							strHtml += '<div class="comAddEditDiv"><span class="fl">是否有子模块：</span><input type="radio" name="validStatus" value="0" title="否" lay-filter="isHasSonModFilter" checked/><input type="radio" name="validStatus" value="1" title="是" lay-filter="isHasSonModFilter"/></div>';
+						}else if(list[0].modType == 1){
+							strHtml += '<div class="comAddEditDiv"><span class="fl">是否有子模块：</span><input type="radio" name="validStatus" value="0" title="否" lay-filter="isHasSonModFilter"/><input type="radio" name="validStatus" value="1" title="是" lay-filter="isHasSonModFilter" checked/></div>';
+						}
+						
 						strHtml += '</div>';
 						$('#addEditWrap').html(strHtml);
 						form.render();
