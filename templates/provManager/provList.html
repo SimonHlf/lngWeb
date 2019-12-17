@@ -9,8 +9,8 @@
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 		<title>省份列表</title>
 		<style>
-			.gasTypeList li{margin:0 0 30px 20px;height: 120px;}
-			.gasTypeList li:hover{cursor: move;}
+		/* 	.gasTypeList li{margin:0 0 30px 20px;height: 120px;}
+			.gasTypeList li:hover{cursor: move;} */
 		</style>
 	</head>
 	<body style="background:#f2f2f2;">
@@ -26,19 +26,22 @@
 							<input type="radio" name="gasTypeInp" value="0" title="其他气质" lay-filter="gasTypeInp" checked/>
 							<input type="radio" name="gasTypeInp" value="1" title="海气" lay-filter="gasTypeInp"/>
 						</div>
-						<div id="provList" class="gasTypeList"></div>
+						<div class="item_container"></div></div>
+						<div id="provList" class="gasTypeList" style="display: none;"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 		
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
-		<link rel="stylesheet" type="text/css" href="../js/jquery.dad.min.js"/>
+		<!-- <link rel="stylesheet" type="text/css" href="../js/dragFun.js"/> -->
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = "addBtn",addFlag = false,gasType=0,provName='';
-			layui.use(['layer','form'],function(){
-				var layer = layui.layer,form=layui.form;
+			layui.config({
+				base: '../js/frame/js/'
+			}).use(['layer','form','dragFun'],function(){
+				var layer = layui.layer,form=layui.form,dragFun = layui.dragFun;
 				form.on('radio(gasTypeInp)',function(data){
 					gasType = data.value;
 					page.loadProvList();
@@ -97,16 +100,24 @@
 					},
 					renderProvHtml : function(list){
 						if(list.length > 0){
-							var strHtml = '';
+							var strHtml = '',html='';
 							strHtml += '<ul class="layui-clear">';
 							for(var i=0;i<list.length;i++){
 								//strHtml += '<li><div class="gasName">'+ list[i].province +'</div><p class="editGasName"><a provId="'+ list[i].id +'" provName="'+ list[i].province +'" class="editGasType" href="javascript:void(0)"><i class="layui-icon layui-icon-edit"></i>编辑气质类型</a></p></li>';
+								html += '<div class="item">';
+								html += '<span currId="'+ list[i].id +'">'+ list[i].province +'</span>';
+								//html += '<img class = "drag_img" img_index="'+i+'" src="'+url_list[i]+'" width="150" height="150">';
+								
+								//html += '<span  class="rmPicture close">×</span>';
+								html += '</div>';
+								
 								strHtml += '<li currId="'+ list[i].id +'"><div class="gasName" style="border-radius:6px;">'+ list[i].province +'</div></li>';
 								//<p class="editGasName" style="text-align:center;">'+ list[i].orderNo +'</p>
 							}
 							strHtml += '</ul>';
+							$(".item_container").html(html);
 							$('#provList').html(strHtml);
-							initDragHtml();
+							dragFun.initDragHtml();
 						}else{
 							$('#provList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>该气质类型下暂无省份</p></div>");
 						}
