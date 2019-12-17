@@ -33,7 +33,10 @@ layui.define(function(exports){
 			    //$(".item_content .item").each(function(i) {
 			    this.init = function() { // 初始化  this为item
 			        this.box = $(this).parent();//li
-			        $(this).attr("index", i).css({
+			        $(this).attr({
+						"index":i,
+						"id":"item_" + i
+					}).css({
 			            position : "absolute",
 			            left : this.box.offset().left,
 			            top : this.box.offset().top - 40
@@ -80,8 +83,14 @@ layui.define(function(exports){
 			                    this.box = currentItem.box ;
 			                    currentItem.box = saveBox ;
 			                    this.move() ;
-			                    $(this).attr("index", this.box.index()) ;
-			                    $(currentItem).attr("index", currentItem.box.index()) ;
+			                    $(this).attr({
+									"index": this.box.index(),
+									"id" : "item_" +this.box.index()
+								}) ;
+			                    $(currentItem).attr({
+									"index":currentItem.box.index(),
+									"id" : "item_" + currentItem.box.index()
+								}) ;
 			                },
 			                down : function() {
 			                    // 移到上方
@@ -92,12 +101,18 @@ layui.define(function(exports){
 			                    for(var i = endIndex; i > startIndex ; i--) {
 			                        var prevNode = $(".item_container .item[index="+ (i - 1) +"]")[0] ;
 			                        node.box = prevNode.box ;
-			                        $(node).attr("index", node.box.index()) ;
+			                        $(node).attr({
+										"index": node.box.index(),
+										"id" : "item_" + node.box.index()
+									}) ;
 			                        node.move() ;
 			                        node = prevNode ;
 			                    }
 			                    currentItem.box = box ;
-			                    $(currentItem).attr("index", box.index()) ;
+			                    $(currentItem).attr({
+									"index": box.index(),
+									"id" : "item_" + box.index()
+								}) ;
 			                },
 			                up : function() {
 			                    // 移到上方
@@ -108,12 +123,18 @@ layui.define(function(exports){
 			                    for(var i = startIndex; i < endIndex; i++) {
 			                        var nextNode = $(".item_container .item[index="+ (i + 1) +"]")[0] ;
 			                        node.box = nextNode.box ;
-			                        $(node).attr("index", node.box.index()) ;
+			                        $(node).attr({
+										"index": node.box.index(),
+										"id" : "item_" + node.box.index()
+									}) ;
 			                        node.move() ;
 			                        node = nextNode ;
 			                    }
 			                    currentItem.box = box ;
-			                    $(currentItem).attr("index", box.index()) ;
+								$(currentItem).attr({
+									"index": box.index(),
+									"id" : "item_" + box.index()
+								}) ;
 			                }
 			            }
 			            directions[direction].call(this) ;

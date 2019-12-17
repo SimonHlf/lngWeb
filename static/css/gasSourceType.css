@@ -48,3 +48,49 @@
 .editGasName a:hover i{
 	color: #009688;
 }
+.orderWrap,
+.inpWrap{
+	float: left;
+}
+.goOrderBtn,
+.cancelOrderBtn,
+.saveOrderBtn{
+	height: 38px;
+	line-height: 38px;
+	float: left;
+	color:#333;
+}
+.saveOrderBtn{
+	color: #009688;
+}
+.goOrderBtn i,
+.goOrderBtn span,
+.cancelOrderBtn,
+.saveOrderBtn{
+	float: left;
+}
+.goOrderBtn i{
+	font-size: 18px;
+}
+.goOrderBtn:hover,
+.goOrderBtn:hover i,
+.cancelOrderBtn:hover,
+.saveOrderBtn:hover{
+	color: #F47837;
+}
+.cancelOrderBtn,
+.saveOrderBtn{
+	margin-left: 15px;
+	display: none;
+}
+.tipTxt{
+	line-height: 38px;
+	float: left;
+	font-size: 12px;
+	color:#F47837;
+	margin-left: 15px;
+	display: none;
+}
+.tipTxt i{
+	font-size: 12px;
+}

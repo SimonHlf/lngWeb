@@ -5,12 +5,14 @@
 		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/gasSourceType.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/jquery.dad.css"/>
+		<link rel="stylesheet" type="text/css" href="../s/layui/css/modules/layui-icon-extend/iconfont.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 		<title>省份列表</title>
 		<style>
-		/* 	.gasTypeList li{margin:0 0 30px 20px;height: 120px;}
-			.gasTypeList li:hover{cursor: move;} */
+		 	.gasTypeList li{margin:0 0 30px 20px;height: 80px !important;width: 80px !important;}
+			.gasTypeList div{height: 80px !important;width: 70px !important;font-size: 14px;}
+			.item_container{width:100%;display: none;}
 		</style>
 	</head>
 	<body style="background:#f2f2f2;">
@@ -22,12 +24,26 @@
 						<a id="addProvBtn" class="posAbs newAddBtn" opts="addBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加省份</a>
 					</div>
 					<div class="layui-card-body">
-						<div class="filterWrap layui-form">
-							<input type="radio" name="gasTypeInp" value="0" title="其他气质" lay-filter="gasTypeInp" checked/>
-							<input type="radio" name="gasTypeInp" value="1" title="海气" lay-filter="gasTypeInp"/>
+						<div class="filterWrap layui-clear">
+							<div class="inpWrap layui-form">
+								<input type="radio" name="gasTypeInp" value="0" title="其他气质" lay-filter="gasTypeInp" checked/>
+								<input type="radio" name="gasTypeInp" value="1" title="海气" lay-filter="gasTypeInp"/>
+							</div>
+							<div class="orderWrap">
+								<a class="goOrderBtn" href="javascript:void(0)">
+									<i class="iconfont icon-order"></i>
+									<span>编辑省份顺序</span>
+								</a>
+								<a class="cancelOrderBtn" href="javascript:void(0)">取消排序</a>
+								<a class="saveOrderBtn" href="javascript:void(0)">保存排序</a>
+								<p class="tipTxt">
+									<i class="iconfont icon-gonggao"></i>
+									<span>鼠标选中对应省份移动即可</span>
+								</p>
+							</div>
 						</div>
-						<div class="item_container"></div></div>
-						<div id="provList" class="gasTypeList" style="display: none;"></div>
+						<div class="item_container"></div>
+						<div id="provList" class="gasTypeList"></div>
 					</div>
 				</div>
 			</div>
@@ -56,6 +72,67 @@
 						$('#addProvBtn').on('click',function(){
 							globalOpts = $(this).attr("opts");
 							_this.commonLayer(globalOpts);
+						});
+						$('.goOrderBtn').on('click',function(){
+							$('.cancelOrderBtn').show();
+							$('.saveOrderBtn').show();
+							$('.tipTxt').show();
+							$('#provList').hide();
+							$('.item_container').show();
+							$(this).hide();
+							dragFun.initDragHtml();
+						});
+						$('.cancelOrderBtn').on('click',function(){
+							$('.goOrderBtn').show();
+							$('.saveOrderBtn').hide();
+							$('#provList').show();
+							$('.item_container').hide();
+							$('.tipTxt').hide();
+							$(this).hide();
+						});
+						$('.saveOrderBtn').on('click',function(){
+							var len = $('.item').length;
+							var indexArr = [],hasSortNewIdArr = [];
+							//第一步 ： 循环当前item 然后降每个item的index存放到一个数组里面
+							$('.item').each(function(i){
+								indexArr.push($('.item').eq(i).attr('index'));
+							});
+							//第二步 对indexArr进行一个数组排序并生成一个新的数组
+							var hasSortArr = indexArr.sort(function(num1,num2){return num1-num2;});
+							//第三步循环当前新数组并根据item的id对应到每个数组下标找到其下span的id
+							for(var i=0;i<hasSortArr.length;i++){
+								hasSortNewIdArr.push($('#item_' + hasSortArr[i]).find('span').attr('currId'));
+							}
+							proIdStr = hasSortNewIdArr.join(',');
+							layer.load();
+							var field = { gsType:gasType,proIdStr:proIdStr};
+							$.ajax({
+							    type:"put",
+								data : field,
+							    dataType:"json",
+							    url:"/common/setProvOrder",
+							    success:function (json){
+							    	layer.closeAll('loading');
+									console.log(json)
+									if(json.code == 200){
+										layer.msg("省份排序成功",{icon:1,time:1000},function(){
+											$('.goOrderBtn').show();
+											$('.saveOrderBtn').hide();
+											$('#provList').show();
+											$('.item_container').hide();
+											$('.tipTxt').hide();
+											$('.cancelOrderBtn').hide();
+											_this.loadProvList();
+										});
+									}else if(json.code == 1000){
+										layer.msg('服务器错误');
+									}else if(json.code == 10002){
+										layer.msg('参数不能为空');
+									}else if(json.code == 70001){
+										layer.msg('抱歉，您暂无权限对省份进行排序');
+									}
+							    }
+							});
 						});
 					},
 					commonLayer : function(){
@@ -87,7 +164,7 @@
 						    url:"/common/getProvinceList",
 						    success:function (json){
 						    	layer.closeAll('loading');
-								console.log(json)
+								//console.log(json)
 								if(json.code == 200){
 									_this.renderProvHtml(json.datas);
 								}else if(json.code == 1000){
@@ -106,18 +183,13 @@
 								//strHtml += '<li><div class="gasName">'+ list[i].province +'</div><p class="editGasName"><a provId="'+ list[i].id +'" provName="'+ list[i].province +'" class="editGasType" href="javascript:void(0)"><i class="layui-icon layui-icon-edit"></i>编辑气质类型</a></p></li>';
 								html += '<div class="item">';
 								html += '<span currId="'+ list[i].id +'">'+ list[i].province +'</span>';
-								//html += '<img class = "drag_img" img_index="'+i+'" src="'+url_list[i]+'" width="150" height="150">';
-								
-								//html += '<span  class="rmPicture close">×</span>';
 								html += '</div>';
-								
 								strHtml += '<li currId="'+ list[i].id +'"><div class="gasName" style="border-radius:6px;">'+ list[i].province +'</div></li>';
 								//<p class="editGasName" style="text-align:center;">'+ list[i].orderNo +'</p>
 							}
 							strHtml += '</ul>';
 							$(".item_container").html(html);
 							$('#provList').html(strHtml);
-							dragFun.initDragHtml();
 						}else{
 							$('#provList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>该气质类型下暂无省份</p></div>");
 						}
