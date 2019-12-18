@@ -5,6 +5,28 @@
 		<title></title>
 	</head>
 	<body>
-		LNG
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			function test(){
+				$.ajax({
+					type:"get",
+					data : { provPy:'', gsId:'',gsNamePy:'',priceDate:''},
+					dataType:"json",
+					url:"/lng/getLngPriceData",
+					success:function (json){
+						//layer.closeAll('loading');
+						console.log(json)
+						if(json.code == 200){
+							
+						}else if(json.code == 1000){
+							//layer.msg('服务器错误');
+						}else if(json.code == 50001){
+							//$('#lqTypeSel').append('<option value="">请选择液质类型</option>');
+						}
+					}
+				});
+			}
+			test();
+		</script>
 	</body>
 </html>
