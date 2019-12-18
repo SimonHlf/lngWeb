@@ -210,8 +210,8 @@
 						var ycNameInp = $.trim($('#ycNameInp').val()),
 							ycPyInp = $.trim($('#ycPyInp').val()),
 							lqTypeInp = $('#lqTypeInp').val(),
-							provPyInp = $('#provPyInp').val(),
-							provNameInp = $('#provNameInp').val();
+							provPyInp = $.trim($('#provPyInp').val()),
+							provNameInp = $.trim($('#provNameInp').val());
 						var field = {name:ycNameInp,namePy:ycPyInp,gasTypeId:lqTypeInp,province:provNameInp,provincePy:provPyInp,checkStatus:checkStatus};
 						table.render({
 							elem: '#lqFactTab',
