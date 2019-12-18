@@ -66,3 +66,9 @@
 	left:5px;
 	top:10px;
 }
+.hasPassCol{
+	color: #009688;
+}
+.hasNoPassCol{
+	color: #f00;;
+}

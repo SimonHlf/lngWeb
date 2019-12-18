@@ -2,9 +2,245 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/jgzz.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>贸易商加入液厂申请管理</title>
 	</head>
-	<body>
-		111
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">申请加入液厂管理</span>
+					</div>
+					<div class="layui-card-body">
+						<div class="filter layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
+							<div class="layui-form" style="float: left;">
+								<input type="radio" name="validStatus" value="0" title="未审核" lay-filter="checkStaFilter" checked/>
+								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
+								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
+							</div>
+							<div class="filterItem" style="width:120px;margin-right: 20px;width: 160px;">
+								<div class="layui-input-inline layui-form" style="width: 160px;">
+									<input id="ycPyInp" type="text" class="layui-input" placeholder="请输入液厂拼音码"/>
+									<a class="clearBtn clearYcNameBtn" href="javascript:void(0)" title="清空"><i class="layui-icon layui-icon-close"></i></a>
+								</div>
+							</div>
+							<div class="filterItem">
+								<div class="layui-input-inline posRel">
+									<input id="ycNameInp" style="display: block;" type="text" class="layui-input" placeholder="请输入液厂名称"/>
+									<a class="clearBtn clearNameBtn" href="javascript:void(0)" title="清空"><i class="layui-icon layui-icon-close"></i></a>
+								</div>
+							</div>
+							<div class="filterItem">
+								<div class="layui-input-inline">
+									<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
+								</div>
+							</div>
+							<div class="filterFlag" style="margin-left: -80px;float: left;">
+								<p>
+									<span class="currStaSpan passBg"></span>
+									<span>表示审核通过</span>
+								</p>
+								<p>
+									<span class="currStaSpan noPassBg"></span>
+									<span>表示审核未通过</span>
+								</p>
+							</div>
+						</div>
+						<table id="lqFactTab" class="layui-table" lay-filter="lqFactTab"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var checkSta=0,addEditFlag = false,globalOpts='',gfcId=0,checkFlag=false,facName = '',compName='',compId=0;
+			layui.use(['layer','table','form'],function(){
+				var layer = layui.layer,form = layui.form,table=layui.table;
+				form.on('radio(checkStaFilter)',function(data){
+					checkSta = data.value;
+					page.loadApplyCompList();
+				});
+				var page = {
+					init : function(){
+						this.loadApplyCompList();
+						this.bindEvent();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#queryBtn').on('click',function(){
+							_this.loadApplyCompList();
+						});
+						$('.clearYcNameBtn').on('click',function(){
+							$('#ycPyInp').val('');
+							_this.loadApplyCompList();
+						});
+						$('.clearNameBtn').on('click',function(){
+							$('#ycNameInp').val('');
+							_this.loadApplyCompList();
+						});
+					},
+					commonLayer : function(){
+						addEditFlag = true;
+						var fullScreenIndex = layer.open({
+							title : '',
+							type: 2,
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../applyManager/viewTradeApplyInfo.html',
+							end : function(){
+								if(addEditFlag){
+									page.loadApplyCompList();
+								}
+							},
+							cancel: function () {
+								addEditFlag = false;
+							}
+						});
+						layer.full(fullScreenIndex);
+					},
+					loadApplyCompList : function(){
+						var ycNameInp = $.trim($('#ycNameInp').val()),
+							ycPyInp = $.trim($('#ycPyInp').val());
+						var field = {gfName:ycNameInp,gfNamePy:ycPyInp,checkStatus:checkSta};
+						table.render({
+							elem: '#lqFactTab',
+							height: 'full-180',
+							url : '/company/getPageFactoryCpy',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas,
+									"count" : res.count
+								}
+							},
+							where:field,
+							page : true,
+							even : true,
+							text: {none : '暂无相关数据'},
+							cellMinWidth : 240,
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'cpyName', title: '贸易商',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										str += '<span>'+ d.cpyName +'</span>';
+										return str;
+									}},
+									{field : 'gasFactoryName', title: '申请加入液厂名称',align:'center'},
+									{field : 'checkStatus', title: '审核状态',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 0){
+											str += '<span>未审核</span>';
+										}else if(d.checkStatus == 1){
+											str += '<span class="hasPassCol">审核通过</span>';
+										}else if(d.checkStatus == 2){
+											str += '<span class="hasNoPassCol">审核未通过</span>';
+										}
+										return str;
+									}},
+									{field : 'checkTime', title: '审核时间',align:'center'},
+									{field : '', title: '操作', fixed: 'right' ,align:'center',templet : function(d){
+										var str = '';
+										str += '<a href="javascript:void(0)" gfcId="'+ d.gfcId +'" compId="'+ d.cpyId +'" compName="'+ d.cpyName +'" facName="'+ d.gasFactoryName +'"  checkSta="'+ d.checkStatus +'"  lay-event="viewCompInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看</a>';
+										if(d.checkStatus == 0){
+											str += '<a href="javascript:void(0)" gfcId="'+ d.gfcId +'" compName="'+ d.cpyName +'" facName="'+ d.gasFactoryName +'" lay-event="compVerify" checkSta="0" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+										}else if(d.checkStatus == 1){//审核通过
+											str += '<a href="javascript:void(0)" gfcId="'+ d.gfcId +'" compName="'+ d.cpyName +'" facName="'+ d.gasFactoryName +'" lay-event="compVerify_spec" checkSta="2" class="layui-btn layui-btn-danger layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为不通过</a>';
+										}else if(d.checkStatus == 2){//审核未通过
+											str += '<a href="javascript:void(0)" gfcId="'+ d.gfcId +'" compName="'+ d.cpyName +'" facName="'+ d.gasFactoryName +'" lay-event="compVerify_spec" checkSta="1" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为通过</a>';
+										}
+										
+										return str;
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								layer.closeAll('loading');
+							}
+						});
+					}
+				};
+				table.on('tool(lqFactTab)',function(obj){
+					if(obj.event == 'compVerify'){
+						checkFlag = true;
+						gfcId = $(this).attr('gfcId'),
+						checkSta = $(this).attr('checkSta');
+						compName = $(this).attr('compName');
+						facName = $(this).attr('facName');
+						layer.open({
+							title : '审核贸易公司[' + compName + ']申请加入液厂-['+ facName +']',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../applyManager/verifyTradeApply.html',
+							end : function(){
+								if(checkFlag){
+									page.loadApplyCompList();
+								}
+							}
+						});
+					}else if(obj.event == 'viewCompInfo'){//编辑公司信息
+						globalOpts = 'editBtn';
+						gfcId = $(this).attr('gfcId'),
+						compId = $(this).attr('compId');
+						compName = $(this).attr('compName');
+						facName = $(this).attr('facName');
+						checkSta = $(this).attr('checkSta');
+						page.commonLayer();
+					}else if(obj.event == 'compVerify_spec'){
+						gfcId = $(this).attr('gfcId'),
+						checkSta = $(this).attr('checkSta');
+						compName = $(this).attr('compName');
+						facName = $(this).attr('facName');
+						var title = '';
+						checkSta == '1' ? title = '<span style="color:green;">通过</span>' : title = '<span style="color:red;">不通过</span>';
+						layer.confirm('确认要将贸易公司[<span style="color:#009688;">' + compName + '</span>]的申请加入液厂['+ facName +']的申请审核状态变更为' + title + '?', {
+						  title:'变更申请加入液厂审核状态提示',
+						  skin: 'layui-layer-molv',
+						  btn: ['确定','取消'] //按钮
+						},function(){
+							layer.load();
+							var field = {gfcId:gfcId,checkStatus:checkSta};
+							$.ajax({
+								type:'PUT',
+								dataType:"json",
+								data :field,
+								url:'/gsf/checkGasCompany',
+								success:function (json){
+									layer.closeAll('loading');
+									if(json.code == 200){
+										layer.msg("变更贸易商申请液厂审核状态成功",{icon:1,time:1500},function(){
+											checkSta = 0;
+											page.loadApplyCompList();
+										});
+									}else if(json.code == 50001){
+										layer.msg("保存失败，当前公司不存在", {icon:5,anim:6,time:2000});
+									}else if(json.code == 1000){
+										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									}else if(json.code == 70001){
+										layer.msg("抱歉，您暂无权限修改贸易商审核状态", {icon:5,anim:6,time:1500});
+									}
+								}
+							});
+						});
+					}
+				});
+				page.init();
+			});
+		</script>
 	</body>
 </html>

@@ -196,46 +196,46 @@
 						}else if(sonModEngNameInp == ''){
 							layer.msg('子模块英文名字不能为空', {icon:5,anim:6,time:1000});
 						}else{
-							if(!regCN.test(sonModChiNameInp)){
+							$.ajax({
+								type:"post",
+								dataType:"json",
+								data:field,
+								url:url,
+								success:function (json){
+									console.log( json )
+									if(json.code == 200){
+										if(opts == 'addSonModOpt'){
+											layer.msg("添加子模块成功",{icon:1,time:1000},function(){
+												_this.loadModuleList();
+												_this.bindEvent_multi();
+												layer.close(_this.data.globalIndex);
+												_this.data.globalIndex = 0;
+											});
+										}else{
+											layer.msg("编辑子模块成功",{icon:1,time:1000},function(){
+												$(that).html('<span>' + sonModChiNameInp + '(' + sonModEngNameInp + ')</span><i class="layui-icon layui-icon-edit"></i>');
+												$(that).attr('actnameChi',sonModChiNameInp);
+												$(that).attr('actNameEng',sonModEngNameInp);
+												layer.close(_this.data.globalIndex);
+												_this.data.globalIndex = 0;
+											});
+										}
+										
+									}else if(json.code == 50003){
+										layer.msg("该子模块已存在，请重新填写", {icon:5,anim:6,time:1000});
+									}else if(json.code == 1000){
+										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									}else if(json.code == 70001){
+										layer.msg("抱歉，您暂无权限添加/编辑子模块", {icon:5,anim:6,time:1000});
+									}
+								}
+							});
+							/*if(!regCN.test(sonModChiNameInp)){
 								layer.msg('子模块中文名字应为汉字', {icon:5,anim:6,time:1000});
 							}else if(!regEN.test(sonModEngNameInp)){
 								layer.msg('子模块英文名字应为英语', {icon:5,anim:6,time:1000});
 							}else{
-								$.ajax({
-									type:"post",
-									dataType:"json",
-									data:field,
-									url:url,
-									success:function (json){
-										console.log( json )
-										if(json.code == 200){
-											if(opts == 'addSonModOpt'){
-												layer.msg("添加子模块成功",{icon:1,time:1000},function(){
-													_this.loadModuleList();
-													_this.bindEvent_multi();
-													layer.close(_this.data.globalIndex);
-													_this.data.globalIndex = 0;
-												});
-											}else{
-												layer.msg("编辑子模块成功",{icon:1,time:1000},function(){
-													$(that).html('<span>' + sonModChiNameInp + '(' + sonModEngNameInp + ')</span><i class="layui-icon layui-icon-edit"></i>');
-													$(that).attr('actnameChi',sonModChiNameInp);
-													$(that).attr('actNameEng',sonModEngNameInp);
-													layer.close(_this.data.globalIndex);
-													_this.data.globalIndex = 0;
-												});
-											}
-											
-										}else if(json.code == 50003){
-											layer.msg("该子模块已存在，请重新填写", {icon:5,anim:6,time:1000});
-										}else if(json.code == 1000){
-											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
-										}else if(json.code == 70001){
-											layer.msg("抱歉，您暂无权限添加/编辑子模块", {icon:5,anim:6,time:1000});
-										}
-									}
-								});
-							}
+							}*/
 						}
 					},
 					//添加、编辑主模块方法
@@ -250,55 +250,55 @@
 						}else if(inpMainModUrl == ''){
 							layer.msg('模块动作Url不能为空', {icon:5,anim:6,time:1000});
 						}else{
-							if(!regCN.test(inpMainModName_cn)){
+							//执行ajax
+							var url = '';
+							if(globalOpts == 'addBtn'){//表示增加主模块
+								url = '/mod/addMod';
+								var field = {modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
+							}else if(globalOpts == 'editBtn'){//表示编辑主模块
+								url = '/mod/upMod';
+								var field = {modId:modId,modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
+							}
+							layer.load();
+							$.ajax({
+								type:"post",
+								dataType:"json",
+								data :field,
+								url:url,
+								success:function (json){
+									console.log(json)
+									layer.closeAll("loading");
+									if(json["code"] == 200){
+										var strTxt = '';
+										if(globalOpts == "addBtn"){//表示增加主模块
+											strTxt = '添加成功';
+										}else if(globalOpts == "editBtn"){//表示编辑主模块
+											strTxt = '编辑成功';
+										}
+										function callBackSuccess(){
+											layer.msg(strTxt,{icon:1,time:1200},function(){
+												_this.loadModuleList();
+												_this.bindEvent_multi();
+												layer.close(_this.data.globalIndex);
+												_this.data.globalIndex = 0;
+											});
+										}
+										callBackSuccess(strTxt);
+									}else if(json["code"] == 1000){
+										layer.msg("服务器错误", {icon:5,anim:6,time:1200});
+									}else if(json["code"] == 50003){//系统错误
+										layer.msg("当前添加主模块已存在", {icon:5,anim:6,time:1200});
+									}else if(json["code"] == 70001){
+										layer.msg("抱歉，您暂无权限增加模块", {icon:5,anim:6,time:1200});
+									}
+								}
+							});
+							/*if(!regCN.test(inpMainModName_cn)){
 								layer.msg('模块中文名字应为汉字', {icon:5,anim:6,time:1000});
 							}else if(regCN.test(inpMainModUrl)){
 								layer.msg('模块动作Url不能含有汉字', {icon:5,anim:6,time:1000});
 							}else{
-								//执行ajax
-								var url = '';
-								if(globalOpts == 'addBtn'){//表示增加主模块
-									url = '/mod/addMod';
-									var field = {modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
-								}else if(globalOpts == 'editBtn'){//表示编辑主模块
-									url = '/mod/upMod';
-									var field = {modId:modId,modName:inpMainModName_cn,modUrl:inpMainModUrl,modType:isHasSonMod};
-								}
-								layer.load();
-								$.ajax({
-									type:"post",
-									dataType:"json",
-									data :field,
-									url:url,
-									success:function (json){
-										console.log(json)
-										layer.closeAll("loading");
-										if(json["code"] == 200){
-											var strTxt = '';
-											if(globalOpts == "addBtn"){//表示增加主模块
-												strTxt = '添加成功';
-											}else if(globalOpts == "editBtn"){//表示编辑主模块
-												strTxt = '编辑成功';
-											}
-											function callBackSuccess(){
-												layer.msg(strTxt,{icon:1,time:1200},function(){
-													_this.loadModuleList();
-													_this.bindEvent_multi();
-													layer.close(_this.data.globalIndex);
-													_this.data.globalIndex = 0;
-												});
-											}
-											callBackSuccess(strTxt);
-										}else if(json["code"] == 1000){
-											layer.msg("服务器错误", {icon:5,anim:6,time:1200});
-										}else if(json["code"] == 50003){//系统错误
-											layer.msg("当前添加主模块已存在", {icon:5,anim:6,time:1200});
-										}else if(json["code"] == 70001){
-											layer.msg("抱歉，您暂无权限增加模块", {icon:5,anim:6,time:1200});
-										}
-									}
-								});
-							}
+							}*/
 						}
 					}
 				};

@@ -68,12 +68,12 @@
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
 									{field : 'name', title: '液质类型名称',align:'center'},
-									{field : 'yz_img', title: '图片',align:'center',templet : function(d){
-										return '<img src="../'+ d.yz_img +'"/>';
+									{field : 'yzImg', title: '图片',align:'center',templet : function(d){
+										return '<img src="../'+ d.yzImg +'"/>';
 									}},
 									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
 										var str = '';
-										str += '<a href="javascript:void(0)" lay-event="viewBigImg" yzImg="'+ d.yz_img +'" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看原图</a>';
+										str += '<a href="javascript:void(0)" lay-event="viewBigImg" yzImg="'+ d.yzImg +'" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看原图</a>';
 										str += '<a href="javascript:void(0)" lqId="'+ d.id +'" lay-event="editLqType" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
 										return str;
 									}}

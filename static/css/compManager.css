@@ -20,6 +20,10 @@
 .filterItem span.noPassBg{
 	background:#f00;
 }
+.filterItemSel{
+	float: left;
+	margin-right: 15px;
+}
 .filterItem{
 	width: auto;
 	float: left;
@@ -86,7 +90,8 @@
 body.hasMargTop{
 	margin-top: 40px;
 }
-.compTabNav{
+.compTabNav,
+.headTit{
 	width:100%;
 	position:fixed;
 	left:0;
@@ -94,6 +99,14 @@ body.hasMargTop{
 	background:#fff;
 	z-index:100;
 	box-shadow:0 2px 2px #ebebeb;
+}
+.headTit{
+	height: 40px;
+	line-height: 40px;
+}
+.headTit p{
+	margin-left: 15px;
+	color: #333;
 }
 .closeBtns{
 	position:absolute;
@@ -110,9 +123,6 @@ body.hasMargTop{
 }
 .closeBtns:hover i{
 	color:red;
-}
-.zzImg{
-	height: 86px;
 }
 .zzImg a{
 	width: 86px;

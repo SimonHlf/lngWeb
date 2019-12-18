@@ -221,18 +221,18 @@
 							parseData : function(res){
 								return {
 									"code" : 0,
-									"data" : res.datas
+									"data" : res.datas,
+									"count" : res.count
 								}
 							},
 							where:field,
 							page : true,
 							even : true,
 							text: {none : '暂无相关数据'},
-							cellMinWidth : 200,
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'name', title: '液厂名称',align:'center',templet : function(d){
+									{field : 'name', title: '液厂名称',width:'220',align:'center',templet : function(d){
 										var str = '';
 										if(d.checkStatus == 1){//通过
 											str += '<span class="currCheckFlag passBg"></span>';
@@ -242,13 +242,13 @@
 										str += '<span>'+ d.name +'</span>';
 										return str;
 									}},
-									{field : 'namePy', title: '拼音码',align:'center'},
-									{field : 'gasTypeName', title: '液质类型',align:'center'},
-									{field : 'lxName', title: '联系人',align:'center'},
-									{field : 'province', title: '所在省份',align:'center'},
-									//	{field : 'address', title: '液厂地址',align:'center'},
-									{field : 'addTime', title: '添加时间',align:'center'},
-									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
+									{field : 'namePy', title: '拼音码',width:'120',align:'center'},
+									{field : 'gasTypeName', title: '液质类型',width:'120',align:'center'},
+									{field : 'lxName', title: '联系人',width:'120',align:'center'},
+									{field : 'province', title: '所在省份',width:'150',align:'center'},
+									{field : 'address', title: '液厂地址',width:'200',align:'center'},
+									{field : 'addTime', title: '添加时间',width:'180',align:'center'},
+									{field : '', title: '操作', fixed: 'right',width:'240', align:'center',templet : function(d){
 										var str = '';
 										str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" facName="'+ d.name +'" lay-event="editLqFacInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
 										if(d.checkStatus == 0){

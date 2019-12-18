@@ -11,9 +11,10 @@
 			<div class="compTabNav  layui-tab-brief">
 				<ul class="layui-tab-title">
 					<li class="layui-this">公司基本信息</li>
-					<li>公司司机押运人</li>
-					<li>挂车车牌</li>
-					<li>车头车牌</li>
+					<li class="otherItem">员工列表</li>
+					<li class="otherItem">公司司机押运人</li>
+					<li class="otherItem">挂车车牌</li>
+					<li class="otherItem">车头车牌</li>
 				</ul> 
 				<a class="closeBtns" href="javascript:void(0)" opts="closeGlobal"><i class="layui-icon layui-icon-close"></i></a>
 			</div>
@@ -87,17 +88,23 @@
 						</div>
 						<div class="layui-form-item">
 							<label class="layui-form-label">营业执照</label>
+							<div id="yyzz" class="zzImg"></div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">公司资质</label>
 							<div id="zzImg" class="zzImg"></div>
 						</div>
-						<div class="layui-form-item addEditItem">
+						<div class="layui-form-item addEditItem btnWrap">
 							<label class="layui-form-label"></label>
 							<div class="layui-input-block" style="width:75%;text-align:center;">
 								<button type="button" id="checkStaBtn" class="layui-btn" style="width:150px;margin-left:0px;"></button>
-								<button type="button" id="cancelBtn" class="layui-btn layui-btn-primary">取消</button>
+								<button type="button" id="cancelBtn" class="layui-btn layui-btn-primary">关闭</button>
 							</div>
 						</div>
 					</div>
 				</div>
+				<!-- 公司员工列表 -->
+				<div id="gsyg" class="layui-form layui-tab-item yyrList"></div>
 				<!-- 公司司机押运人 -->
 				<div id="sjyy" class="layui-form layui-tab-item yyrList"></div>
 				<!-- 挂车车牌 -->
@@ -114,7 +121,7 @@
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts;
 			var compId = parent.compId,checkSta = parent.checkSta,compName = parent.compName;
-			var backCheckSta = 0,isSetFlag = false,checkFlag = false;
+			var backCheckSta = 0,isSetFlag = false,checkFlag = false,currPage = parent.currPage;
 			layui.use(['form','layer','element'],function(){
 				var form = layui.form,layer=layui.layer,element = layui.element;
 				//tab点击事件的监听
@@ -122,22 +129,35 @@
 					if(data.index == 0){
 						
 					}else if(data.index == 1){
-						page.loadCompOtherInfo('sjyy');
+						page.loadCompOtherInfo('gsyg');
 					}else if(data.index == 2){
-						page.loadCompOtherInfo('gccp');
+						page.loadCompOtherInfo('sjyy');
 					}else if(data.index == 3){
+						page.loadCompOtherInfo('gccp');
+					}else if(data.index == 4){
 						page.loadCompOtherInfo('ctcp');
 					}
 				});
 				var page = {
 					init : function(){
+						if(currPage == 'compListPage'){
+							$('.btnWrap').remove();
+						}else if(currPage == 'addEditFacPage'){
+							$('.btnWrap').remove();
+							$('.otherItem').remove();
+						}else{
+							$('.otherItem').remove();
+						}
 						this.bindEvent();
 						this.loadCompInfo();
 						this.loadCheckStaTxtByStaNum(checkSta);
 					},
 					loadCompOtherInfo : function(opt){
 						var url = '',_this = this,currTypeTxt = '';
-						if(opt == 'sjyy'){
+						if(opt == 'gsyg'){
+							url = '/company/queryUserCompany';
+							currTypeTxt = '公司员工';
+						}else if(opt == 'sjyy'){
 							url = '/company/queryCompanyPsr';
 							currTypeTxt = '司机押运人';
 						}else if(opt == 'gccp'){
@@ -155,8 +175,11 @@
 						    url:url,
 						    success:function (json){
 						    	layer.closeAll('loading');
+								//console.log(json)
 								if(json.code == 200){
-									if(opt == 'sjyy'){
+									if(opt == 'gsyg'){
+										_this.renderGsygHtml(json.datas);
+									}else if(opt == 'sjyy'){
 										_this.renderSjHtml(json.datas);
 									}else if(opt == 'gccp'){
 										_this.renderGccpHtml(json.datas,opt);
@@ -170,6 +193,13 @@
 								}
 						    }
 						});
+					},
+					renderGsygHtml : function(list){
+						if(list.length > 0){
+							
+						}else{
+							$('#gsyg').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>尚未添加员工</p></div>");
+						}
 					},
 					//生成挂车车牌结构
 					renderGccpHtml : function(list,opt){
@@ -215,7 +245,7 @@
 						    success:function (json){
 						    	layer.closeAll('loading');
 								if(json.code == 200){
-									console.log(json)
+									//console.log(json)
 									_this.renderCompInfoHtml(json.datas);
 								}else if(json.code == 1000){
 									layer.msg('服务器错误');
@@ -242,13 +272,18 @@
 						$('select[name=province]').html('<option>'+ list[0].provName +'</option>');
 						$('select[name=city]').html('<option>'+ list[0].city +'</option>');
 						$('select[name=area]').html('<option>'+ list[0].county +'</option>');
+						if(list[0].yyzzImg != ''){
+							$('#yyzz').html('<a href="javascript:void(0)"><img src="'+ list[0].yyzzImg +'"/></a>');
+						}else{
+							$('#yyzz').html('<p style="color:#999;line-height:38px;">暂未上传营业执照</p>');
+						}
 						if(list[0].zzImageList.length > 0){
 							for(var i=0;i<list[0].zzImageList.length;i++){
 								str += '<a href="javascript:void(0)"><img src="'+ list[0].zzImageList[i].czImage +'"/></a>';
 							}
 							$('#zzImg').html(str);
 						}else{
-							$('#zzImg').html('<p style="color:#999;line-height:38px;">暂未上传营业执照！</p>');
+							$('#zzImg').html('<p style="color:#999;line-height:38px;">暂未上传公司资质</p>');
 						}
 						form.render();
 					},

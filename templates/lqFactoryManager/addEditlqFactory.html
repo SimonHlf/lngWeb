@@ -102,7 +102,7 @@
 				</div>
 				<!-- 贸易商列表 -->
 				<div id="tradeList" class="layui-form layui-tab-item">
-					
+					<table id="compTable" class="layui-table" lay-filter="compTable"></table>
 				</div>
 				
 				
@@ -114,14 +114,23 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts,gfId = parent.gfId,succFacUrl = '',maxNum = 0,yzbgImg = '',checkSta=0,isSetFlag = false;
+			var compName = '',compId = 0,currPage = 'addEditFacPage';
 			layui.config({
 				base: '../js/frame/js/'
 			}).extend({ //设定组件别名
 			    common:  'address'// 表示模块文件的名字
-			}).use(['form','layer','address','upload','element'],function(){
-				var form = layui.form,layer = layui.layer,upload = layui.upload,element=layui.element;
+			}).use(['form','layer','address','upload','element','table'],function(){
+				var form = layui.form,layer = layui.layer,upload = layui.upload,table = layui.table,element=layui.element;
 				form.on('select(lqTypeSel)',function(data){
 					data.value == '' ? $('#lqTypeInp').val('') : $('#lqTypeInp').val(data.value);
+				});
+				//tab点击事件的监听
+				element.on('tab(compFilter)', function(data){
+					if(data.index == 0){
+						
+					}else if(data.index == 1){
+						page.loadCpyInfo();
+					}
 				});
 				var page = {
 					init : function(){
@@ -133,6 +142,48 @@
 							layui.address();
 							$('.tradeLi').hide();
 						}
+					},
+					//加载液厂下贸易商列表
+					loadCpyInfo : function(){
+						var _this = this;
+						layer.load('1');
+						table.render({
+							elem: '#compTable',
+							height: 'full-180',
+							url : '/company/getSpecGasFactoryCpy',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas
+								}
+							},
+							where:{ gfId:gfId },
+							page : false,
+							even : true,
+							text: {none : '暂无相关数据'},
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'cpyName', title: '公司名称',width:'200',align:'center'},
+									{field : 'cptTypeName', title: '公司类型',width:'120',align:'center'},
+									{field : 'lxName', title: '联系人',width:'100',align:'center'},
+									{field : 'lxTel', title: '联系电话',width:'150',align:'center'},
+									{field : 'provName', title: '所在省',width:'120',align:'center'},
+									{field : 'address', title: '公司地址',width:'260',align:'center'},
+									{field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
+									{field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
+									{field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
+									{field : '', title: '操作', fixed: 'right',width:'150', align:'center',templet : function(d){
+										return '<a href="javascript:void(0)" compId="'+ d.compId +'" compName="'+ d.cpyName +'" lay-event="viewCompInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看详情</a>';
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								layer.closeAll('loading');
+							}
+						});
 					},
 					//生成液质类型
 					loadLqType : function(){
@@ -406,6 +457,20 @@
 						
 					}
 				};
+				table.on('tool(compTable)',function(obj){
+					if(obj.event == 'viewCompInfo'){
+						compName = $(this).attr('compName'),
+						compId = $(this).attr('compId');
+						var fullScreenIndex = layer.open({
+							title : '',
+							type: 2,
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../compManager/addEditComp.html'
+						});
+						layer.full(fullScreenIndex);
+					}
+				});
 				page.init();
 			});
 			function deleteImg(obj){

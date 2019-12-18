@@ -68,7 +68,7 @@
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show">
-						<iframe id="mainIframe" src="goCpyJoinFcyCheckPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
+						<iframe id="mainIframe" src="goLngPage"  frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
 					</div>
 				</div>
 			</div>
@@ -134,7 +134,6 @@
 				},
 				//生成模块列表DOM
 				renderModuleList : function(list){
-					console.log(list)
 					var modItem = ''
 					for(var i=0;i<list.length;i++){
 						if(list[i].subModList.length != 0){
