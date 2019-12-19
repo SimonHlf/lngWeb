@@ -67,6 +67,56 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var prevDate = '',currDate = '',nextDate = '',remarkTxt;
+			layui.define(['table'], function (exports) {
+				var table = layui.table;
+				exports('loadLngData',function(){
+					var ycPyInp = $.trim($('#ycPyInp').val()),
+						lqTypeInp = $('#lqTypeInp').val(),
+						provPyInp = $.trim($('#provPyInp').val()),
+						lngDateInp = $('#lngDateInp').val();
+					var field = {gsNamePy:ycPyInp,gasTypeId:lqTypeInp,provPy:provPyInp,priceDate:lngDateInp};
+					table.render({
+						elem: '#lngTable',
+						height: 'full-150',
+						url : '/lng/getLngPriceData',
+						method : 'get',
+						parseData : function(res){
+							return {
+								"code" : 0,
+								"data" : res.datas
+							}
+						},
+						where:field,
+						page : false,
+						even : true,
+						text: {none : '暂无相关数据'},
+						cellMinWidth:150,
+						cols : [
+							[
+								{field : '', title: '序号',type:'numbers', align:'center'},
+								{field : 'gfName', title: '液厂名称',align:'center'},
+								{field : 'province', title: '归属地',align:'center'},
+								{field : 'gfType', title: '液质类型',align:'center'},
+								{field : 'prePrice', title:prevDate ,align:'center'},
+								{field : 'currPrice', title: currDate,align:'center',edit: 'text',templet:function(d){
+									var str = '';
+									str += '<span id="currPri_'+ d.gfId +'" onclick="test()" style="cursor:pointer;">点击</span>';
+									str += d.currPrice;
+									return str;
+								}},
+								{field : 'nextPrice', title: nextDate,align:'center',edit: 'text'},
+								{field : 'remark', title: remarkTxt,align:'center',edit: 'text'}
+							]
+						],
+						done : function(res, curr, count){
+							console.log(res)
+							layer.closeAll('loading');
+						}
+					});
+				});
+			});
+			
+			
 			layui.use(['layer','table','form','laydate'],function(){
 				var layer = layui.layer,form = layui.form,table=layui.table,laydate=layui.laydate;
 				laydate.render({'elem':'#lngDateInp',done: function(value){
@@ -78,11 +128,11 @@
 					remarkTxt = value + '(备注)';
 					prevDate = page.selDateCalDate(value,-1)
 					nextDate = page.selDateCalDate(value,+1);
-					page.loadLngData();
+					layui.loadLngData();
 				}});
 				form.on('select(lqTypeSel)',function(data){
 					data.value == '' ? $('#lqTypeInp').val('') : $('#lqTypeInp').val(data.value);
-					page.loadLngData();
+					layui.loadLngData();
 				});
 				var page = {
 					init : function(){
@@ -100,20 +150,20 @@
 						prevDate = prevDay.getFullYear()+"-" + (prevDay.getMonth()+1) + "-" + prevDay.getDate();
 						nextDate = nextDay.getFullYear()+"-" + (nextDay.getMonth()+1) + "-" + nextDay.getDate();
 						remarkTxt = currDate + '(备注)';
-						this.loadLngData();
+						layui.loadLngData();
 					},
 					bindEvent : function(){
 						var _this = this;
 						$('#queryBtn').on('click',function(){
-							_this.loadLngData();
+							layui.loadLngData();
 						});
 						$('.clearYcPyBtn').on('click',function(){
 							$('#ycPyInp').val('');
-							_this.loadLngData();
+							layui.loadLngData();
 						});
 						$('.clearProvBtn').on('click',function(){
 							$('#provPyInp').val('');
-							_this.loadLngData();
+							layui.loadLngData();
 						});
 						
 						$('#provPyInp').keyup(function (ev) {
@@ -121,7 +171,7 @@
 							clearTimeout(this.timer);
 							layer.load();
 							this.timer = setTimeout(function(){
-								_this.loadLngData();
+								layui.loadLngData();
 							}, 500);
 						});
 						$('#ycPyInp').keyup(function (ev) {
@@ -129,7 +179,7 @@
 							clearTimeout(this.timer);
 							layer.load();
 							this.timer = setTimeout(function(){
-								_this.loadLngData();
+								layui.loadLngData();
 							}, 500);
 						});
 					},
@@ -172,51 +222,6 @@
 						}else{
 							$('#lqTypeSel').append('<option value="">请选择液质类型</option>');
 						}
-					},
-					loadLngData : function(){
-						var ycPyInp = $.trim($('#ycPyInp').val()),
-							lqTypeInp = $('#lqTypeInp').val(),
-							provPyInp = $.trim($('#provPyInp').val()),
-							lngDateInp = $('#lngDateInp').val();
-						var field = {gsNamePy:ycPyInp,gasTypeId:lqTypeInp,provPy:provPyInp,priceDate:lngDateInp};
-						table.render({
-							elem: '#lngTable',
-							height: 'full-150',
-							url : '/lng/getLngPriceData',
-							method : 'get',
-							parseData : function(res){
-								return {
-									"code" : 0,
-									"data" : res.datas
-								}
-							},
-							where:field,
-							page : false,
-							even : true,
-							text: {none : '暂无相关数据'},
-							cellMinWidth:150,
-							cols : [
-								[
-									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'gfName', title: '液厂名称',align:'center'},
-									{field : 'province', title: '归属地',align:'center'},
-									{field : 'gfType', title: '液质类型',align:'center'},
-									{field : 'prePrice', title:prevDate ,align:'center'},
-									{field : 'currPrice', title: currDate,align:'center',edit: 'text',templet:function(d){
-										var str = '';
-										str += '<span id="currPri_'+ d.gfId +'" onclick="test()" style="cursor:pointer;">点击</span>';
-										str += d.currPrice;
-										return str;
-									}},
-									{field : 'nextPrice', title: nextDate,align:'center',edit: 'text'},
-									{field : 'remark', title: remarkTxt,align:'center',edit: 'text'}
-								]
-							],
-							done : function(res, curr, count){
-								console.log(res)
-								layer.closeAll('loading');
-							}
-						});
 					}
 				};
 				table.on('edit(lngTable)',function(obj){
@@ -257,13 +262,21 @@
 							}
 						}
 					});*/
-					
-					
 				});
 				page.init();
 			});
 			function test(){
-				alert("----")
+				layer.open({
+					title : '123',
+					type: 2,
+					skin:'layui-layer-molv', //样式类名
+					closeBtn: 1, //不显示关闭按钮
+					area : ['400px','350px'],
+					content: '../lngManager/addEditLngPrice.html',
+					end : function(){
+						//layui.loadLngData();
+					}
+				});
 			}
 		</script>
 	</body>

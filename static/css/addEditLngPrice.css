@@ -1,0 +1,93 @@
+body{
+	padding: 10px 15px;
+}
+.tipsTxt{
+	height: 26px;
+	line-height: 26px;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+.tipsTxt p,
+.tipsTxt i{
+	float: left;
+	color: #666;
+}
+.tipsTxt i{
+	font-size: 12px;
+}
+.priceItem {
+	height: 40px;
+	margin-bottom: 15px;
+}
+.priceItem .priceTit,
+.priceItem .inpWrap{
+	float: left;
+	position: relative;
+}
+.priceItem .priceTit{
+	width: 85px;
+	height: 40px;
+}
+.priceItem .priceTit span{
+	display: block;
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+	color:#333;
+}
+.priceItem .priceTit span.dateTxt{
+	font-size: 12px;
+	color: #666;
+}
+.priceItem .inpWrap input{
+	width: 260px;
+	border:none;
+	border-bottom: 1px solid #ccc;
+	height: 17px;
+	padding: 11px 0 11px 24px;
+	color: #333;
+	font-weight: bold;
+	font-size: 18px;
+}
+.priceItem .inpWrap input::-webkit-input-placeholder{
+	font-weight: normal;
+	font-size: 14px;
+}
+.priceItem .inpWrap span{
+	width: 20px;
+	height: 40px;
+	line-height: 40px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	text-align: left;
+	color: #666;
+	font-size: 18px;
+}
+.remarkWrap p.titP{
+	color: #333;
+	margin-bottom: 5px;
+}
+.remarkBox textarea{
+	border:1px solid #ccc;
+	height: 70px;
+	resize: none;
+	width:96%;
+	padding: 10px 2%;
+}
+.saveBtn{
+	display: block;
+	width: 140px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	border-radius: 4px;
+	background: #009f95;
+	margin:15px auto 0;
+	color: #fff;
+	font-size: 16px;
+}
+.saveBtn:hover{
+	color: #fff;
+	opacity: .8;
+}
