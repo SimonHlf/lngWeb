@@ -7,16 +7,22 @@
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 		<title>lng行情管理</title>
+		<style>
+			.layui-table-cell{
+				height:24px;
+				line-height:24px;
+			}
+		</style>
 	</head>
 	<body style="background:#f2f2f2;">
 		<div class="layui-fluid" style="margin-top:15px;">
 			<div class="layui-row">
 				<div class="layui-card">
-					<div class="layui-card-header posRel">
+					<!-- <div class="layui-card-header posRel">
 						<span class="itemDivs">lng行情管理</span>
-					</div>
+					</div> -->
 					<div class="layui-card-body">
-						<div class="filter layui-clear" style="margin:0px 0 20px;">
+						<div class="filter layui-clear">
 							<div class="filterItem" style="width: 160px;">
 								<div class="layui-input-inline" style="width: 160px;">
 									<input id="provPyInp" type="text" class="layui-input" placeholder="请输入省拼音码" autocomplete="off"/>
@@ -40,11 +46,7 @@
 							
 							<div class="filterItem_spec" style="float:left;margin-right:15px;">
 								<div class="layui-input-inline" style="width:130px;">
-									 <input id="stDate" type="text" placeholder="请选择起始时间" readonly class="layui-input"/>
-								</div>
-								<span style="margin:0 5px;">至</span>
-								<div class="layui-input-inline" style="width:130px;">
-									 <input id="edDate" type="text" placeholder="请选择结束时间" readonly class="layui-input"/>
+									 <input id="lngDateInp" type="text" placeholder="请选择时间" readonly class="layui-input"/>
 								</div>
 							</div>
 							
@@ -61,14 +63,23 @@
 			</div>
 		</div>
 		
-		
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+			var prevDate = '',currDate = '',nextDate = '',remarkTxt;
 			layui.use(['layer','table','form','laydate'],function(){
 				var layer = layui.layer,form = layui.form,table=layui.table,laydate=layui.laydate;
-				laydate.render({'elem':'#stDate'});
-				laydate.render({'elem':'#edDate'});
+				laydate.render({'elem':'#lngDateInp',done: function(value){
+					if(value == ''){
+						var date = new Date()
+						value = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate()
+					}
+					currDate = value;
+					remarkTxt = value + '(备注)';
+					prevDate = page.selDateCalDate(value,-1)
+					nextDate = page.selDateCalDate(value,+1);
+					page.loadLngData();
+				}});
 				form.on('select(lqTypeSel)',function(data){
 					data.value == '' ? $('#lqTypeInp').val('') : $('#lqTypeInp').val(data.value);
 					page.loadLngData();
@@ -76,8 +87,20 @@
 				var page = {
 					init : function(){
 						this.loadLqTypeData();
-						this.loadLngData();
 						this.bindEvent();
+						this.calDate();
+						$('#lngDateInp').val(currDate);
+					},
+					//计算日期
+					calDate : function(value){
+						var date = new Date(),prevDay = new Date(),nextDay = new Date();
+						currDate = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate();
+						prevDay.setTime(date.getTime()-24*60*60*1000);
+						nextDay.setTime(date.getTime()+24*60*60*1000);
+						prevDate = prevDay.getFullYear()+"-" + (prevDay.getMonth()+1) + "-" + prevDay.getDate();
+						nextDate = nextDay.getFullYear()+"-" + (nextDay.getMonth()+1) + "-" + nextDay.getDate();
+						remarkTxt = currDate + '(备注)';
+						this.loadLngData();
 					},
 					bindEvent : function(){
 						var _this = this;
@@ -101,7 +124,6 @@
 								_this.loadLngData();
 							}, 500);
 						});
-						
 						$('#ycPyInp').keyup(function (ev) {
 							var keyWord=$('#ycPyInp').val();
 							clearTimeout(this.timer);
@@ -110,7 +132,14 @@
 								_this.loadLngData();
 							}, 500);
 						});
-						
+					},
+					selDateCalDate : function(date,day){
+						var dd = new Date(date);
+					　　 dd.setDate(dd.getDate() + day);
+					　　 var y = dd.getFullYear();
+					　　 var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
+					　　 var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+						return y + "-" + m + "-" + d;
 					},
 					loadLqTypeData : function(){
 						var _this = this;
@@ -148,9 +177,8 @@
 						var ycPyInp = $.trim($('#ycPyInp').val()),
 							lqTypeInp = $('#lqTypeInp').val(),
 							provPyInp = $.trim($('#provPyInp').val()),
-							stDateInp = $('#stDate').val(),
-							edDateInp = $('#edDate').val();
-						var field = {gsNamePy:ycPyInp,gsId:lqTypeInp,provPy:provPyInp,priceDate:''};
+							lngDateInp = $('#lngDateInp').val();
+						var field = {gsNamePy:ycPyInp,gasTypeId:lqTypeInp,provPy:provPyInp,priceDate:lngDateInp};
 						table.render({
 							elem: '#lngTable',
 							height: 'full-150',
@@ -173,10 +201,15 @@
 									{field : 'gfName', title: '液厂名称',align:'center'},
 									{field : 'province', title: '归属地',align:'center'},
 									{field : 'gfType', title: '液质类型',align:'center'},
-									{field : 'prePrice', title: '昨日价格',align:'center'},
-									{field : 'currPrice', title: '今日价格',align:'center'},
-									{field : 'nextPrice', title: '明日价格',align:'center'},
-									{field : 'remark', title: '备注',align:'center'}
+									{field : 'prePrice', title:prevDate ,align:'center'},
+									{field : 'currPrice', title: currDate,align:'center',edit: 'text',templet:function(d){
+										var str = '';
+										str += '<span id="currPri_'+ d.gfId +'" onclick="test()" style="cursor:pointer;">点击</span>';
+										str += d.currPrice;
+										return str;
+									}},
+									{field : 'nextPrice', title: nextDate,align:'center',edit: 'text'},
+									{field : 'remark', title: remarkTxt,align:'center',edit: 'text'}
 								]
 							],
 							done : function(res, curr, count){
@@ -186,8 +219,52 @@
 						});
 					}
 				};
+				table.on('edit(lngTable)',function(obj){
+					var value = obj.value,priceDate = '',priceNum = 0,remark='';
+					var gfId = obj.data.gfId,regNum = /^(0|[1-9][0-9]*)$/,isPassFlag = false;
+					if(obj.field == 'currPrice' || obj.field == 'remark'){
+						if(obj.field == 'currPrice'){
+							var selector = obj.tr.selector+' td[data-field="'+obj.field+'"] div';
+							var oldtext = $(selector).text();
+							if(!regNum.test( value )){
+								layer.msg('价格须为大于等于0的正整数,请从新填写');
+								obj.value = 0;
+								$(obj.tr.selector + ' td[data-field="' + obj.field + '"] input').val(oldtext);
+								return;
+							}
+							priceNum = value;
+						}else{
+							remark = value;
+						}
+						priceDate = obj.data.currDate;
+					}else if(obj.field == 'nextPrice'){
+						priceDate = obj.data.nextDate;
+						priceNum = value;
+					}
+					//layer.load();
+					var field = {gfId:gfId,price:priceNum,priceDate:priceDate,remark:remark};
+					/*$.ajax({
+						type:"post",
+						data : { id:field },
+						dataType:"json",
+						url:"/lng/addBatchLngData",
+						success:function (json){
+							layer.closeAll('loading');
+							if(json.code == 200){
+							}else if(json.code == 1000){
+								layer.msg('服务器错误');
+							}else if(json.code == 50001){
+							}
+						}
+					});*/
+					
+					
+				});
 				page.init();
 			});
+			function test(){
+				alert("----")
+			}
 		</script>
 	</body>
 </html>
