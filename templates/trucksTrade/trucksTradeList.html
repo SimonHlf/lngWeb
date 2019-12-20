@@ -24,7 +24,7 @@
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>
 							<div class="filterItemSel layui-form">
-								<input type="hidden" id="tradeTypeInp"/>
+								<input type="hidden" id="tradeTypeInp" value="1"/>
 								<select id="tradeTypeSel" lay-filter="tradeTypeSel">
 									<option value="">请选择贸易类型</option>
 									<option value="1">租赁</option>
@@ -38,14 +38,14 @@
 								<p>
 									<span class="currStaSpan passBg"></span>
 									<span>表示审核通过</span>
-								</p>
+								</p> 
 								<p>
 									<span class="currStaSpan noPassBg"></span>
 									<span>表示审核未通过</span>
 								</p>
 							</div>
 						</div>
-						<table id="compTable" class="layui-table" lay-filter="compTable"></table>
+						<table id="truckTradeTab" class="layui-table" lay-filter="truckTradeTab"></table>
 					</div>
 				</div>
 			</div>
@@ -54,7 +54,78 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			
+			var typeId = '',checkFlag = false,compId = '',checkSta='',globalOpts = '',addEditFlag = false,compName='',currPage='compListPage';
+			layui.use(['layer','table','form'],function(){
+				var layer = layui.layer,table = layui.table,form = layui.form;
+				var page = {
+					init : function(){
+						this.loadTrucksTradeList();
+					},
+					loadTrucksTradeList : function(){
+						var _this = this;
+						layer.load();
+						var checkStaInp = $('#checkStaInp').val(),
+							tradeTypeInp = $('#tradeTypeInp').val();
+						var field = {tradeType:tradeTypeInp,checkSta:checkStaInp};
+						table.render({
+							elem: '#truckTradeTab',
+							height: 'full-150',
+							url : '/trucksTrade/queryTrucksTrade',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas,
+									"count":res.count
+								}
+							},
+							where:field,
+							page : true,
+							limit:20,
+							even : true,
+							text: {none : '暂无相关数据'},
+							limits:[10,20,30,40],
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'name', title: '公司名称',width:'200',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										str += '<span>'+ d.name +'</span>';
+										return str;
+									}},
+									{field : 'lxName', title: '联系人',width:'100',align:'center'},
+									{field : 'lxTel', title: '联系电话',width:'150',align:'center'},
+									{field : 'companyType', title: '公司类型',width:'120',align:'center',templet : function(d){
+										return d.companyType.name;
+									}},
+									{field : 'address', title: '公司地址',width:'260',align:'center'},
+									{field : 'province', title: '所在省',width:'120',align:'center'},
+									{field : 'city', title: '所在市',width:'120',align:'center'},
+									{field : 'county', title: '所在县/区',width:'120',align:'center'},
+									{field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
+									{field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
+									{field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
+									{field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
+									{field : '', title: '操作', fixed: 'right',width:'120', align:'center',templet : function(d){
+										var strHtml = '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" checkSta="'+ d.checkStatus +'" lay-event="viewCheckComp" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看信息</a>';
+										return strHtml;
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								layer.closeAll('loading');
+							}
+						});
+					}
+				};
+				page.init();
+			});
 		</script>
 		
 	</body>
