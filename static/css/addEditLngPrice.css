@@ -91,3 +91,34 @@ body{
 	color: #fff;
 	opacity: .8;
 }
+.priceChange{
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	line-height: 40px;
+	font-size: 16px;
+}
+.priceChange i,
+.priceChange p{
+	float: left;
+}
+.priceChange p{
+	font-weight: bold;
+}
+.priceChange i{
+	font-size: 20px;
+	margin-top: 1px;
+}
+.priceChange i.upArrow,
+.priceChange i.upArrow ~ p{
+	color: red;
+}
+.priceChange i.downArrow{
+	display: block;
+	transform: rotate(180deg);
+}
+.priceChange i.downArrow,
+.priceChange i.downArrow ~ p{
+	color: #05b105;
+}

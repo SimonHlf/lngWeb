@@ -70,5 +70,106 @@
 	color: #009688;
 }
 .hasNoPassCol{
-	color: #f00;;
+	color: #f00;
+}
+.editTdBtn{
+	width:100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top:0;
+}
+.changeWrap{
+	position: absolute;
+	right: 10px;
+	top: 0;
+	height: 100%;
+	line-height: 24px;
+	font-size: 12px;
+}
+.changeWrap i,
+.changeWrap p{
+	float: left;
+}
+.changeWrap p{
+	font-weight: bold;
+}
+.changeWrap i{
+	font-size: 14px;
+	margin-top: 1px;
+}
+.changeWrap i.upArrow,
+.changeWrap i.upArrow ~ p{
+	color: #ff6565;
+}
+.changeWrap i.downArrow{
+	display: block;
+	transform: rotate(180deg);
+	margin-top: 0px;
+}
+.changeWrap i.downArrow,
+.changeWrap i.downArrow ~ p{
+	color: #05b105;
+}
+.filterItem_spec{
+	float:left;
+	margin-right:15px;
+}
+.filterItem_spec .layui-input-inline{
+	width: 120px;
+}
+.filterItem_spec .layui-input-inline,
+.filterItem_spec a{
+	float: left;
+}
+.filterItem_spec .layui-input-inline input{
+	text-align: center;
+}
+.filterItem_spec a{
+	width: 40px;
+	height: 36px;
+	line-height: 36px;
+	border:1px solid #e6e6e6;
+	text-align: center;
+}
+.filterItem_spec a.prevBtn{
+	border-right: none;
+	border-radius: 2px 0 0 2px;
+	margin-right: -1px;
+}
+.filterItem_spec a.nextBtn{
+	border-left: none;
+	border-radius: 0px 2px 2px 0px;
+	margin-left: -1px;
+}
+.filterItem_spec a.nextBtn i{
+	transform: rotate(180deg);
+	display: inline-block;
+}
+.filterItem_spec a:hover i{
+	color:#009688;
+}
+.filterItem_spec a.resetBtn{
+	margin-left: 10px;
+	margin-right: 20px;
+	border-radius: 2px;
+}
+.filterItem_spec a.resetBtn i{
+	font-size: 14px;
+	transform: rotate(-90deg);
+	display: inline-block;
+}
+.batchCreateBtn{
+	float: right;
+	width: 150px;
+	height: 38px;
+	line-height: 38px;
+	background: #009688;
+	border-radius: 4px;
+	text-align: center;
+	color: #fff;
+}
+.batchCreateBtn:hover{
+	color: #fff;
+	opacity: .8;
 }

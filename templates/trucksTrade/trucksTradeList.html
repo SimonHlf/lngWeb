@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>槽车租卖管理</title>
+	</head>
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">槽车租卖管理</span>
+					</div>
+					<div class="layui-card-body">
+						<input type="hidden" id="checkStaInp" value="-1" />
+						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
+							<div class="filterItem">
+								<input type="radio" name="validStatus" value="0" title="未审核" lay-filter="checkStaFilter" checked/>
+								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
+								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
+							</div>
+							<div class="filterItemSel layui-form">
+								<input type="hidden" id="tradeTypeInp"/>
+								<select id="tradeTypeSel" lay-filter="tradeTypeSel">
+									<option value="">请选择贸易类型</option>
+									<option value="1">租赁</option>
+									<option value="2">买卖</option>
+								</select>
+							</div>
+							<div class="filterItem">
+								<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
+							</div>
+							<div class="filterItem">
+								<p>
+									<span class="currStaSpan passBg"></span>
+									<span>表示审核通过</span>
+								</p>
+								<p>
+									<span class="currStaSpan noPassBg"></span>
+									<span>表示审核未通过</span>
+								</p>
+							</div>
+						</div>
+						<table id="compTable" class="layui-table" lay-filter="compTable"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+		</script>
+		
+	</body>
+</html>

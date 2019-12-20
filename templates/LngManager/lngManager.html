@@ -38,16 +38,17 @@
 							<div class="filterItem" style="width: 160px;">
 								<input type="hidden" id="lqTypeInp" />
 								<div class="layui-input-inline layui-form">
-									<select id="lqTypeSel" lay-filter="lqTypeSel"> 
-										<option value="">请选择液质类型</option>
-								     </select>
+									<select id="lqTypeSel" lay-filter="lqTypeSel"></select>
 								</div>
 							</div>
 							
-							<div class="filterItem_spec" style="float:left;margin-right:15px;">
-								<div class="layui-input-inline" style="width:130px;">
+							<div class="filterItem_spec">
+								<a class="prevBtn" href="javascript:void(0)" title="上一天"><i class="iconfont icon-fanhui"></i></a>
+								<div class="layui-input-inline">
 									 <input id="lngDateInp" type="text" placeholder="请选择时间" readonly class="layui-input"/>
 								</div>
+								<a class="nextBtn" href="javascript:void(0)" title="下一天"><i class="iconfont icon-fanhui"></i></a>
+								<a href="javascript:void(0)" class="resetBtn" title="重置日期"><i class="layui-icon layui-icon-refresh-3"></i></a>
 							</div>
 							
 							<div class="filterItem">
@@ -55,6 +56,10 @@
 									<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
 								</div>
 							</div>
+							<a class="batchCreateBtn" href="javascript:void(0)">
+								<i class="iconfont icon-fuzhi"></i>
+								<span>批量复制昨天</span>
+							</a>
 							
 						</div>
 						<table id="lngTable" class="layui-table" lay-filter="lngTable"></table>
@@ -66,7 +71,8 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var prevDate = '',currDate = '',nextDate = '',remarkTxt;
+			var prevDate = '',currDate = '',nextDate = '',remarkTxt = '',addEditFlag = false;
+			var currGfId = 0,specDate = '';
 			layui.define(['table'], function (exports) {
 				var table = layui.table;
 				exports('loadLngData',function(){
@@ -75,6 +81,7 @@
 						provPyInp = $.trim($('#provPyInp').val()),
 						lngDateInp = $('#lngDateInp').val();
 					var field = {gsNamePy:ycPyInp,gasTypeId:lqTypeInp,provPy:provPyInp,priceDate:lngDateInp};
+					layer.load();
 					table.render({
 						elem: '#lngTable',
 						height: 'full-150',
@@ -97,15 +104,42 @@
 								{field : 'gfName', title: '液厂名称',align:'center'},
 								{field : 'province', title: '归属地',align:'center'},
 								{field : 'gfType', title: '液质类型',align:'center'},
-								{field : 'prePrice', title:prevDate ,align:'center'},
-								{field : 'currPrice', title: currDate,align:'center',edit: 'text',templet:function(d){
+								{field : 'prePrice', title:prevDate ,align:'center',templet:function(d){
 									var str = '';
-									str += '<span id="currPri_'+ d.gfId +'" onclick="test()" style="cursor:pointer;">点击</span>';
-									str += d.currPrice;
+									str += '<a href="javascript:void(0)" class="editTdBtn" gfName="'+ d.gfName +'" specDate="'+ d.preDate +'" onclick=addNewPriceFun(this,"'+ d.gfId +'")></a>';
+									str += d.prePrice == 0 ? '' : d.prePrice;
 									return str;
 								}},
-								{field : 'nextPrice', title: nextDate,align:'center',edit: 'text'},
-								{field : 'remark', title: remarkTxt,align:'center',edit: 'text'}
+								{field : 'currPrice', title: '<strong style="color:#F47837;">'+ currDate +'</strong>',align:'center',templet:function(d){
+									var str = '';
+									str += '<a href="javascript:void(0)" class="editTdBtn" gfName="'+ d.gfName +'" specDate="'+ d.currDate +'" onclick=addNewPriceFun(this,"'+ d.gfId +'")></a>';
+									if(d.diffPrice_curr != 0){
+										if(d.diffPrice_curr > 0){
+											str += '<div class="changeWrap"><i class="iconfont icon-jiantou upArrow"></i><p>'+ d.diffPrice_curr +'</p></div>';
+										}else if(d.diffPrice_curr < 0){
+											console.log("jinlaiel")
+											var calRes = (d.diffPrice_curr).toString().substr(1);
+											str += '<div class="changeWrap"><i class="iconfont icon-jiantou downArrow"></i><p>'+ calRes +'</p></div>';
+										}
+									}
+									str += d.currPrice == 0 ? '' : d.currPrice;
+									return str;
+								}},
+								{field : 'nextPrice', title: nextDate,align:'center',templet:function(d){
+									var str = '';
+									str += '<a href="javascript:void(0)" class="editTdBtn" gfName="'+ d.gfName +'" specDate="'+ d.nextDate +'" onclick=addNewPriceFun(this,"'+ d.gfId +'")></a>';
+									if(d.diffPrice_next != 0){
+										if(d.diffPrice_next > 0){
+											str += '<div class="changeWrap"><i class="iconfont icon-jiantou upArrow"></i><p>'+ d.diffPrice_next +'</p></div>';
+										}else if(d.diffPrice_next < 0){
+											var calRes = (d.diffPrice_next).toString().substr(1);
+											str += '<div class="changeWrap"><i class="iconfont icon-jiantou downArrow"></i><p>'+ calRes +'</p></div>';
+										}
+									}
+									str += d.nextPrice == 0 ? '' : d.nextPrice;
+									return str;
+								}},
+								{field : 'remark', title: remarkTxt,align:'center'}
 							]
 						],
 						done : function(res, curr, count){
@@ -115,18 +149,18 @@
 					});
 				});
 			});
-			
-			
-			layui.use(['layer','table','form','laydate'],function(){
-				var layer = layui.layer,form = layui.form,table=layui.table,laydate=layui.laydate;
+			layui.config({
+				base: '/js/frame/js/'
+			}).use(['layer','table','form','laydate','batchCopy'],function(){
+				var layer = layui.layer,form = layui.form,table=layui.table,laydate=layui.laydate,batchCopy = layui.batchCopy;
 				laydate.render({'elem':'#lngDateInp',done: function(value){
 					if(value == ''){
 						var date = new Date()
-						value = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate()
+						value = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate();
 					}
 					currDate = value;
 					remarkTxt = value + '(备注)';
-					prevDate = page.selDateCalDate(value,-1)
+					prevDate = page.selDateCalDate(value,-1);
 					nextDate = page.selDateCalDate(value,+1);
 					layui.loadLngData();
 				}});
@@ -135,6 +169,12 @@
 					layui.loadLngData();
 				});
 				var page = {
+					data : {
+						indexLayer : '<div class="indexLayer"><div class="loadingWrap"></div></div>',
+						copyTips : '<div class="spinner"></div><p>正在批量复制中<span class="dotting"></span></p><p>请勿刷新页面</p>',
+						copySuccTips : '<i class="iconfont icon-success readSucc"></i><p class="succTxt">批量复制成功，<span id="countNum"></span>秒后关闭</p>',
+						copyListTab : '<div class="copyListWrap"><a class="closeCopyBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-close"></i></a><div class="copyTit"></div><div class="tableWrap"><table id="copyListTab" class="layui-table" lay-filter="copyListTab"></table></div></div>'
+					},
 					init : function(){
 						this.loadLqTypeData();
 						this.bindEvent();
@@ -168,6 +208,9 @@
 						
 						$('#provPyInp').keyup(function (ev) {
 							var keyWord=$('#provPyInp').val();
+							if(ev.keyCode == 8 && $('#ycPyInp').val().length != 0){
+								return;
+							}
 							clearTimeout(this.timer);
 							layer.load();
 							this.timer = setTimeout(function(){
@@ -176,11 +219,103 @@
 						});
 						$('#ycPyInp').keyup(function (ev) {
 							var keyWord=$('#ycPyInp').val();
+							if(ev.keyCode == 8 && $('#ycPyInp').val().length != 0){
+								return;
+							}
 							clearTimeout(this.timer);
 							layer.load();
 							this.timer = setTimeout(function(){
 								layui.loadLngData();
 							}, 500);
+						});
+						//上一日
+						$('.prevBtn').on('click',function(){
+							$('#lngDateInp').val(page.selDateCalDate($('#lngDateInp').val(),-1));
+							currDate = $('#lngDateInp').val();
+							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
+							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
+							remarkTxt = currDate + '(备注)';
+							layui.loadLngData();
+						});
+						//下一日
+						$('.nextBtn').on('click',function(){
+							$('#lngDateInp').val(page.selDateCalDate($('#lngDateInp').val(),+1));
+							currDate = $('#lngDateInp').val();
+							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
+							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
+							remarkTxt = currDate + '(备注)';
+							layui.loadLngData();
+						});
+						//重置
+						$('.resetBtn').on('click',function(){
+							var date = new Date()
+							currDate = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate();
+							$('#lngDateInp').val(currDate);
+							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
+							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
+							remarkTxt = currDate + '(备注)';
+							layui.loadLngData();
+						});
+						$('.batchCreateBtn').on('click',function(){
+							layer.load();
+							$.ajax({
+								type:"post",
+								data : { priceDate: $('#lngDateInp').val()},
+								dataType:"json",
+								url:"/lng/checkRemainFlag",
+								success:function (json){
+									layer.closeAll('loading');
+									console.log(json)
+									if(json.code == 200){
+										if(json.datas){
+											if($('#lngDateInp').val() != ''){
+												layer.confirm('是否确认批量复制[<span style="color:red;">'+ prevDate +'</span>]号余下未变动价格填充至[<span style="color:red">'+ currDate +'</span>]号?', {
+													title:'提示',
+												    skin: 'layui-layer-molv',
+												    btn: ['确定','取消'] //按钮
+												},function(index){
+													layer.close(index);
+													_this.remainBatchData();
+												});
+											}else{
+												layer.msg('请选择日期');
+											}
+										}else{
+											layer.msg($('#lngDateInp').val() + '号价格已批量复制完成，不能重复复制');
+										}
+									}else if(json.code == 1000){
+										layer.msg('服务器错误');
+									}else if(json.code == 70001){
+										layer.msg('抱歉，您暂无权限进行批量复制昨日价格');
+									}
+								}
+							});
+						});
+					},
+					//批量复制昨天
+					remainBatchData : function(){
+						var _this = this;
+						parent.parent.$('body').append(this.data.indexLayer);
+						parent.parent.$('body').find('.loadingWrap').html(this.data.copyTips);
+						parent.parent.$('body').append(this.data.copyListTab);
+						parent.parent.$('body').find('.copyTit').html($('#lngDateInp').val() + '日批量复制记录');
+						$.ajax({
+							type:"post",
+							data : { priceDate: $('#lngDateInp').val()},
+							dataType:"json",
+							url:"/lng/addRemainBatchData",
+							success:function (json){
+								layer.closeAll('loading');
+								console.log(json)
+								if(json.code == 200){
+									parent.parent.$('body').find('.loadingWrap').html(_this.data.copySuccTips);
+									_this.showTime(3,parent.parent.$('body').find('#countNum'),json.datas);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 70001){
+									layer.msg('抱歉，您暂无权限进行批量复制昨日价格');
+								}
+							}
 						});
 					},
 					selDateCalDate : function(date,day){
@@ -190,6 +325,26 @@
 					　　 var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
 					　　 var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
 						return y + "-" + m + "-" + d;
+					},
+					showTime : function(count,obj,copyList){
+						var _this = this;
+						$(obj).html(count);
+						if(count == 0){
+							parent.parent.$('body').find('.loadingWrap').remove();
+							parent.parent.$('.copyListWrap').show();
+							batchCopy.renderCopyList(copyList);
+							parent.parent.$('.closeCopyBtn').on('click',function(){
+								parent.parent.$('body').find('.indexLayer').remove();
+								parent.parent.$('body').find('.copyListWrap').remove();
+								layui.loadLngData();
+							});
+							console.log(copyList)
+						}else{
+							count -= 1;
+							setTimeout(function () {
+								_this.showTime(count,obj,copyList);
+							}, 1000);
+						}
 					},
 					loadLqTypeData : function(){
 						var _this = this;
@@ -224,57 +379,27 @@
 						}
 					}
 				};
-				table.on('edit(lngTable)',function(obj){
-					var value = obj.value,priceDate = '',priceNum = 0,remark='';
-					var gfId = obj.data.gfId,regNum = /^(0|[1-9][0-9]*)$/,isPassFlag = false;
-					if(obj.field == 'currPrice' || obj.field == 'remark'){
-						if(obj.field == 'currPrice'){
-							var selector = obj.tr.selector+' td[data-field="'+obj.field+'"] div';
-							var oldtext = $(selector).text();
-							if(!regNum.test( value )){
-								layer.msg('价格须为大于等于0的正整数,请从新填写');
-								obj.value = 0;
-								$(obj.tr.selector + ' td[data-field="' + obj.field + '"] input').val(oldtext);
-								return;
-							}
-							priceNum = value;
-						}else{
-							remark = value;
-						}
-						priceDate = obj.data.currDate;
-					}else if(obj.field == 'nextPrice'){
-						priceDate = obj.data.nextDate;
-						priceNum = value;
-					}
-					//layer.load();
-					var field = {gfId:gfId,price:priceNum,priceDate:priceDate,remark:remark};
-					/*$.ajax({
-						type:"post",
-						data : { id:field },
-						dataType:"json",
-						url:"/lng/addBatchLngData",
-						success:function (json){
-							layer.closeAll('loading');
-							if(json.code == 200){
-							}else if(json.code == 1000){
-								layer.msg('服务器错误');
-							}else if(json.code == 50001){
-							}
-						}
-					});*/
-				});
 				page.init();
 			});
-			function test(){
+			function addNewPriceFun(obj,gfId){
+				var gfName = $(obj).attr('gfName');
+				currGfId = gfId;
+				specDate = $(obj).attr('specDate');
+				addEditFlag = true;
 				layer.open({
-					title : '123',
+					title : '液厂['+ gfName +'] ('+ specDate +')',
 					type: 2,
 					skin:'layui-layer-molv', //样式类名
 					closeBtn: 1, //不显示关闭按钮
 					area : ['400px','350px'],
 					content: '../lngManager/addEditLngPrice.html',
 					end : function(){
-						//layui.loadLngData();
+						if(addEditFlag){
+							layui.loadLngData();
+						}
+					},
+					cancel : function(){
+						addEditFlag = false;
 					}
 				});
 			}
