@@ -49,6 +49,9 @@ body{
 	font-weight: bold;
 	font-size: 18px;
 }
+.priceItem .inpWrap input.focusCls{
+	border-bottom:1px solid #009f95;
+}
 .priceItem .inpWrap input::-webkit-input-placeholder{
 	font-weight: normal;
 	font-size: 14px;
@@ -75,17 +78,28 @@ body{
 	width:96%;
 	padding: 10px 2%;
 }
-.saveBtn{
-	display: block;
+.saveBtn,
+.notSave{
 	width: 140px;
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
 	border-radius: 4px;
-	background: #009f95;
 	margin:15px auto 0;
 	color: #fff;
 	font-size: 16px;
+	display: block;
+}
+.notSave{
+	background: #ccc;
+	cursor:default ;
+	display: none;
+}
+.notSave:hover{
+	color: #fff;
+}
+.saveBtn{
+	background:#009f95 ;
 }
 .saveBtn:hover{
 	color: #fff;

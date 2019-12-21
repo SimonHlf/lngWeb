@@ -97,12 +97,12 @@
 						page : false,
 						even : true,
 						text: {none : '暂无相关数据'},
-						cellMinWidth:150,
+						// cellMinWidth:150,
 						cols : [
 							[
 								{field : '', title: '序号',type:'numbers', align:'center'},
-								{field : 'gfName', title: '液厂名称',align:'center'},
 								{field : 'province', title: '归属地',align:'center'},
+								{field : 'gfName', title: '液厂名称',align:'center'},
 								{field : 'gfType', title: '液质类型',align:'center'},
 								{field : 'prePrice', title:prevDate ,align:'center',templet:function(d){
 									var str = '';
@@ -117,7 +117,6 @@
 										if(d.diffPrice_curr > 0){
 											str += '<div class="changeWrap"><i class="iconfont icon-jiantou upArrow"></i><p>'+ d.diffPrice_curr +'</p></div>';
 										}else if(d.diffPrice_curr < 0){
-											console.log("jinlaiel")
 											var calRes = (d.diffPrice_curr).toString().substr(1);
 											str += '<div class="changeWrap"><i class="iconfont icon-jiantou downArrow"></i><p>'+ calRes +'</p></div>';
 										}
@@ -139,11 +138,11 @@
 									str += d.nextPrice == 0 ? '' : d.nextPrice;
 									return str;
 								}},
-								{field : 'remark', title: remarkTxt,align:'center'}
+								{field : 'remark', title: '备注',width:'20%',align:'center'}
 							]
 						],
 						done : function(res, curr, count){
-							console.log(res)
+							//console.log(res)
 							layer.closeAll('loading');
 						}
 					});
@@ -159,7 +158,6 @@
 						value = date.getFullYear()+"-" + (date.getMonth()+1) + "-" + date.getDate();
 					}
 					currDate = value;
-					remarkTxt = value + '(备注)';
 					prevDate = page.selDateCalDate(value,-1);
 					nextDate = page.selDateCalDate(value,+1);
 					layui.loadLngData();
@@ -189,7 +187,6 @@
 						nextDay.setTime(date.getTime()+24*60*60*1000);
 						prevDate = prevDay.getFullYear()+"-" + (prevDay.getMonth()+1) + "-" + prevDay.getDate();
 						nextDate = nextDay.getFullYear()+"-" + (nextDay.getMonth()+1) + "-" + nextDay.getDate();
-						remarkTxt = currDate + '(备注)';
 						layui.loadLngData();
 					},
 					bindEvent : function(){
@@ -234,7 +231,6 @@
 							currDate = $('#lngDateInp').val();
 							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
 							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
-							remarkTxt = currDate + '(备注)';
 							layui.loadLngData();
 						});
 						//下一日
@@ -243,7 +239,6 @@
 							currDate = $('#lngDateInp').val();
 							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
 							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
-							remarkTxt = currDate + '(备注)';
 							layui.loadLngData();
 						});
 						//重置
@@ -253,7 +248,6 @@
 							$('#lngDateInp').val(currDate);
 							prevDate = page.selDateCalDate($('#lngDateInp').val(),-1);
 							nextDate = page.selDateCalDate($('#lngDateInp').val(),+1);
-							remarkTxt = currDate + '(备注)';
 							layui.loadLngData();
 						});
 						$('.batchCreateBtn').on('click',function(){

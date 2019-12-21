@@ -19,7 +19,7 @@
 			</div>
 			<div class="inpWrap">
 				<span>¥</span>
-				<input id="priceInp" type="text" placeholder="请输入今日价格(0-1000)" maxlength="5" autocomplete="off" />
+				<input id="priceInp" type="text" placeholder="请输入价格(0-10000)" maxlength="5" autocomplete="off" />
 				<div class="priceChange"></div>
 			</div>
 		</div>
@@ -29,89 +29,102 @@
 				<textarea id="remark" placeholder="请输入备注(30字内)" maxlength="30"></textarea>
 			</div>
 		</div>
+		<a class="notSave" href="javascript:void(0)">保存</a>
 		<a class="saveBtn" href="javascript:void(0)">保存</a>
-		
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var currGfId = parent.currGfId,specDate = parent.specDate,ckPrice = 0;
+			var currGfId = parent.currGfId,specDate = parent.specDate,ckPrice = 0,isPassFlag = false;;
 			layui.use(['layer'],function(){
 				var layer = layui.layer;
 				var page = {
 					init : function(){
 						this.loadGfDetInfo();
 						this.bindEvent();
+						$('#priceInp').focus().addClass('focusCls');
+					},
+					regPrice : function(value){
+						var str = '';
+						var regNum = /^\+?[1-9]\d*$/;
+						if(value == ''){
+							layer.msg('请输入价格');
+							$('.priceChange').html('');
+							isPassFlag = false;
+							return;
+						}
+						if(regNum.test( $.trim(value) )){
+							if(value > 10000){
+								layer.msg('价格最大值不能大于10000');
+								$('.priceChange').html('');
+								isPassFlag = false;
+							}else{
+								if(ckPrice != 0){
+									$('#priceInp').removeClass('focusCls');
+									if(value > ckPrice){
+										var nowPrice = parseInt( $.trim(value) - ckPrice);
+										str += '<i class="iconfont icon-jiantou upArrow"></i>';
+										str += '<p>'+ nowPrice +'</p>';
+									}else if(value < ckPrice){
+										var nowPrice = parseInt( ckPrice - $.trim(value));
+										str += '<i class="iconfont icon-jiantou downArrow"></i>';
+										str += '<p>'+ nowPrice +'</p>';
+									}
+									$('.priceChange').html(str);
+									isPassFlag = true;
+								}
+							}
+						}else{
+							layer.msg('价格须为大于0的正整数');
+							$('.priceChange').html('');
+							isPassFlag = false;
+						}
 					},
 					bindEvent : function(){
+						var _this = this;
+						$('#priceInp').focus(function(){
+							$(this).addClass('focusCls');
+						});
 						$('#priceInp').blur(function(){
-							var regNum = /^\+?[1-9]\d*$/;
-							var str = '';
-							if($(this).val() == ''){
-								layer.msg('请输入价格');
-								$('#priceInp').val('');
-								$('.priceChange').html('');
-								return;
-							}
-							if(regNum.test( $.trim($(this).val()) )){
-								if($(this).val() > 10000){
-									layer.msg('价格最大值不能大于10000');
-									$('#priceInp').val('');
-									$('.priceChange').html('');
-								}else{
-									if(ckPrice != 0){
-										if($(this).val() > ckPrice){
-											var nowPrice = parseInt( $.trim($(this).val()) - ckPrice);
-											str += '<i class="iconfont icon-jiantou upArrow"></i>';
-											str += '<p>'+ nowPrice +'</p>';
-										}else if($(this).val() < ckPrice){
-											var nowPrice = parseInt( ckPrice - $.trim($(this).val()));
-											str += '<i class="iconfont icon-jiantou downArrow"></i>';
-											str += '<p>'+ nowPrice +'</p>';
-										}
-										$('.priceChange').html(str);
-									}
-								}
-							}else{
-								layer.msg('价格须为大于0的正整数');
-								$('#priceInp').val('');
-								$('.priceChange').html('');
-							}
+							_this.regPrice($(this).val());
 						});
 						$('.saveBtn').on('click',function(){
 							var priceInp = $.trim($('#priceInp').val()),
 								remark = $.trim($('#remark').val());
-							var index= parent.layer.getFrameIndex(window.name)
-							if(priceInp == ''){
-								layer.msg('请输入价格');
-								return;
-							}
-							layer.load('1');
-							var field = { gfId:currGfId,priceDate:specDate,price:priceInp,remark:remark };
-							$.ajax({
-								type:"post",
-								data :field ,
-								dataType:"json",
-								url:"/lng/addBatchLngData",
-								success:function (json){
-									layer.closeAll('loading');
-									if(json.code == 200){
-										if(json.datas[0].existList.length == 0){
-											layer.msg("添加价格成功",{icon:1,time:1000},function(){
-												parent.addEditFlag = true;
-												parent.layer.close(index);
-											});
-										}else{
-											layer.msg('当前输入价格已存在');
+							var index= parent.layer.getFrameIndex(window.name);
+							if(isPassFlag){
+								layer.load('1');
+								var field = { gfId:currGfId,priceDate:specDate,price:priceInp,remark:remark };
+								$.ajax({
+									type:"post",
+									data :field ,
+									dataType:"json",
+									url:"/lng/addBatchLngData",
+									success:function (json){
+										layer.closeAll('loading');
+										if(json.code == 200){
+											if(json.datas[0].existList.length == 0){
+												layer.msg("添加价格成功",{icon:1,time:1000},function(){
+													parent.addEditFlag = true;
+													parent.layer.close(index);
+												});
+											}else{
+												layer.msg('当前输入价格已存在');
+											}
+										}else if(json.code == 1000){
+											layer.msg('服务器错误');
+										}else if(json.code == 10002){
+											layer.msg('保存参数不能为空');
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无添加价格的权限');
 										}
-									}else if(json.code == 1000){
-										layer.msg('服务器错误');
-									}else if(json.code == 10002){
-										layer.msg('保存参数不能为空');
-									}else if(json.code == 70001){
-										layer.msg('抱歉，您暂无添加价格的权限');
 									}
-								}
-							});
+								});
+							}
+							// if(priceInp == ''){
+							// 	layer.msg('请输入价格');
+							// 	return;
+							// }
+							
 						});
 					},
 					loadGfDetInfo : function(){

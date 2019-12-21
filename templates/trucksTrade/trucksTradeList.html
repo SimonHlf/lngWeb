@@ -14,6 +14,7 @@
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
 						<span class="itemDivs">槽车租卖管理</span>
+						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加槽车租卖</a>
 					</div>
 					<div class="layui-card-body">
 						<input type="hidden" id="checkStaInp" value="-1" />
@@ -59,7 +60,33 @@
 				var layer = layui.layer,table = layui.table,form = layui.form;
 				var page = {
 					init : function(){
+						this.bindEvent();
 						this.loadTrucksTradeList();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#addTruckTrade').on('click',function(){
+							_this.commonLayer();
+						});
+					},
+					commonLayer : function(){
+						addEditFlag = true;
+						var fullScreenIndex = layer.open({
+							title : '添加槽车买卖',
+							type: 2,
+							closeBtn: 1, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../trucksTrade/addEditTruckTrade.html',
+							end : function(){
+								if(addEditFlag){
+									//page.loadCompList();
+								}
+							},
+							cancel: function () {
+								addEditFlag = false;
+							}
+						});
+						layer.full(fullScreenIndex);
 					},
 					loadTrucksTradeList : function(){
 						var _this = this;
@@ -69,7 +96,7 @@
 						var field = {tradeType:tradeTypeInp,checkSta:checkStaInp};
 						table.render({
 							elem: '#truckTradeTab',
-							height: 'full-150',
+							height: 'full-200',
 							url : '/trucksTrade/queryTrucksTrade',
 							method : 'get',
 							parseData : function(res){
@@ -88,33 +115,30 @@
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'name', title: '公司名称',width:'200',align:'center',templet : function(d){
-										var str = '';
-										if(d.checkStatus == 1){//通过
-											str += '<span class="currCheckFlag passBg"></span>';
-										}else if(d.checkStatus == 2){//不通过
-											str += '<span class="currCheckFlag noPassBg"></span>';
-										}
-										str += '<span>'+ d.name +'</span>';
-										return str;
+									{field : 'tradeType', title: '贸易类型',width:'120',align:'center',templet:function(d){
+										return d.tradeType == 1 ? '租赁' : '买卖';
 									}},
-									{field : 'lxName', title: '联系人',width:'100',align:'center'},
-									{field : 'lxTel', title: '联系电话',width:'150',align:'center'},
-									{field : 'companyType', title: '公司类型',width:'120',align:'center',templet : function(d){
-										return d.companyType.name;
+									{field : 'trucksNo', title: '槽车车牌号',width:'150',align:'center'},
+									{field : 'trucksType', title: '槽车类型',width:'120',align:'center',templet:function(d){
+										return d.trucksType.name;
 									}},
-									{field : 'address', title: '公司地址',width:'260',align:'center'},
-									{field : 'province', title: '所在省',width:'120',align:'center'},
-									{field : 'city', title: '所在市',width:'120',align:'center'},
-									{field : 'county', title: '所在县/区',width:'120',align:'center'},
-									{field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
-									{field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
-									{field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
-									{field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
-									{field : '', title: '操作', fixed: 'right',width:'120', align:'center',templet : function(d){
-										var strHtml = '<a href="javascript:void(0)" compId="'+ d.id +'" compName="'+ d.name +'" checkSta="'+ d.checkStatus +'" lay-event="viewCheckComp" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看信息</a>';
-										return strHtml;
+									{field : 'spYear', title: '车头上牌日期',width:'150',align:'center'},
+									{field : 'trucksHeadType', title: '车头类型',width:'150',align:'center',templet : function(d){
+										return d.trucksHeadType.name;
+									}},
+									{field : 'trucksHeadPp', title: '车头品牌',width:'120',align:'center',templet:function(d){
+										return d.trucksHeadPp.name;
+									}},
+									{field : 'xsDistance', title: '行驶里程(公里)',width:'140',align:'center'},
+									{field : 'wqPfbz', title: '尾气排放标准',width:'120',align:'center',templet:function(d){
+										return d.wqPfbz.name;
 									}}
+									// {field : 'potPpId', title: '储罐品牌',width:'120',align:'center'},
+									// {field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
+									// {field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
+									// {field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
+									// {field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
+									// {field : '', title: '操作', fixed: 'right',width:'120', align:'center'}
 								]
 							],
 							done : function(res, curr, count){

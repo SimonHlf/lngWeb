@@ -54,7 +54,6 @@
 								layer.closeAll('loading');
 							    $('#thumbnailImg').show().attr('src','/temp/' + res.datas);
 							    $('.viewBigImg').show();
-								console.log(res.datas)
 							    succUrl = res.datas;
 						    }
 						});
@@ -141,8 +140,8 @@
 								layer.closeAll('loading');
 								if(json.code == 200){
 									$('#inpLqTypeName').val(json.datas[0].name);
-									succUrl = json.datas[0].yz_img.replace('_small','');
-									$('#thumbnailImg').show().attr('src','../' + json.datas[0].yz_img);
+									succUrl = json.datas[0].yzImg.replace('_small','');
+									$('#thumbnailImg').show().attr('src','../' + json.datas[0].yzImg);
 									$('.viewBigImg').show();
 								}else if(json.code == 50001){
 									layer.msg("未找到当前液质类型", {icon:5,anim:6,time:2000});

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addEditTruckTrade.css"/>
+		<title>添加/编辑槽车租卖</title>
+	</head>
+	<body>
+		<div class="truckTradeWrap layui-form">
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="tradeTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>贸易类型</label>
+				<div class="layui-input-block">
+					<input type="radio" value="1" name="tradeTypeName" title="租赁" lay-filter="tradeTypeFilter"/>
+					<input type="radio" value="2" name="tradeTypeName" title="买卖" lay-filter="tradeTypeFilter"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="compTypeInp" value="1">
+				<label class="layui-form-label"><span class="mustItem">*</span>企业类型</label>
+				<div class="layui-input-block">
+					<input type="radio" value="1" name="compTypeName" title="个人" lay-filter="comTypeFilter"/>
+					<input type="radio" value="2" name="compTypeName" title="公司" lay-filter="comTypeFilter"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="truckTypeInp">
+				<label class="layui-form-label"><span class="mustItem">*</span>货车类型</label>
+				<div class="layui-input-block">
+					<input type="radio" value="1" name="truckTypeName" title="普货" lay-filter="truckTypeFilter"/>
+					<input type="radio" value="2" name="truckTypeName" title="危货" lay-filter="truckTypeFilter"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="compNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
+				<div class="layui-input-block comInpItem">
+					<select id="compNameSel" lay-filter="compNameSel">
+						<option value="">请选择公司名称</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>车辆主图</label>
+				<div class="layui-input-block">
+					<a id="addImgBtn_main" title="添加车辆主图" class="addMainImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+						<img id="thubImg_main"/>
+					</a>
+					<p class="tipsInfo">
+						<i class="iconfont icon-gonggao"></i>
+						<span>请上传车辆主图，建议图片宽高尺寸750*400</span>
+					</p>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="cardTitInp">
+				<input type="hidden" id="cardWordsInp">
+				<input type="hidden" id="cardNumInp">
+				<label class="layui-form-label"><span class="mustItem">*</span>车牌号码</label>
+				<div class="layui-input-block">
+					<div class="carNumSelWrap">
+						<select id="cardTitSel" lay-filter="cardTitSel"></select>
+					</div>
+					<div class="carNumSelWrap">
+						<select id="cardWordSel" lay-filter="cardWordSel"></select>
+					</div>
+					<div class="carNumInpWrap">
+						<input type="text" class="layui-input" placeholder="请输入车牌号码" />
+					</div>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>车头上牌时间</label>
+				<div class="layui-input-block comInpItem">
+					<input id="truckHeadTimeInp" type="text" placeholder="请选择车头上牌时间" readonly class="layui-input"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">购置日期</label>
+				<div class="layui-input-block comInpItem">
+					<input id="truckBuyTime" type="text" placeholder="请选择车辆购置日期" readonly class="layui-input"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="truckHeadTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>车头类型</label>
+				<div class="layui-input-block comInpItem">
+					<select id="truckHeadTypeSel" lay-filter="truckHeadTypeSel">
+						<option value="">请选择车头类型</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="truckHeadBrandInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>车头品牌</label>
+				<div class="layui-input-block comInpItem">
+					<select id="truckHeadBrandSel" lay-filter="truckHeadBrandSel">
+						<option value="">请选择车头品牌</option>
+					</select>
+				</div>
+			</div>
+			
+			<!-- 危货下储罐品牌 容积以及上牌年月 -->
+			<div class="dangerItemWrap">
+				<div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐品牌</label>
+					<input type="hidden" id="tankBandInp"/>
+					<div class="layui-input-block comInpItem">
+						<select id="tankBandSel" lay-filter="tankBandSel">
+							<option value="">请选择储罐品牌</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐容积</label>
+					<div class="layui-input-block comInpItem">
+						<input id="volumeInp" type="text" placeholder="请输入储罐容积(1-1000立方)" class="layui-input" maxlength="4"/>
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐上牌日期</label>
+					<div class="layui-input-block comInpItem">
+						<input id="potYearInp" type="text" placeholder="请选择储罐上牌日期" class="layui-input" readonly/>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>行驶里程</label>
+				<div class="layui-input-block comInpItem">
+					<input id="driveMileInp" type="text" placeholder="请输入车辆行驶里程(公里)" class="layui-input"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="accidentInp">
+				<label class="layui-form-label"><span class="mustItem">*</span>是否发生事故</label>
+				<div class="layui-input-block">
+					<input type="radio" value="0" title="不公开" lay-filter="accidentFilter"/>
+					<input type="radio" value="1" title="是" lay-filter="accidentFilter"/>
+					<input type="radio" value="2" title="否" lay-filter="accidentFilter"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>联系人</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrNameInp" type="text" class="layui-input" placeholder="请输入联系人姓名" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>手机号码</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrTel" type="text" class="layui-input" placeholder="请输入联系人手机号码" maxlength="11"/>
+				</div>		
+			</div>
+			
+			<!-- 运输范围贸易类型为租赁时存在 -->
+			<div class="layui-form-item transformArea">
+				<label class="layui-form-label"><span class="mustItem">*</span>运输范围</label>
+				<div class="layui-input-block comInpItem" id="provList"></div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="wxpfbzInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>尾气排放标准</label>
+				<div class="layui-input-block comInpItem">
+					<select id="wqpfbzSel" lay-filter="wqpfbzSel">
+						<option value="">请选择尾气排放标准</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="gasTypeInp"/>
+				<label class="layui-form-label">气源类型</label>
+				<div class="layui-input-block comInpItem">
+					<select id="gasTypeSel" lay-filter="gasTypeSel">
+						<option value="">请选择气源类型</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block comInpItem">
+					<textarea placeholder="请输入备注(200字以内)" maxlength="200" class="layui-textarea"></textarea>
+				</div>		
+			</div>
+			
+			<!-- 货车类型为危货 -->
+			<div class="dangerItemWrap">
+				<div class="dangerItem hasMargL">
+					<p><span class="mustItem">*</span>车头行驶证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_headXsz" title="添加车头行驶证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_headXsz"/>
+						</a>
+						<span class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>罐车行驶证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_gcXsz" title="添加罐车行驶证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_gcXsz"/>
+						</a>
+						<span class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>车辆运营证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_yyz" title="添加车辆运营证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_yyz"/>
+						</a>
+						<span class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>储罐检验合格证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_jyz" title="添加储罐检验合格证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_jyz"/>
+						</a>
+						<span class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>安全阀校验报告</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_aqf" title="添加安全阀校验报告" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_aqf"/>
+						</a>
+						<span class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+			</div>
+			
+			
+			
+			
+			
+			<div class="layui-form-item comInpItem hasAlign">
+				<button class="layui-btn">保存槽车信息</button>
+			</div>
+			
+			
+			
+			<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+			<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+			<script type="text/javascript">
+				var cardTitle = ["京", "沪", "津", "渝", "冀", "豫", "云", "辽", "黑", "湘", "鲁", "新", "苏",  "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "川", "青", "藏", "琼", "宁"];
+				var cardWords = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+				layui.use(['layer','upload','form','laydate'],function(){
+					var layer = layui.layer,form = layui.form,upload = layui.upload,laydate = layui.laydate;
+					laydate.render({'elem':'#truckHeadTimeInp'});
+					laydate.render({'elem':'#truckBuyTime'});
+					laydate.render({'elem':'#potYearInp'});
+					var page = {
+						init : function(){
+							this.loadProvList();
+							this.renderCardNumWords();
+						},
+						renderCardNumWords : function(){
+							var strNum = '',strWord = '';
+							$('#cardTitInp').val(cardTitle[0]);
+							$('#cardWordsInp').val(cardWords[0]);
+							for(var i=0;i<cardTitle.length;i++){
+								strNum += '<option value="'+ cardTitle[i] +'">'+ cardTitle[i] +'</option>';
+							}
+							for(var i=0;i<cardWords.length;i++){
+								strWord += '<option value="'+ cardWords[i] +'">'+ cardWords[i] +'</option>';
+							}
+							$('#cardTitSel').html(strNum);
+							$('#cardWordSel').html(strWord);
+							form.render();
+						},
+						loadProvList : function(){
+							var _this = this;
+							$.ajax({
+							    type:"get",
+								data : { gsType:1 },
+							    dataType:"json",
+							    url:"/common/getProvinceList",
+							    success:function (json){
+							    	layer.closeAll('loading');
+									console.log(json)
+									if(json.code == 200){
+										_this.renderProvHtml(json.datas);
+									}else if(json.code == 1000){
+										layer.msg('服务器错误');
+									}else if(json.code == 50001){
+										layer.msg('暂无省份，请添加');
+										//$('#provList').html("<div class='noDataRec' style='margin:60px auto;'><i class='iconfont icon-wujilu'></i><p>该气质类型下暂无省份</p></div>");
+									}
+							    }
+							});
+						},
+						renderProvHtml : function(list){
+							var str = '';
+							for(var i=0;i<list.length;i++){
+								str += '<input type="checkbox" name="areaInp" title="'+ list[i].province +'" value="'+ list[i].province +'" lay-skin="primary">';
+							}
+							$('#provList').html(str);
+							form.render();
+						}
+					};
+					page.init();
+					
+				});
+				
+			</script>
+		</div>
+	</body>
+</html>
