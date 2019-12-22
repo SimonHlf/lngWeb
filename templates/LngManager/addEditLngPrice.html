@@ -45,7 +45,8 @@
 					},
 					regPrice : function(value){
 						var str = '';
-						var regNum = /^\+?[1-9]\d*$/;
+						//var regNum = /^\+?[1-9]\d*$/;
+						var regNum = /^(0|[1-9][0-9]*)$/;
 						if(value == ''){
 							layer.msg('请输入价格');
 							$('.priceChange').html('');
@@ -58,7 +59,12 @@
 								$('.priceChange').html('');
 								isPassFlag = false;
 							}else{
-								if(ckPrice != 0){
+								if(value == 0){//停产 
+									$('#remark').val('停产');
+								}else{
+									$('#remark').val('');
+								}
+								if(ckPrice >= 0){
 									$('#priceInp').removeClass('focusCls');
 									if(value > ckPrice){
 										var nowPrice = parseInt( $.trim(value) - ckPrice);
@@ -74,7 +80,7 @@
 								}
 							}
 						}else{
-							layer.msg('价格须为大于0的正整数');
+							layer.msg('价格须为大于等于0的正整数');
 							$('.priceChange').html('');
 							isPassFlag = false;
 						}
