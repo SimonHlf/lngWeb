@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addEditTruckTrade.css"/>
+		<title>添加/编辑槽车租卖</title>
+	</head>
+	<body>
+		<div class="truckTradeWrap layui-form">
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="tradeTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>租卖类型</label>
+				<div class="layui-input-block">
+					<input type="radio" value="0" name="tradeTypeName" title="可租可卖" lay-filter="tradeTypeFilter"/>
+					<input type="radio" value="1" name="tradeTypeName" title="租" lay-filter="tradeTypeFilter"/>
+					<input type="radio" value="2" name="tradeTypeName" title="卖" lay-filter="tradeTypeFilter"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="compTypeInp">
+				<label class="layui-form-label"><span class="mustItem">*</span>企业类型</label>
+				<div class="layui-input-block">
+					<input type="radio" value="1" name="compTypeName" title="个人" lay-filter="comTypeFilter"/>
+					<input type="radio" value="2" name="compTypeName" title="公司" lay-filter="comTypeFilter"/>
+				</div>		
+			</div>
+			<div id="compNameWrap" class="layui-form-item addEditItem">
+				<input type="hidden" id="compNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
+				<div class="layui-input-block comInpItem">
+					<select id="compNameSel" lay-filter="compNameSel">
+						<option value="">请选择公司</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>储罐主图</label>
+				<div class="layui-input-block">
+					<a id="addImgBtn_main" title="添加储罐主图" class="addMainImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+						<img id="thubImg_main"/>
+					</a>
+					<p class="tipsInfo">
+						<i class="iconfont icon-gonggao"></i>
+						<span>请上传储罐主图，建议图片宽高尺寸750*400</span>
+					</p>
+					<span class="viewMainBigImg">查看原图</span>
+				</div>		
+			</div>
+
+			<!-- 危货下储罐品牌 容积以及上牌年月 -->
+			<div class="dangerItemWrap" style="display: block;">
+				<div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐品牌</label>
+					<input type="hidden" id="tankBandInp"/>
+					<div class="layui-input-block comInpItem">
+						<select id="tankBandSel" lay-filter="tankBandSel">
+							<option value="">请选择储罐品牌</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐容积</label>
+					<div class="layui-input-block comInpItem">
+						<input id="volumeInp" type="text" placeholder="请输入储罐容积(1-1000立方)" class="layui-input" autocomplete="off" maxlength="4"/>
+					</div>
+				</div>
+				
+				<div class="layui-form-item addEditItem">
+					<input type="hidden" id="sxInfoInp"/>
+					<label class="layui-form-label"><span class="mustItem">*</span>有无手续</label>
+					<div class="layui-input-block">
+						<input type="radio" value="1" name="sxInfoName" title="有" lay-filter="sxInfoFilter"/>
+						<input type="radio" value="2" name="sxInfoName" title="无" lay-filter="sxInfoFilter"/>
+					</div>		
+				</div>
+				
+				
+				<div class="layui-form-item addEditItem">
+					<label class="layui-form-label">购置时间</label>
+					<div class="layui-input-block comInpItem">
+						<input id="potBuyTime" type="text" placeholder="请选择储罐购置时间" readonly class="layui-input"/>
+					</div>		
+				</div>
+				
+				<!-- <div class="layui-form-item">
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐上牌日期</label>
+					<div class="layui-input-block comInpItem">
+						<input id="potYearInp" type="text" placeholder="请选择储罐上牌日期" class="layui-input" readonly/>
+					</div>
+				</div> -->
+			</div>
+			
+			
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="zzjzInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>装载介质</label>
+				<div class="layui-input-block comInpItem">
+					<select id="zzjzSel" lay-filter="zzjzSel">
+						<option value="">请选择装载介质</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>罐所在选择地区</label>
+				<input type="hidden" id="provInp" />
+				<input type="hidden" id="cityInp" />
+				<div class="itemDet provItemDet">
+					<select id="provinceSel" name="province" lay-filter="province">
+						<option value="">请选择省</option>
+					</select>
+				</div>
+				<div class="itemDet">
+					<input type="hidden" id="cityInp" />
+					<select id="citySel" name="city" lay-filter="city" disabled>
+						<option value="">请选择市区</option>
+					</select>
+				</div>
+				<!--div class="itemDet">
+					<input type="hidden" id="cityInp" />
+					<select id="citySel" name="city" lay-filter="city" disabled></select>
+				</div>
+				<div class="itemDet">
+					<input type="hidden" id="countyInp" />
+					<select id="areaSel" name="area" lay-filter="area" disabled></select>
+				</div-->
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>租赁价格</label>
+				<div class="layui-input-block comInpItem">
+					<input id="zlPriceInp" type="text" class="layui-input" placeholder="请输入租赁价格" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>官方价格</label>
+				<div class="layui-input-block comInpItem">
+					<input id="gfPriceInp" type="text" class="layui-input" placeholder="请输入官方价格" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>联系人</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrNameInp" type="text" class="layui-input" placeholder="请输入联系人姓名" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>手机号码</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrTel" type="text" class="layui-input" placeholder="请输入联系人手机号码" autocomplete="off" maxlength="11"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block comInpItem">
+					<textarea id="remark" placeholder="请输入备注(200字以内)" maxlength="200" class="layui-textarea"></textarea>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item comInpItem hasAlign">
+				<button id="saveBtn" class="layui-btn">保存储罐租卖信息</button>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var mainImgSucc = '';
+			var globalOpts = parent.globalOpts,isRightZulinPrice = false,isRightGfPrice = false,isRightVolume = false;
+			layui.config({
+				base: '/js/frame/js/'
+			}).use(['layer','form','common','address','basicInfo','laydate'],function(){
+				var layer = layui.layer,form = layui.form,laydate=layui.laydate,upload = layui.upload,address = layui.address(),basicInfo=layui.basicInfo,common=layui.common;
+				laydate.render({'elem':'#potBuyTime',trigger: 'click'});
+				//企业类型radio
+				form.on('radio(comTypeFilter)',function(data){
+					$('#compTypeInp').val(data.value);
+					if(data.value == 1){//个人
+						$('#compNameWrap').hide();
+					}else{//公司
+						//货车类型 普货和危货
+						$('#compNameWrap').show();
+						basicInfo.getCompanyList();
+					}
+					$('#compNameInp').val(''); 
+					form.render();
+				})
+				//有无手续
+				form.on('radio(sxInfoFilter)',function(data){
+					$('#sxInfoInp').val(data.value);
+				})
+				var page = {
+					init : function(){
+						basicInfo.getTankBrand();
+						basicInfo.getZzjz();
+						this.uploadMainImg();
+						this.bindEvent();
+					},
+					uploadMainImg : function(){
+						upload.render({
+						    elem: '#addImgBtn_main'
+						    ,url: '/upload/uploadSingle'
+							,method : 'post'
+						    ,accept : 'images'
+							,auto: true
+							,before: function(obj){
+								layer.load();
+						    }
+						    ,done: function(res){
+								layer.closeAll('loading');
+							    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+							    $('.viewMainBigImg').show();
+							    mainImgSucc = res.datas;
+						    }
+						});
+					},
+					bindEvent : function(){
+						$('.viewMainBigImg').on('click',function(){
+							if(globalOpts == 'addBtn'){
+								window.open('/temp/' + mainImgSucc);
+							}else{
+								window.open('../' + mainImgSucc);
+							};
+						});
+						$('#volumeInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('储罐容积是大于0的正整数');
+									isRightVolume = false;
+								}else{
+									isRightVolume = true;
+								}
+							}
+						});
+						$('#zlPriceInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('租赁价格应是大于0的正整数');
+									isRightZulinPrice = false;
+								}else{
+									isRightZulinPrice = true;
+								}
+							}
+						});
+						$('#gfPriceInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('官方价格应是大于0的正整数');
+									isRightGfPrice = false;
+								}else{
+									isRightGfPrice = true;
+								}
+							}
+						});
+						$('#saveBtn').on('click',function(){
+							var tradeTypeInp = $('#tradeTypeInp').val(),
+								compTypeInp = $('#compTypeInp').val(),
+								compNameInp = $('#compNameInp').val(),
+								tankBandInp = $('#tankBandInp').val(),
+								volumeInp = $.trim($('#volumeInp').val()),
+								sxInfoInp = $('#sxInfoInp').val(),
+								potBuyTime = $('#potBuyTime').val(),
+								zzjzInp = $('#zzjzInp').val(),
+								provInp = $('#provInp').val(),
+								cityInp = $('#cityInp').val(),
+								
+								zlPriceInp = $('#zlPriceInp').val(),
+								gfPriceInp = $('#gfPriceInp').val(),
+								lxrNameInp = $.trim($('#lxrNameInp').val()),
+								lxrTel = $.trim($('#lxrTel').val()),
+								remark = $.trim($('#remark').val());
+							
+							if(tradeTypeInp == ''){
+								layer.msg('请选择租卖类型');
+							}else if(compTypeInp == ''){
+								layer.msg('请选择企业类型');
+							}else if(compTypeInp == 2 && compNameInp == ''){
+								layer.msg('请选择公司');
+							}else if(mainImgSucc == ''){
+								layer.msg('请上传储罐主图');
+							}else if(tankBandInp == ''){
+								layer.msg('请选择储罐品牌');
+							}else if(volumeInp == ''){
+								layer.msg('请输入储罐容积');
+							}else if(isRightVolume == false){
+								layer.msg('储罐容积是大于0的正整数');
+							}else if(sxInfoInp == ''){
+								layer.msg('请选择有无手续');
+							}else if(potBuyTime == ''){
+								layer.msg('请选择储罐购买时间');
+							}else if(zzjzInp == ''){
+								layer.msg('请选择装载介质');
+							}else if(provInp == ''){
+								layer.msg('请选择罐所在省');
+							}else if(cityInp == ''){
+								layer.msg('请选择罐所在市');
+							}else if(zlPriceInp == ''){
+								layer.msg('请输入租赁价格');
+							}else if(isRightZulinPrice == false){
+								layer.msg('租赁价格应是大于0的正整数');
+							}else if(gfPriceInp == ''){
+								layer.msg('请输入官方价格');
+							}else if(isRightGfPrice == false){
+								layer.msg('官方价格应是大于0的正整数');
+							}else if(lxrNameInp == ''){
+								layer.msg('请输入联系人姓名');
+							}else if(lxrTel == ''){
+								layer.msg('请输入联系人手机号码');
+							}else if(!regPhone.test(lxrTel) && lxrTel.length != 11){
+								layer.msg('手机号码格式不对，请重新填写');
+							}else{
+								var url = '',type = '';
+								var index= parent.layer.getFrameIndex(window.name);
+								if(globalOpts == 'addBtn'){
+									var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeInp,mainImg:mainImgSucc,trucksNo:cardNum,
+												spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
+												xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
+												lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
+												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc};
+									url = '/potTrade/addPotTrade';
+									type = 'post';
+								}else if(globalOpts == 'editBtn'){
+									var field = {};
+									url = '/potTrade/updatePotTrade';
+									type = 'put';
+								}
+							}
+							
+							
+							
+							
+							
+							
+							
+						});
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>

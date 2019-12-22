@@ -36,7 +36,7 @@
 	position: relative;
 }
 .addImgBtn i{
-	font-size: 30px;
+	font-size: 26px;
 	color: #ccc;
 }
 .addMainImgBtn i{
@@ -55,8 +55,8 @@
 	height: 120px;
 }
 .addImgBtn img{
-	width: 80px;
-	height: 80px;
+	width: 60px;
+	height: 60px;
 }
 .carNumSelWrap{
 	width: 70px;
@@ -92,14 +92,16 @@
 }
 .dangerItem{
 	float: left;
+	height: 82px;
 	text-align: center;
-	margin-left: 32px;
+	margin-left:24px;
 }
 .dangerItem.hasMargL{
-	margin-left: 84px;
+	margin-left: 76px;
 }
 .dangerItem p {
 	float: left;
+	margin-right: 8px;
 	line-height: 60px;
 }
 .dangerItem p span.mustItem{
@@ -117,6 +119,34 @@
 	cursor: pointer;
 	display: none;
 }
-.viewBigImg:hover{
+.viewBigImg:hover,
+.viewMainBigImg:hover{
 	color: #F47837;
+}
+.tipInfo{
+	height: 38px;
+	line-height: 38px;
+	color: #999;
+}
+#compNameWrap,
+#gasTypeWrap,
+.dangerItemWrap,
+#transformArea{
+	display: none;
+}
+.viewMainBigImg{
+	float: left;
+	margin-left: 10px;
+	margin-top: 49px;
+	color:#009688 ;
+	cursor: pointer;
+	display: none;
+}
+.itemDet{
+	float: left;
+	width: 397px;
+}
+.provItemDet{
+	margin-right: 15px;
+	margin-left: 9px;
 }

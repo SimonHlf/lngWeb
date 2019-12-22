@@ -2,10 +2,9 @@
  * @Description: 基础配置
  * @author: hlf
  */
-var noGradInfo = '';//根据科目联动年级时用到 存在年级 清空 不存在有值 noGradInfo
 //自定义模块
-layui.define(['form','table'],function(exports){
-	var form=layui.form,table=layui.table;
+layui.define(['form'],function(exports){
+	var form=layui.form;
     var obj = {
     	getId : function(id){
     		return document.getElementById(id);
@@ -79,7 +78,7 @@ layui.define(['form','table'],function(exports){
 			}
 			$('#compTypeSel').html(str);
 			form.render();
-		},
+		}
     };
     //输出接口
     exports('common', obj);
