@@ -307,7 +307,7 @@
 					<div class="detImgList">
 						<ul id="detImgListUl"></ul>
 					</div>
-					<a id="addYzbgImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
+					<a id="addDetImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
 						<i class="iconfont icon-add"></i>
 					</a>
 				</div>
@@ -328,7 +328,7 @@
 				var mainImgSucc = '', headXszSucc = '',gcXszSucc = '',clyxzSucc = '',cgHgzSucc = '',aqfjySucc = '';
 				var globalOpts = parent.globalOpts,isRightCardNum = false,isRightDriveMile = false,isRightVolume = false,isRightPrice = false;
 				var tmpDetImgArr = [];
-				var ttId = parent.ttId;
+				var ttId = parent.ttId,currPage = 'addEditTruckTradePage';
 				layui.config({
 					base: '/js/frame/js/'
 				}).use(['layer','upload','form','laydate','basicInfo','address','uploadImg'],function(){
@@ -342,7 +342,7 @@
 							$('#transformArea').show();
 							$('#jgzzWrap').show();
 							basicInfo.getJgzz();
-							page.loadProvList();
+							basicInfo.loadProvList();
 							$('#priceLableTxt').html('租赁价格');
 						}else{
 							$('#jgzzWrap').hide();
@@ -412,31 +412,21 @@
 					form.on('radio(accidentFilter)',function(data){
 						$('#accidentInp').val(data.value);
 					})
-					//运输范围checkbox
-					form.on('checkbox(areaFilter)',function(data){
-						var value = data.value;
-						if(data.elem.checked){
-							tmpProvNameArr.push(value);
-						}else{
-							for(var i=0;i<tmpProvNameArr.length;i++){
-								if(value == tmpProvNameArr[i]){
-									tmpProvNameArr.splice(i,1);
-								}
-							}
-						}
-					})
 					var page = {
 						init : function(){
 							this.bindEvent();
 							this.uploadMainImg();
 							this.upWeihuoImg();
-							this.renderCardNumWords();
+							basicInfo.renderCardNumWords();
 							basicInfo.getWqpfbz();
 							basicInfo.getTrucksHeadType();
 							basicInfo.getTrucksHeadBrand();
-							uploadImg.uploadMultiImg('addYzbgImgBtn','detImgListUl',9);
+							uploadImg.uploadMultiImg('addDetImgBtn','detImgListUl',9);
 							if(globalOpts == 'editBtn'){
-								this.loadTruckTradeInfo();
+								var _this = this;
+								setTimeout(function(){
+									_this.loadTruckTradeInfo();
+								},200);
 							}else{
 								layui.address();
 							}
@@ -509,7 +499,49 @@
 							});
 							$('#truckBuyTime').val(list.buyYear);
 							$('#truckHeadTimeInp').val(list.spYear);
-							$('#priceNumInp').val();
+							//$('#priceNumInp').val();
+							$('#truckHeadTypeInp').val(list.headTypeId);
+							$('#truckHeadTypeSel option').each(function(i){
+								if($('#truckHeadTypeSel option').eq(i).val() == list.headTypeId){
+									$('#truckHeadTypeSel option').eq(i).attr('selected','selected');
+								}
+							});
+							$('#truckHeadBrandInp').val(list.headPpId);
+							$('#truckHeadBrandSel option').each(function(i){
+								if($('#truckHeadBrandSel option').eq(i).val() == list.headPpId){
+									$('#truckHeadBrandSel option').eq(i).attr('selected','selected');
+								}
+							});
+							$('#driveMileInp').val(list.xsDistance);
+							$('input[name=accidentInpName]').each(function(i){
+								if($('input[name=accidentInpName]').eq(i).val() == list.accidentFlag){
+									$('input[name=accidentInpName]').eq(i).attr('checked',true);
+								}
+							});
+							$('#lxrNameInp').val(list.lxName);
+							$('#lxrTel').val(list.lxTel);
+							$('#wxpfbzInp').val(list.pfbzId);
+							$('#wqpfbzSel option').each(function(i){
+								if($('#wqpfbzSel option').eq(i).val() == list.pfbzId){
+									$('#wqpfbzSel option').eq(i).attr('selected','selected');
+								}
+							});
+							$('#remark').val(list.remark);
+							if(list.zzlist.length > 0){
+								var str = '';
+								hasUpNum = list.zzlist.length;
+								var tmpDetBigImg = [];
+								if(list.zzlist.length == 9){
+									$('#addDetImgBtn').hide();
+								}
+								for(var i=0;i<list.zzlist.length;i++){
+									tmpDetBigImg.push( list.zzlist[i].ttImg.replace('_small','') );
+									str += '<li><input type="hidden" name="detImgInp" value="'+ tmpDetBigImg[i] +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="../' + list.zzlist[i].ttImg + '"/><span onclick=viewBigImg(\''+ tmpDetBigImg[i] +'\')>查看原图</span></li>';
+								}
+								$('#detImgListUl').html(str);
+								
+							}
+							
 							
 							form.render();
 							layui.address();
@@ -762,16 +794,17 @@
 										});
 										imgDetStr = tmpDetImgArr.join(',');
 									}
+									var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeNameInp,mainImg:mainImgSucc,trucksNo:cardNum,
+												spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
+												xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
+												lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
+												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr};
 									if(globalOpts == 'addBtn'){
-										var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeNameInp,mainImg:mainImgSucc,trucksNo:cardNum,
-													spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
-													xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
-													lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
-													tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr};
 										url = '/trucksTrade/addTrucksTrade';
 										type = 'post';
 									}else if(globalOpts == 'editBtn'){
-										var field = {};
+										var editField ={id:ttId};
+										field = Object.assign(field,editField);
 										url = '/trucksTrade/updateTrucksTrade';
 										type = 'put';
 									}
@@ -805,48 +838,6 @@
 									});
 								}
 							});
-						},
-						renderCardNumWords : function(){
-							var strNum = '',strWord = '';
-							$('#cardTitInp').val(cardTitle[0]);
-							$('#cardWordsInp').val(cardWords[0]);
-							for(var i=0;i<cardTitle.length;i++){
-								strNum += '<option value="'+ cardTitle[i] +'">'+ cardTitle[i] +'</option>';
-							}
-							for(var i=0;i<cardWords.length;i++){
-								strWord += '<option value="'+ cardWords[i] +'">'+ cardWords[i] +'</option>';
-							}
-							$('#cardTitSel').html(strNum);
-							$('#cardWordSel').html(strWord);
-							form.render();
-						},
-						loadProvList : function(){
-							var _this = this;
-							$.ajax({
-							    type:"get",
-								data : { gsType:1 },
-							    dataType:"json",
-							    url:"/common/getProvinceList",
-							    success:function (json){
-							    	layer.closeAll('loading');
-									console.log(json)
-									if(json.code == 200){
-										_this.renderProvHtml(json.datas);
-									}else if(json.code == 1000){
-										layer.msg('服务器错误');
-									}else if(json.code == 50001){
-										layer.msg('暂无省份，请添加');
-									}
-							    }
-							});
-						},
-						renderProvHtml : function(list){
-							var str = '';
-							for(var i=0;i<list.length;i++){
-								str += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list[i].province +'" value="'+ list[i].province +'" lay-skin="primary">';
-							}
-							$('#provList').html(str);
-							form.render();
 						}
 					};
 					page.init();

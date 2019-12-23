@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
-		<title>槽车租卖管理</title>
+		<title>燃气买卖管理</title>
 		<style>
 			.checkBtn{margin-right: 10px;}
 		</style>
@@ -16,8 +16,8 @@
 			<div class="layui-row">
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
-						<span class="itemDivs">槽车租卖管理</span>
-						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加槽车租卖</a>
+						<span class="itemDivs">燃气买卖管理</span>
+						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加燃气买卖</a>
 					</div>
 					<div class="layui-card-body">
 						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
@@ -27,11 +27,8 @@
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>
 							<div class="filterItemSel layui-form" style="width: 140px;">
-								<input type="hidden" id="tradeTypeInp" value=""/>
-								<select id="tradeTypeSel" lay-filter="tradeTypeSel">
-									<option value="">请选择贸易类型</option>
-									<option value="1">租赁</option>
-									<option value="2">买卖</option>
+								<select id="lqTypeSel" lay-filter="lqTypeSel">
+									<option value="">请选择液质类型</option>
 								</select>
 							</div>
 							<div class="filterItem">
@@ -57,22 +54,24 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var checkFlag = false,checkSta=0,globalOpts = '',addEditFlag = false,currPage='compListPage';
-			var ttId = 0,showSta = 0;
-			layui.use(['layer','table','form'],function(){ 
-				var layer = layui.layer,table = layui.table,form = layui.form;
+			var checkFlag = false,checkSta=1,globalOpts = '',addEditFlag = false;
+			var compId = '',gasTypeId = '',gfId = '';
+			layui.config({
+				base: '/js/frame/js/'
+			}).use(['layer','table','form','basicInfo'],function(){ 
+				var layer = layui.layer,table = layui.table,form = layui.form,basicInfo = layui.basicInfo;
 				form.on('radio(checkStaFilter)',function(data){
 					checkSta = data.value;
-					page.loadTrucksTradeList();
+					page.loadRqTradeList();
 				});
-				form.on('select(tradeTypeSel)',function(data){
-					data.value == '' ? $('#tradeTypeInp').val('') : $('#tradeTypeInp').val(data.value);
-					page.loadTrucksTradeList();
+				form.on('select(lqTypeSel)',function(data){
+					data.value == '' ? gasTypeId = '' : gasTypeId = data.value;
 				});
 				var page = {
 					init : function(){
 						this.bindEvent();
-						this.loadTrucksTradeList();
+						basicInfo.getLqType();
+						this.loadRqTradeList();
 					},
 					bindEvent : function(){
 						var _this = this;
@@ -83,16 +82,16 @@
 					},
 					commonLayer : function(){
 						addEditFlag = true;
-						var title = globalOpts == 'addBtn' ? '添加槽车买卖信息' : '编辑槽车买卖信息'
+						var title = globalOpts == 'addBtn' ? '添加燃气买卖信息' : '编辑燃气买卖信息'
 						var fullScreenIndex = layer.open({
 							title : title,
 							type: 2,
 							closeBtn: 1, //不显示关闭按钮
 							area : ['500px','300px'],
-							content: '../trucksTrade/addEditTruckTrade.html',
+							content: '../rqTrade/addEditRqTrade.html',
 							end : function(){
 								if(addEditFlag){
-									page.loadTrucksTradeList();
+									page.loadRqTradeList();
 								}
 							},
 							cancel: function () {
@@ -101,15 +100,15 @@
 						});
 						layer.full(fullScreenIndex);
 					},
-					loadTrucksTradeList : function(){
+					loadRqTradeList : function(){
 						var _this = this;
 						layer.load();
 						var tradeTypeInp = $('#tradeTypeInp').val();
-						var field = {tradeType:tradeTypeInp,checkSta:checkSta};
+						var field = {cpyId:compId,gasTypeId:gasTypeId,gfId:gfId,checkStatus:checkSta};
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
-							url : '/trucksTrade/queryTrucksTrade',
+							url : '/gasTrade/getPageGasTradeList',
 							method : 'get',
 							parseData : function(res){
 								return {
@@ -181,8 +180,8 @@
 					}else if(checkSta == 2){//审核不通过
 						currTit = '<span style="color:red;">不通过</span>';
 					}
-					layer.confirm('是否要将当前槽车租卖信息审核状态变更为['+ currTit +']?', {
-					  title:'修改槽车租卖审核状态',
+					layer.confirm('是否要将当前燃气买卖信息审核状态变更为['+ currTit +']?', {
+					  title:'修改燃气买卖审核状态',
 					  skin: 'layui-layer-molv',
 					  btn: ['确定','取消'],//按钮
 					  closeBtn:0,

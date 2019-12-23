@@ -444,6 +444,9 @@
 							var tmpYzBgImg_sm = list[0].yzbg.split(',');
 							var tmpYzBgImg = [],str = '';
 							maxNum = tmpYzBgImg_sm.length;
+							if(list.zzlist.length == 5){
+								$('#addYzbgImgBtn').hide();
+							}
 							for(var i=0;i<tmpYzBgImg_sm.length;i++){
 								tmpYzBgImg.push( tmpYzBgImg_sm[i].replace('_small','') );
 								str += '<li><input type="hidden" name="yzbgImgInp" value="'+ tmpYzBgImg[i] +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="../' + tmpYzBgImg_sm[i] + '"/><span onclick=viewYzbgBigImg(\''+ tmpYzBgImg[i] +'\')>查看原图</span></li>';

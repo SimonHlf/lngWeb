@@ -25,6 +25,27 @@ layui.define(['form'],function(exports){
 					}
 			    }
 			});
+			/*
+			
+				var field = {typeName:'LNG贸易商',checkSta:1},_this = this;
+				$.ajax({
+				    type:"get",
+					data : field,
+				    dataType:"json",
+				    url:"/company/getCompanyList",
+				    success:function (json){
+						console.log(json)
+				    	layer.closeAll('loading');
+						if(json.code == 200){
+							_this.renderCompSelList(json.datas);
+						}else if(json.code == 1000){
+							layer.msg('服务器错误');
+						}else if(json.code == 50001){
+							layer.msg('暂无公司,请先添加公司');
+						}
+				    }
+				});
+			*/
 		},
 		renderCompSelList : function(list){
 			var str = '<option value="">请选择公司</option>';
@@ -320,9 +341,124 @@ layui.define(['form'],function(exports){
 			}
 			$('#rqDevTypeSel').html(str);
 			form.render();
+		},
+		//获取液质类型
+		getLqType : function(){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : { id:'' },
+			    dataType:"json",
+			    url:"/gasType/queryGasType",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					if(json.code == 200){
+						_this.renderLqTypeHtml(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂未液质类型,请先添加');
+					}
+			    }
+			});
+		},
+		renderLqTypeHtml : function(list){
+			var str = '<option value="">请选择燃气设备类型</option>';
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+			}
+			$('#lqTypeSel').html(str);
+			form.render();
+		},
+		//获取液厂
+		getLqFactory : function(){
+			
+		},
+		loadProvList : function(){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : { gsType:1 },
+			    dataType:"json",
+			    url:"/common/getProvinceList",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					console.log(json)
+					if(json.code == 200){
+						_this.renderProvHtml(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂无省份，请添加');
+					}
+			    }
+			});
+		},
+		renderProvHtml : function(list){
+			if(currPage == 'addEditRqTradePage'){
+				var str = '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="全国" value="全国" lay-skin="primary">';
+			}else{
+				var str = '';
+			}
+			for(var i=0;i<list.length;i++){
+				str += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list[i].province +'" value="'+ list[i].province +'" lay-skin="primary">';
+			}
+			$('#provList').html(str);
+			form.render();
+		},
+		renderCardNumWords : function(){
+			var strNum = '',strWord = '';
+			$('#cardTitInp').val(cardTitle[0]);
+			$('#cardWordsInp').val(cardWords[0]);
+			for(var i=0;i<cardTitle.length;i++){
+				strNum += '<option value="'+ cardTitle[i] +'">'+ cardTitle[i] +'</option>';
+			}
+			for(var i=0;i<cardWords.length;i++){
+				strWord += '<option value="'+ cardWords[i] +'">'+ cardWords[i] +'</option>';
+			}
+			$('#cardTitSel').html(strNum);
+			$('#cardWordSel').html(strWord);
+			form.render();
 		}
 	};
 	//basicInfo 基础表单select
+	//运输范围checkbox
+	form.on('checkbox(areaFilter)',function(data){
+		var value = data.value;
+		if(data.elem.checked){
+			if(currPage == 'addEditRqTradePage'){
+				$('input[name=areaInp]').each(function(i){
+					if(value == '全国'){
+						$('input[name=areaInp]').eq(i+1).attr('disabled',true);
+						$('input[name=areaInp]').eq(i+1).next().find('span').addClass('disColor');
+					}else{
+						$('input[name=areaInp]').eq(0).attr('disabled',true);
+						$('input[name=areaInp]').eq(0).next().find('span').addClass('disColor');
+					}
+				});
+			}
+			tmpProvNameArr.push(value);
+		}else{
+			for(var i=0;i<tmpProvNameArr.length;i++){
+				if(value == tmpProvNameArr[i]){
+					tmpProvNameArr.splice(i,1);
+				}
+			}
+			if(currPage == 'addEditRqTradePage'){
+				$('input[name=areaInp]').each(function(i){
+					if(value == '全国'){
+						$('input[name=areaInp]').eq(i+1).attr('disabled',false);
+						$('input[name=areaInp]').eq(i+1).next().find('span').removeClass('disColor');
+					}else{
+						if(tmpProvNameArr.length == 0){
+							$('input[name=areaInp]').eq(0).attr('disabled',false);
+							$('input[name=areaInp]').eq(0).next().find('span').removeClass('disColor');
+						}
+					}
+				});
+			}
+		}
+	})
 	//选择公司
 	form.on('select(compNameSel)',function(data){
 		data.value == '' ? $('#compNameInp').val('') : $('#compNameInp').val(data.value);
@@ -375,6 +511,10 @@ layui.define(['form'],function(exports){
 	//选择燃气设备类型
 	form.on('select(rqDevTypeSel)',function(data){
 		data.value == '' ? $('#rqDevTypeInp').val('') : $('#rqDevTypeInp').val(data.value);
+	});
+	//选择液质类型
+	form.on('select(lqTypeSel)',function(data){
+		data.value == '' ? $('#lqTypeInp').val('') :  $('#lqTypeInp').val(data.value);
 	});
 	
     //输出接口

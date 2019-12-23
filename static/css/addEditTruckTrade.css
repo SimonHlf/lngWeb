@@ -134,7 +134,8 @@
 }
 .viewBigImg:hover,
 .viewMainBigImg:hover,
-.detImgList li span:hover{
+.detImgList li span:hover,
+.viewQfBigImg:hover{
 	color: #F47837;
 }
 .tipInfo{
@@ -225,4 +226,50 @@
 	text-align: center;
 	cursor: pointer;
 	color:#009688 ;
+}
+.layui-form-checkbox[lay-skin=primary] span.disColor{
+	color: #ccc;
+}
+.innerQianfeng{
+	zoom:1;
+}
+.innerQianfeng:after{content:"";display:block;clear:both;}
+.qianfengItem{
+	width: 256px;
+	float: left;
+	margin-right: 16px;
+}
+.qianfengItem.noMargR{
+	margin-right: 0;
+}
+.qianfengItem a{
+	width: 254px;
+	height: 118px;
+	line-height: 118px;
+	border:1px solid #ccc;
+	text-align: center;
+	display: block;
+	position: relative;
+	margin:10px 0 5px 0;
+}
+.qianfengItem a i{
+	font-size: 36px;
+	color:#ccc ;
+}
+.qianfengItem a img{
+	width:254px ;
+	height: 118px;
+	position: absolute;
+	left: 0;
+	top:0;
+	display: none;
+}
+.viewQfBigImg{
+	width: 100%;
+	line-height: 26px;
+	color:#009688 ;
+	cursor: pointer;
+	text-align: center;
+	display: block;
+	display: none;
 }

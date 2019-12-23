@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addEditTruckTrade.css"/>
+		<title>添加/编辑燃气买卖</title>
+	</head>
+	<body>
+		<div class="truckTradeWrap layui-form">
+			<div id="compNameWrap" class="layui-form-item addEditItem" style="display: block;">
+				<input type="hidden" id="compNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
+				<div class="layui-input-block comInpItem">
+					<select id="compNameSel" lay-filter="compNameSel">
+						<option value="">请选择公司</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>燃气买卖主图</label>
+				<div class="layui-input-block">
+					<a id="addImgBtn_main" title="添加燃气买卖主图" class="addMainImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+						<img id="thubImg_main"/>
+					</a>
+					<p class="tipsInfo">
+						<i class="iconfont icon-gonggao"></i>
+						<span>请上传燃气买卖主图主图，建议图片宽高尺寸750*400</span>
+					</p>
+					<span class="viewMainBigImg">查看原图</span>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="lqTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>液质类型</label>
+				<div class="layui-input-block comInpItem">
+					<select id="lqTypeSel" lay-filter="lqTypeSel">
+						<option value="">请选择液质类型</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="lqFactoryInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>液厂</label>
+				<div class="layui-input-block comInpItem">
+					<select id="lqFactorySel" lay-filter="lqFactorySel">
+						<option value="">请选择液厂</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="cardTitInp">
+				<input type="hidden" id="cardWordsInp">
+				<label class="layui-form-label"><span class="mustItem">*</span>槽车车牌号</label>
+				<div class="layui-input-block">
+					<div class="carNumSelWrap">
+						<select id="cardTitSel" lay-filter="cardTitSel"></select>
+					</div>
+					<div class="carNumSelWrap">
+						<select id="cardWordSel" lay-filter="cardWordSel"></select>
+					</div>
+					<div class="carNumInpWrap">
+						<input id="cardNumInp" type="text" class="layui-input" placeholder="请输入槽车车牌号码" maxlength="5" autocomplete="off" />
+					</div>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="jsyNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>驾驶员</label>
+				<div class="layui-input-block comInpItem">
+					<select id="jsyNameSel" lay-filter="jsyNameSel">
+						<option value="">请选择驾驶员</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>驾驶员电话</label>
+				<div class="layui-input-block comInpItem">
+					<input id="jsyTelInp" type="text" placeholder="请输入驾驶员手机号码" maxlength="11" class="layui-input" autocomplete="off"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="yyyNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>押运员</label>
+				<div class="layui-input-block comInpItem">
+					<select id="yyyNameSel" lay-filter="yyyNameSel">
+						<option value="">请选择押运员</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>押运员电话</label>
+				<div class="layui-input-block comInpItem">
+					<input id="yyyTelInp" type="text" placeholder="请输入押运员手机号码" maxlength="11" class="layui-input" autocomplete="off"/>
+				</div>		
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>装载量</label>
+				<div class="layui-input-block comInpItem">
+					<input id="gasVolumeInp" type="text" placeholder="请输入装载量" class="layui-input" autocomplete="off"/>
+					<span class="danweiTxt">吨</span>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>单价</label>
+				<div class="layui-input-block comInpItem">
+					<input id="gasPriceInp" type="text" placeholder="请输入单价" class="layui-input" autocomplete="off"/>
+					<span class="danweiTxt">吨</span>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>装车日期</label>
+				<div class="layui-input-block comInpItem">
+					<input id="zcDateInp" type="text" placeholder="请选择装车日期" readonly class="layui-input"/>
+					<span class="danweiTxt">日</span>
+				</div>		
+			</div>
+			<div class="layui-form-item qianfengWrap">
+				<label class="layui-form-label"><span class="mustItem">*</span>铅封信息</label>
+				<div class="layui-input-block comInpItem innerQianfeng">
+					<div class="qianfengItem">
+						<input type="text" id="qfTxtInp1" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<a href="javascript:void(0)" id="addImgBtn_qfImg1" class="addQfImgBtn" title="请添加铅封图片">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_qfImg1"/>
+						</a>
+						<span class="viewQfBigImg">查看原图</span>
+					</div>
+					
+					<div class="qianfengItem">
+						<input type="text" id="qfTxtInp2" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<a href="javascript:void(0)" id="addImgBtn_qfImg2" class="addQfImgBtn" title="请添加铅封图片">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_qfImg2"/>
+						</a>
+						<span class="viewQfBigImg">查看原图</span>
+					</div>
+					
+					<div class="qianfengItem noMargR">
+						<input type="text" id="qfTxtInp3" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<a href="javascript:void(0)" id="addImgBtn_qfImg3" class="addQfImgBtn" title="请添加铅封图片">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_qfImg3"/>
+						</a>
+						<span class="viewQfBigImg">查看原图</span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item transformArea">
+				<label class="layui-form-label"><span class="mustItem">*</span>配送区域</label>
+				<div class="layui-input-block comInpItem" id="provList"></div>
+			</div>
+			
+			
+			
+			
+			<!-- <div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(一)</label>
+				<div class="layui-input-block comInpItem">
+					<input id="qfTxtInp1" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(二)</label>
+				<div class="layui-input-block comInpItem">
+					<input id="qfTxtInp2" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(三)</label>
+				<div class="layui-input-block comInpItem">
+					<input id="qfTxtInp3" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
+				</div>		
+			</div> -->
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">GPS信息</label>
+				<div class="layui-input-block comInpItem">
+					<input id="GPSInfoInp" type="text" class="layui-input" placeholder="请输入GPS信息" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>联系人</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrNameInp" type="text" class="layui-input" placeholder="请输入联系人姓名" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>手机号码</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrTel" type="text" class="layui-input" placeholder="请输入联系人手机号码" autocomplete="off" maxlength="11"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">备注</label>
+				<div class="layui-input-block comInpItem">
+					<textarea id="remark" placeholder="请输入备注(200字以内)" maxlength="200" class="layui-textarea"></textarea>
+				</div>		
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<!-- 货车类型为危货 -->
+			<!-- <div class="dangerItemWrap layui-clear">
+				<div class="dangerItem hasMargL">
+					<p><span class="mustItem">*</span>车头行驶证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_headXsz" title="添加车头行驶证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_headXsz"/>
+						</a>
+						<span id="viewBigImg_headXsz" class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>罐车行驶证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_gcXsz" title="添加罐车行驶证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_gcXsz"/>
+						</a>
+						<span id="viewBigImg_gcXsz" class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>车辆运营证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_yyz" title="添加车辆运营证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_yyz"/>
+						</a>
+						<span id="viewBigImg_yyz" class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>储罐检验合格证</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_jyz" title="添加储罐检验合格证" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_jyz"/>
+						</a>
+						<span id="viewBigImg_jyz" class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+				
+				<div class="dangerItem">
+					<p><span class="mustItem">*</span>安全阀校验报告</p>
+					<div class="addImgWrap">
+						<a id="addImgBtn_aqf" title="添加安全阀校验报告" class="addImgBtn" href="javascript:void(0)">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_aqf"/>
+						</a>
+						<span id="viewBigImg_aqf" class="viewBigImg">查看原图</span>
+					</div>		
+				</div>
+			</div> -->
+			
+			
+			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">燃气买卖详情图</label>
+				<span class="tipsTxt">最多上传9张</span>
+				<div class="layui-input-block comInpItem">
+					<div class="detImgList">
+						<ul id="detImgListUl"></ul>
+					</div>
+					<a id="addDetImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+					</a>
+				</div>
+			</div>
+			
+			<div class="layui-form-item comInpItem hasAlign">
+				<button id="saveBtn" class="layui-btn">保存燃气买卖信息</button>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var cardTitle = ["京", "沪", "津", "渝", "冀", "豫", "云", "辽", "黑", "湘", "鲁", "新", "苏",  "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "川", "青", "藏", "琼", "宁"];
+			var cardWords = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+			var tmpProvNameArr = [];
+			var mainImgSucc = '', bdImgSucc = '',whpImgSucc = '',trucksImgSucc = '';
+			var globalOpts = parent.globalOpts;
+			var tmpDetImgArr = [],currPage = 'addEditRqTradePage';
+			layui.config({
+				base: '/js/frame/js/'
+			}).use(['layer','upload','form','laydate','basicInfo','address','uploadImg'],function(){
+				var layer = layui.layer,form = layui.form,upload = layui.upload,laydate = layui.laydate,basicInfo=layui.basicInfo,uploadImg = layui.uploadImg;
+				laydate.render({'elem':'#zcDateInp',trigger: 'click'});
+				var page = {
+					init : function(){
+						basicInfo.renderCardNumWords();
+						basicInfo.loadProvList();
+					}
+				};
+				page.init();
+			});
+		</script>
+		
+		
+	</body>
+</html>
