@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addEditTruckTrade.css"/>
+		<title>添加/编辑燃气设备</title>
+	</head>
+	<body>
+		<div class="truckTradeWrap layui-form">
+			<div id="compNameWrap" class="layui-form-item addEditItem" style="display: block;">
+				<input type="hidden" id="compNameInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
+				<div class="layui-input-block comInpItem">
+					<select id="compNameSel" lay-filter="compNameSel">
+						<option value="">请选择公司</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>燃气设备主图</label>
+				<div class="layui-input-block">
+					<a id="addImgBtn_main" title="添加燃气设备主图" class="addMainImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+						<img id="thubImg_main"/>
+					</a>
+					<p class="tipsInfo">
+						<i class="iconfont icon-gonggao"></i>
+						<span>请上传燃气设备主图，建议图片宽高尺寸750*400</span>
+					</p>
+					<span class="viewMainBigImg">查看原图</span>
+				</div>		
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>设备名称</label>
+				<div class="layui-input-block comInpItem">
+					<input id="rqDevNameInp" type="text" placeholder="请输入燃气设备名称" class="layui-input" autocomplete="off" maxlength="40"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>设备型号</label>
+				<div class="layui-input-block comInpItem">
+					<input id="rqDevNoInp" type="text" placeholder="请输入燃气设备型号" class="layui-input" autocomplete="off" maxlength="40"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>生产厂家</label>
+				<div class="layui-input-block comInpItem">
+					<input id="rqDevFacInp" type="text" placeholder="请输入燃气设备生产厂家" class="layui-input" autocomplete="off" maxlength="40"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="mustItem">*</span>设备价格</label>
+				<div class="layui-input-block comInpItem">
+					<input id="rqDevPriceInp" type="text" placeholder="请输入燃气设备价格" class="layui-input" autocomplete="off" maxlength="12"/>
+					<span class="danweiTxt">元</span>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="rqDevLmInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>设备类目</label>
+				<div class="layui-input-block comInpItem">
+					<select id="rqDevLmSel" lay-filter="rqDevLmSel">
+						<option value="">请选择燃气设备类目</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="rqDevTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>设备类型</label>
+				<div class="layui-input-block comInpItem">
+					<select id="rqDevTypeSel" lay-filter="rqDevTypeSel">
+						<option value="">请选择燃气设备类型</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>联系人</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrNameInp" type="text" class="layui-input" placeholder="请输入联系人姓名" autocomplete="off" maxlength="10"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>手机号码</label>
+				<div class="layui-input-block comInpItem">
+					<input id="lxrTel" type="text" class="layui-input" placeholder="请输入联系人手机号码" autocomplete="off" maxlength="11"/>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">设备描述</label>
+				<div class="layui-input-block comInpItem">
+					<textarea id="remark" placeholder="请输入设备描述 (200字以内)" maxlength="200" class="layui-textarea"></textarea>
+				</div>		
+			</div>
+			
+			
+			
+			<div class="layui-form-item addEditItem" style="display: none;">
+				<label class="layui-form-label">设备详情图</label>
+				<span class="tipsTxt">最多上传9张</span>
+				<div class="layui-input-block comInpItem">
+					<div class="detImgList">
+						<ul id="detImgListUl">
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+						</ul>
+					</div>
+					<a id="addYzbgImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+					</a>
+				</div>
+			</div>
+			
+			
+			<div class="layui-form-item comInpItem hasAlign">
+				<button id="saveBtn" class="layui-btn">保存燃气设备买卖信息</button>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var mainImgSucc = '';
+			var globalOpts = parent.globalOpts,isRightXsPrice = false;
+			layui.config({
+				base: '/js/frame/js/'
+			}).use(['layer','form','common','basicInfo','upload'],function(){
+				var layer = layui.layer,form = layui.form,upload = layui.upload,basicInfo=layui.basicInfo;
+				
+				var page = {
+					init : function(){
+						this.uploadMainImg();
+						this.bindEvent();
+						basicInfo.getCompanyList();
+						basicInfo.getRqDevLm();
+						basicInfo.getRqDevType();
+					},
+					uploadMainImg : function(){
+						upload.render({
+						    elem: '#addImgBtn_main'
+						    ,url: '/upload/uploadSingle'
+							,method : 'post'
+						    ,accept : 'images'
+							,auto: true
+							,before: function(obj){
+								layer.load();
+						    }
+						    ,done: function(res){
+								layer.closeAll('loading');
+							    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+							    $('.viewMainBigImg').show();
+							    mainImgSucc = res.datas;
+						    }
+						});
+					},
+					bindEvent : function(){
+						$('.viewMainBigImg').on('click',function(){
+							if(globalOpts == 'addBtn'){
+								window.open('/temp/' + mainImgSucc);
+							}else{
+								window.open('../' + mainImgSucc);
+							};
+						});
+						$('#rqDevPriceInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('燃气设备价格应是大于0的正整数');
+									isRightXsPrice = false;
+								}else{
+									isRightXsPrice = true;
+								}
+							}else{
+								isRightXsPrice = false;
+							}
+						});
+						$('#saveBtn').on('click',function(){
+							var compNameInp = $('#compNameInp').val(),
+								rqDevNameInp = $('#rqDevNameInp').val(),
+								rqDevNoInp = $('#rqDevNoInp').val(),
+								rqDevFacInp = $('#rqDevFacInp').val(),
+								rqDevPriceInp = $('#rqDevPriceInp').val(),
+								rqDevLmInp = $('#rqDevLmInp').val(),
+								
+								rqDevTypeInp = $('#rqDevTypeInp').val(),
+								lxrNameInp = $.trim($('#lxrNameInp').val()),
+								lxrTel = $.trim($('#lxrTel').val()),
+								remark = $.trim($('#remark').val()),
+								regPhone = /^1\d{10}$/;
+							
+							if(compNameInp == ''){
+								layer.msg('请选择公司');
+							}else if(mainImgSucc == ''){
+								layer.msg('请上传燃气设备主图');
+							}else if(rqDevNameInp == ''){
+								layer.msg('请输入燃气设备名称');
+							}else if(rqDevNoInp == ''){
+								layer.msg('请输入燃气设备型号');
+							}else if(rqDevFacInp == ''){
+								layer.msg('请输入燃气设备生产厂家');
+							}else if(rqDevPriceInp == ''){
+								layer.msg('请输入燃气设备价格');
+							}else if(isRightXsPrice == false){
+								layer.msg('燃气设备价格应是大于0的正整数');
+							}else if(rqDevLmInp == ''){
+								layer.msg('请选择燃气设备类目');
+							}else if(rqDevTypeInp == ''){
+								layer.msg('请选择燃气设备类型');
+							}else if(lxrNameInp == ''){
+								layer.msg('请输入联系人姓名');
+							}else if(lxrTel == ''){
+								layer.msg('请输入联系人手机号码');
+							}else if(!regPhone.test(lxrTel) && lxrTel.length != 11){
+								layer.msg('手机号码格式不对，请重新填写');
+							}else{
+								var url = '',type = '';
+								var index= parent.layer.getFrameIndex(window.name);
+								if(globalOpts == 'addBtn'){
+var field = {compId:compNameInp,mainImg:mainImgSucc,devName:rqDevNameInp,devNo:rqDevNoInp,devPp:rqDevFacInp,devPrice:rqDevPriceInp,lmId:rqDevLmInp,zlId:rqDevTypeInp,lxName:lxrNameInp,lxTel:lxrTel,description:remark};
+									url = '/rqDevTrade/addRqDevTrade';
+									type = 'post';
+								}else if(globalOpts == 'editBtn'){
+									var field = {};
+									url = '/rqDevTrade/updateRqDevTrade';
+									type = 'put';
+								}
+								layer.load('1');
+								$.ajax({
+								    type:type,
+									data : field,
+								    dataType:"json",
+								    url:url,
+								    success:function (json){
+								    	layer.closeAll('loading');
+										if(json.code == 200){
+											var title = globalOpts == 'addBtn' ? '添加燃气设备买卖信息成功' : '编辑燃气设备买卖信息成功';
+											layer.msg(title,{icon:1,time:1200},function(){
+												parent.addEditFlag = true;
+												parent.layer.close(index);
+											});
+										}else if(json.code == 1000){
+											layer.msg('服务器错误');
+										}else if(json.code == 50001){
+											layer.msg('当前燃气设备买卖信息不存在');
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无对燃气设备买卖添加或编辑的权限');
+										}else if(json.code == 80001){
+											layer.msg('当前燃气设备买卖信息审核已通过，暂不能修改');
+										}
+								    }
+								});
+							}
+
+							
+							
+						});
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>

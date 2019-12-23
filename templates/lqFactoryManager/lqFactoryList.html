@@ -187,7 +187,6 @@
 					},
 					commonLayer : function(){
 						addEditFlag = true;
-						//var title = globalOpts == 'addBtn' ? '添加液厂' : '编辑液厂--' + facName
 						var fullScreenIndex = layer.open({
 							title : '',
 							type: 2,
@@ -231,10 +230,11 @@
 							even : true,
 							limit:20,
 							text: {none : '暂无相关数据'},
+							cellMinWidth:200,
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'name', title: '液厂名称',width:'220',align:'center',templet : function(d){
+									{field : 'name', title: '液厂名称',align:'center',templet : function(d){
 										var str = '';
 										if(d.checkStatus == 1){//通过
 											str += '<span class="currCheckFlag passBg"></span>';
@@ -244,34 +244,87 @@
 										str += '<span>'+ d.name +'</span>';
 										return str;
 									}},
-									{field : 'namePy', title: '拼音码',width:'120',align:'center'},
-									{field : 'gasTypeName', title: '液质类型',width:'120',align:'center'},
-									{field : 'lxName', title: '联系人',width:'120',align:'center'},
-									{field : 'province', title: '所在省份',width:'150',align:'center'},
-									{field : 'address', title: '液厂地址',width:'200',align:'center'},
-									{field : 'addTime', title: '添加时间',width:'180',align:'center'},
-									{field : '', title: '操作', fixed: 'right',width:'240', align:'center',templet : function(d){
+									{field : 'namePy', title: '拼音码',align:'center'},
+									{field : 'gasTypeName', title: '液质类型',align:'center'},
+									{field : 'lxName', title: '联系人',align:'center'},
+									{field : 'province', title: '所在省份',align:'center'},
+									{field : 'address', title: '液厂地址',align:'center'},
+									{field : 'addTime', title: '添加时间',align:'center'},
+									{field : '', title: '操作', fixed: 'right', align:'center',templet : function(d){
 										var str = '';
-										str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" facName="'+ d.name +'" lay-event="editLqFacInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										str += '<a href="javascript:void(0)" style="margin-right:10px;" gfId="'+ d.gfId +'" facName="'+ d.name +'" lay-event="editLqFacInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
 										if(d.checkStatus == 0){
 											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify" checkSta="0" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
 										}else if(d.checkStatus == 1){//审核通过
-											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify_spec" checkSta="2" class="layui-btn layui-btn-danger layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为不通过</a>';
+											str += '<input type="checkbox" name="checkStaName" checkSta="2" lay-skin="switch" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
 										}else if(d.checkStatus == 2){//审核未通过
-											str += '<a href="javascript:void(0)" gfId="'+ d.gfId +'" name="'+ d.name +'" lay-event="lqFacVerify_spec" checkSta="1" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>更改为通过</a>';
+											str += '<input type="checkbox" name="checkStaName" gfId="'+ d.gfId +'" name="'+ d.name +'" checkSta="1" lay-skin="switch" ttId="'+ d.ttId +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
 										}
-										
 										return str;
 									}}
 								]
 							],
 							done : function(res, curr, count){
-								console.log(res)
+								//console.log(res)
+								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
 						});
 					}
 				};
+				form.on('switch(verifyInfo_spec)',function(data){
+					var currTit = '';
+					var currCheckStatus = data.elem.checked;
+					gfId = $(this).attr('gfId'),
+					checkStatus = $(this).attr('checkSta');
+					lqFacName = $(this).attr('name');
+					if(checkStatus == 1){//审核通过
+						currTit = '<span style="color:green;">审核通过</span>';
+					}else if(checkStatus == 2){//审核不通过
+						currTit = '<span style="color:red;">不通过</span>';
+					}
+					layer.confirm('是否要将当前槽车租卖信息审核状态变更为['+ currTit +']?', {
+					  title:'修改液厂审核状态',
+					  skin: 'layui-layer-molv',
+					  btn: ['确定','取消'],//按钮
+					  closeBtn:0,
+					},function(index){
+						data.elem.checked = currCheckStatus;
+						layer.load();
+						var field = {gfId:gfId,checkStatus:checkStatus};
+						$.ajax({
+							type:'PUT',
+							dataType:"json",
+							data :field,
+							url:'/gsf/checkGf',
+							success:function (json){
+								layer.closeAll('loading');
+								if(json.code == 200){
+									layer.msg("变更液厂审核状态成功",{icon:1,time:1000},function(){
+										checkStatus = -1;
+										page.loadLqFactoryList();
+									});
+								}else if(json.code == 50001){
+									layer.msg("修改失败，当前液厂不存在", {icon:5,anim:6,time:2000});
+									data.elem.checked=!currCheckStatus;
+									form.render();
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									data.elem.checked=!currCheckStatus;
+									form.render();
+								}else if(json.code == 70001){
+									layer.msg("抱歉，您暂无权限修改液厂审核状态", {icon:5,anim:6,time:1500});
+									data.elem.checked=!currCheckStatus;
+									form.render();
+								}
+							}
+						});
+					},function(index){
+						data.elem.checked=!currCheckStatus;
+						form.render();
+						layer.close(index);
+					});
+				});
 				table.on('tool(lqFactTab)',function(obj){
 					if(obj.event == 'editLqFacInfo'){
 						gfId = $(this).attr('gfId');
@@ -294,42 +347,6 @@
 									page.loadCompList();
 								}
 							}
-						});
-					}else if(obj.event == 'lqFacVerify_spec'){
-						gfId = $(this).attr('gfId'),
-						checkStatus = $(this).attr('checkSta');
-						lqFacName = $(this).attr('name');
-						var title = '';
-						checkStatus == '1' ? title = '<span style="color:green;">通过</span>' : title = '<span style="color:red;">不通过</span>';
-						layer.confirm('确认要将液厂[<span style="color:#009688;">' + lqFacName + '</span>]的审核状态变更为' + title + '?', {
-						  title:'变更公司审核状态提示',
-						  skin: 'layui-layer-molv',
-						  btn: ['确定','取消'] //按钮
-						},function(){
-							layer.load();
-							var field = {gfId:gfId,checkStatus:checkStatus};
-							console.log(field)
-							$.ajax({
-								type:'PUT',
-								dataType:"json",
-								data :field,
-								url:'/gsf/checkGf',
-								success:function (json){
-									layer.closeAll('loading');
-									if(json.code == 200){
-										layer.msg("变更液厂审核状态成功",{icon:1,time:1000},function(){
-											checkStatus = -1;
-											page.loadLqFactoryList();
-										});
-									}else if(json.code == 50001){
-										layer.msg("修改失败，当前液厂不存在", {icon:5,anim:6,time:2000});
-									}else if(json.code == 1000){
-										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
-									}else if(json.code == 70001){
-										layer.msg("抱歉，您暂无权限修改液厂审核状态", {icon:5,anim:6,time:1500});
-									}
-								}
-							});
 						});
 					}
 				});

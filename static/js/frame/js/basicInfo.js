@@ -201,6 +201,125 @@ layui.define(['form'],function(exports){
 			}
 			$('#zzjzSel').html(str);
 			form.render();
+		},
+		//获取进港资质
+		getJgzz : function(){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : {validSta:0},
+			    dataType:"json",
+			    url:"/qual/queryQual",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					if(json.code == 200){
+						_this.renderJgzz(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂未添加进港资质,请先添加');
+					}
+			    }
+			});
+		},
+		renderJgzz : function(list){
+			// var str = '<option value="">请选择进港资质</option>';
+			// for(var i=0;i<list.length;i++){
+			// 	str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+			// }
+			// $('#jgzzSel').html(str);
+			var str = '';
+			for(var i=0;i<list.length;i++){
+				str += '<input type="checkbox" name="jjzzInpName" lay-filter="jjzzFilter" title="'+ list[i].name +'" value="'+ list[i].id +'" lay-skin="primary">'
+			}
+			$('#jgzzList').html(str);
+			form.render();
+		},
+		//通过槽车类型获取对应类型车辆信息 普货 危货
+		getTrucksByTruckType : function(type){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : {type:type},
+			    dataType:"json",
+			    url:"/trucksType/queryTrTypeByType",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					if(json.code == 200){
+						_this.renderTrcuksInfo(json.datas,type);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂未添加槽车类型对应车辆类型');
+					}
+			    }
+			});
+		},
+		renderTrcuksInfo : function(list,type){
+			if(type == 1){
+				var str = '<option value="">请选择普货车辆类型</option>';
+			}else{
+				var str = '<option value="">请选择危货车辆类型</option>';
+			}
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+			}
+			$('#truckTypeNameSel').html(str);
+			form.render();
+		},
+		getRqDevLm : function(){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : { id:'' },
+			    dataType:"json",
+			    url:"/rqDevType/queryRqDevType",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					if(json.code == 200){
+						_this.renderRqlmHtml(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂未添加燃气设备类目,请先添加');
+					}
+			    }
+			});
+		},
+		renderRqlmHtml : function(list){
+			var str = '<option value="">请选择燃气设备类目</option>';
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+			}
+			$('#rqDevLmSel').html(str);
+			form.render();
+		},
+		getRqDevType : function(){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : { id:'' },
+			    dataType:"json",
+			    url:"/rqType/queryRqType",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					if(json.code == 200){
+						_this.renderRqDevTypeHtml(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('暂未添加燃气设备类型,请先添加');
+					}
+			    }
+			});
+		},
+		renderRqDevTypeHtml : function(list){
+			var str = '<option value="">请选择燃气设备类型</option>';
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+			}
+			$('#rqDevTypeSel').html(str);
+			form.render();
 		}
 	};
 	//basicInfo 基础表单select
@@ -231,6 +350,31 @@ layui.define(['form'],function(exports){
 	//选择装载介质
 	form.on('select(zzjzSel)',function(data){
 		data.value == '' ? $('#zzjzInp').val('') : $('#zzjzInp').val(data.value);
+	});
+	//选择进港资质
+	form.on('checkbox(jjzzFilter)',function(data){
+		var value = data.value;
+		if(data.elem.checked){
+			jjzzIdArr.push(value);
+		}else{
+			for(var i=0;i<jjzzIdArr.length;i++){
+				if(value == jjzzIdArr[i]){
+					jjzzIdArr.splice(i,1);
+				}
+			}
+		}
+	});
+	//根据货车类普货危货获取对应车辆类型选择
+	form.on('select(truckTypeNameSel)',function(data){
+		data.value == '' ? $('#truckTypeNameInp').val('') : $('#truckTypeNameInp').val(data.value);
+	});
+	//选择燃气设备类目
+	form.on('select(rqDevLmSel)',function(data){
+		data.value == '' ? $('#rqDevLmInp').val('') : $('#rqDevLmInp').val(data.value);
+	});
+	//选择燃气设备类型
+	form.on('select(rqDevTypeSel)',function(data){
+		data.value == '' ? $('#rqDevTypeInp').val('') : $('#rqDevTypeInp').val(data.value);
 	});
 	
     //输出接口

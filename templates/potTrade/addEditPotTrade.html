@@ -10,7 +10,7 @@
 		<div class="truckTradeWrap layui-form">
 			<div class="layui-form-item addEditItem">
 				<input type="hidden" id="tradeTypeInp"/>
-				<label class="layui-form-label"><span class="mustItem">*</span>租卖类型</label>
+				<label class="layui-form-label"><span class="mustItem">*</span>贸易类型</label>
 				<div class="layui-input-block">
 					<input type="radio" value="0" name="tradeTypeName" title="可租可卖" lay-filter="tradeTypeFilter"/>
 					<input type="radio" value="1" name="tradeTypeName" title="租" lay-filter="tradeTypeFilter"/>
@@ -65,6 +65,7 @@
 					<label class="layui-form-label"><span class="mustItem">*</span>储罐容积</label>
 					<div class="layui-input-block comInpItem">
 						<input id="volumeInp" type="text" placeholder="请输入储罐容积(1-1000立方)" class="layui-input" autocomplete="off" maxlength="4"/>
+						<span class="danweiTxt">m³</span>
 					</div>
 				</div>
 				
@@ -79,20 +80,14 @@
 				
 				
 				<div class="layui-form-item addEditItem">
-					<label class="layui-form-label">购置时间</label>
+					<label class="layui-form-label"><span class="mustItem">*</span>购置年份</label>
 					<div class="layui-input-block comInpItem">
-						<input id="potBuyTime" type="text" placeholder="请选择储罐购置时间" readonly class="layui-input"/>
+						<input id="potBuyTime" type="text" placeholder="请选择储罐购置年份" readonly class="layui-input"/>
+						<span class="danweiTxt">年</span>
 					</div>		
 				</div>
-				
-				<!-- <div class="layui-form-item">
-					<label class="layui-form-label"><span class="mustItem">*</span>储罐上牌日期</label>
-					<div class="layui-input-block comInpItem">
-						<input id="potYearInp" type="text" placeholder="请选择储罐上牌日期" class="layui-input" readonly/>
-					</div>
-				</div> -->
+
 			</div>
-			
 			
 			
 			<div class="layui-form-item addEditItem">
@@ -114,31 +109,24 @@
 					</select>
 				</div>
 				<div class="itemDet">
-					<input type="hidden" id="cityInp" />
 					<select id="citySel" name="city" lay-filter="city" disabled>
 						<option value="">请选择市区</option>
 					</select>
 				</div>
-				<!--div class="itemDet">
-					<input type="hidden" id="cityInp" />
-					<select id="citySel" name="city" lay-filter="city" disabled></select>
-				</div>
-				<div class="itemDet">
-					<input type="hidden" id="countyInp" />
-					<select id="areaSel" name="area" lay-filter="area" disabled></select>
-				</div-->
 			</div>
 			
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>租赁价格</label>
+			<div class="layui-form-item addEditItem" id="zulinPriceWrap">
+				<label class="layui-form-label"><span class="mustItem">*</span>租卖价格</label>
 				<div class="layui-input-block comInpItem">
-					<input id="zlPriceInp" type="text" class="layui-input" placeholder="请输入租赁价格" autocomplete="off" maxlength="10"/>
+					<input id="zlPriceInp" type="text" class="layui-input" placeholder="请输入租卖价格" autocomplete="off" maxlength="10"/>
+					<span class="danweiTxt">元</span>
 				</div>		
 			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>官方价格</label>
+			<div class="layui-form-item addEditItem" id="xsPriceWrap">
+				<label class="layui-form-label"><span class="mustItem">*</span>销售价格</label>
 				<div class="layui-input-block comInpItem">
-					<input id="gfPriceInp" type="text" class="layui-input" placeholder="请输入官方价格" autocomplete="off" maxlength="10"/>
+					<input id="xsPriceInp" type="text" class="layui-input" placeholder="请输入销售价格" autocomplete="off" maxlength="10"/>
+					<span class="danweiTxt">元</span>
 				</div>		
 			</div>
 			
@@ -156,11 +144,71 @@
 			</div>
 			
 			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label">备注</label>
+				<label class="layui-form-label">产品描述</label>
 				<div class="layui-input-block comInpItem">
-					<textarea id="remark" placeholder="请输入备注(200字以内)" maxlength="200" class="layui-textarea"></textarea>
+					<textarea id="remark" placeholder="请输入产品描述 (200字以内)" maxlength="200" class="layui-textarea"></textarea>
 				</div>		
 			</div>
+			
+			<div class="layui-form-item addEditItem" style="display: none;">
+				<label class="layui-form-label">储罐详情图</label>
+				<span class="tipsTxt">最多上传9张</span>
+				<div class="layui-input-block comInpItem">
+					<div class="detImgList">
+						<ul id="detImgListUl">
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+							<li>
+								<img src="../images/4.png"/>
+								<a href="javascript:void(0)"><i class="layui-icon layui-icon-delete"></i></a>
+								<span>查看原图</span>
+							</li>
+						</ul>
+					</div>
+					<a id="addYzbgImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+					</a>
+				</div>
+			</div>
+			
 			
 			<div class="layui-form-item comInpItem hasAlign">
 				<button id="saveBtn" class="layui-btn">保存储罐租卖信息</button>
@@ -171,12 +219,30 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var mainImgSucc = '';
-			var globalOpts = parent.globalOpts,isRightZulinPrice = false,isRightGfPrice = false,isRightVolume = false;
+			var globalOpts = parent.globalOpts,isRightZulinPrice = false,isRightVolume = false,isRightXsPrice = false;
 			layui.config({
 				base: '/js/frame/js/'
-			}).use(['layer','form','common','address','basicInfo','laydate'],function(){
-				var layer = layui.layer,form = layui.form,laydate=layui.laydate,upload = layui.upload,address = layui.address(),basicInfo=layui.basicInfo,common=layui.common;
-				laydate.render({'elem':'#potBuyTime',trigger: 'click'});
+			}).use(['layer','form','address','basicInfo','laydate','upload'],function(){
+				var layer = layui.layer,form = layui.form,laydate=layui.laydate,upload = layui.upload,address = layui.address(),basicInfo=layui.basicInfo;
+				laydate.render({'elem':'#potBuyTime',trigger: 'click',type:'year'});
+				//贸易类型
+				form.on('radio(tradeTypeFilter)',function(data){
+					$('#tradeTypeInp').val(data.value);
+					if(data.value == 0){
+						$('#zulinPriceWrap').show();
+						$('#xsPriceWrap').show();
+					}else if(data.value == 1){//租
+						$('#zulinPriceWrap').show();
+						$('#xsPriceWrap').hide();
+					}else{//卖
+						$('#zulinPriceWrap').show();
+						$('#xsPriceWrap').hide();
+					}
+					$('#zlPriceInp').val('');
+					$('#xsPriceInp').val('');
+					form.render();
+				})
+				
 				//企业类型radio
 				form.on('radio(comTypeFilter)',function(data){
 					$('#compTypeInp').val(data.value);
@@ -236,6 +302,8 @@
 								}else{
 									isRightVolume = true;
 								}
+							}else{
+								isRightVolume = false;
 							}
 						});
 						$('#zlPriceInp').on('blur',function(){
@@ -247,17 +315,21 @@
 								}else{
 									isRightZulinPrice = true;
 								}
+							}else{
+								isRightZulinPrice = false;
 							}
 						});
-						$('#gfPriceInp').on('blur',function(){
+						$('#xsPriceInp').on('blur',function(){
 							var regNum = /^\+?[1-9]\d*$/;
 							if($(this).val() != ''){
 								if(!regNum.test( $.trim($(this).val()) )){
-									layer.msg('官方价格应是大于0的正整数');
-									isRightGfPrice = false;
+									layer.msg('销售价格应是大于0的正整数');
+									isRightXsPrice = false;
 								}else{
-									isRightGfPrice = true;
+									isRightXsPrice = true;
 								}
+							}else{
+								isRightXsPrice = false;
 							}
 						});
 						$('#saveBtn').on('click',function(){
@@ -273,10 +345,11 @@
 								cityInp = $('#cityInp').val(),
 								
 								zlPriceInp = $('#zlPriceInp').val(),
-								gfPriceInp = $('#gfPriceInp').val(),
+								xsPriceInp = $('#xsPriceInp').val(),
 								lxrNameInp = $.trim($('#lxrNameInp').val()),
 								lxrTel = $.trim($('#lxrTel').val()),
-								remark = $.trim($('#remark').val());
+								remark = $.trim($('#remark').val()),
+								regPhone = /^1\d{10}$/;
 							
 							if(tradeTypeInp == ''){
 								layer.msg('请选择租卖类型');
@@ -295,21 +368,23 @@
 							}else if(sxInfoInp == ''){
 								layer.msg('请选择有无手续');
 							}else if(potBuyTime == ''){
-								layer.msg('请选择储罐购买时间');
+								layer.msg('请选择储罐购买年份');
 							}else if(zzjzInp == ''){
 								layer.msg('请选择装载介质');
 							}else if(provInp == ''){
 								layer.msg('请选择罐所在省');
 							}else if(cityInp == ''){
 								layer.msg('请选择罐所在市');
-							}else if(zlPriceInp == ''){
-								layer.msg('请输入租赁价格');
+							}else if(tradeTypeInp == 0 && zlPriceInp == '' && xsPriceInp == ''){
+								layer.msg('请输入租赁价格和销售价格');
+							}else if(tradeTypeInp == 1 && zlPriceInp == ''){
+								layer.msg('请输入租卖价格');
+							}else if(tradeTypeInp == 2 && xsPriceInp == ''){
+								layer.msg('请输入销售价格');
 							}else if(isRightZulinPrice == false){
 								layer.msg('租赁价格应是大于0的正整数');
-							}else if(gfPriceInp == ''){
-								layer.msg('请输入官方价格');
-							}else if(isRightGfPrice == false){
-								layer.msg('官方价格应是大于0的正整数');
+							}else if(isRightXsPrice == false){
+								layer.msg('销售价格应是大于0的正整数');
 							}else if(lxrNameInp == ''){
 								layer.msg('请输入联系人姓名');
 							}else if(lxrTel == ''){
@@ -320,11 +395,7 @@
 								var url = '',type = '';
 								var index= parent.layer.getFrameIndex(window.name);
 								if(globalOpts == 'addBtn'){
-									var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeInp,mainImg:mainImgSucc,trucksNo:cardNum,
-												spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
-												xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
-												lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
-												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc};
+var field = {compId:compNameInp,mainImg:mainImgSucc,potPpId:tankBandInp,potVol:volumeInp,sxInfo:sxInfoInp,buyYear:potBuyTime,zzjzTypeId:zzjzInp,province:provInp,city:cityInp,leasePrice:zlPriceInp,sellPrice:xsPriceInp,tradeStatus:tradeTypeInp,lxName:lxrNameInp,lxTel:lxrTel,remark:remark};
 									url = '/potTrade/addPotTrade';
 									type = 'post';
 								}else if(globalOpts == 'editBtn'){
@@ -332,12 +403,33 @@
 									url = '/potTrade/updatePotTrade';
 									type = 'put';
 								}
+								layer.load('1');
+								$.ajax({
+								    type:type,
+									data : field,
+								    dataType:"json",
+								    url:url,
+								    success:function (json){
+								    	layer.closeAll('loading');
+										if(json.code == 200){
+											var title = globalOpts == 'addBtn' ? '添加储罐租卖信息成功' : '编辑储罐租卖信息成功';
+											layer.msg(title,{icon:1,time:1200},function(){
+												parent.addEditFlag = true;
+												parent.layer.close(index);
+											});
+										}else if(json.code == 1000){
+											layer.msg('服务器错误');
+										}else if(json.code == 50001){
+											layer.msg('当前储罐租卖信息不存在');
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无对储罐租卖添加或编辑的权限');
+										}else if(json.code == 80001){
+											layer.msg('当前储罐租卖信息审核已通过，暂不能修改');
+										}
+								    }
+								});
 							}
-							
-							
-							
-							
-							
+
 							
 							
 						});

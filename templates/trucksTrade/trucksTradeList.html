@@ -7,6 +7,9 @@
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 		<title>槽车租卖管理</title>
+		<style>
+			.checkBtn{margin-right: 10px;}
+		</style>
 	</head>
 	<body style="background:#f2f2f2;">
 		<div class="layui-fluid" style="margin-top:15px;">
@@ -17,15 +20,14 @@
 						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加槽车租卖</a>
 					</div>
 					<div class="layui-card-body">
-						<input type="hidden" id="checkStaInp" value="-1" />
 						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
-							<div class="filterItem">
+							<div class="filterItem" style="margin-right: 15px;">
 								<input type="radio" name="validStatus" value="0" title="未审核" lay-filter="checkStaFilter" checked/>
 								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>
-							<div class="filterItemSel layui-form">
-								<input type="hidden" id="tradeTypeInp" value="1"/>
+							<div class="filterItemSel layui-form" style="width: 140px;">
+								<input type="hidden" id="tradeTypeInp" value=""/>
 								<select id="tradeTypeSel" lay-filter="tradeTypeSel">
 									<option value="">请选择贸易类型</option>
 									<option value="1">租赁</option>
@@ -55,9 +57,18 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var typeId = '',checkFlag = false,compId = '',checkSta='',globalOpts = '',addEditFlag = false,compName='',currPage='compListPage';
-			layui.use(['layer','table','form'],function(){
+			var checkFlag = false,checkSta=1,globalOpts = '',addEditFlag = false,currPage='compListPage';
+			var ttId = 0,showSta = 0;
+			layui.use(['layer','table','form'],function(){ 
 				var layer = layui.layer,table = layui.table,form = layui.form;
+				form.on('radio(checkStaFilter)',function(data){
+					checkSta = data.value;
+					page.loadTrucksTradeList();
+				});
+				form.on('select(tradeTypeSel)',function(data){
+					data.value == '' ? $('#tradeTypeInp').val('') : $('#tradeTypeInp').val(data.value);
+					page.loadTrucksTradeList();
+				});
 				var page = {
 					init : function(){
 						this.bindEvent();
@@ -72,15 +83,16 @@
 					},
 					commonLayer : function(){
 						addEditFlag = true;
+						var title = globalOpts == 'addBtn' ? '添加槽车买卖信息' : '编辑槽车买卖信息'
 						var fullScreenIndex = layer.open({
-							title : '添加槽车买卖',
+							title : title,
 							type: 2,
 							closeBtn: 1, //不显示关闭按钮
 							area : ['500px','300px'],
 							content: '../trucksTrade/addEditTruckTrade.html',
 							end : function(){
 								if(addEditFlag){
-									//page.loadCompList();
+									page.loadTrucksTradeList();
 								}
 							},
 							cancel: function () {
@@ -92,9 +104,8 @@
 					loadTrucksTradeList : function(){
 						var _this = this;
 						layer.load();
-						var checkStaInp = $('#checkStaInp').val(),
-							tradeTypeInp = $('#tradeTypeInp').val();
-						var field = {tradeType:tradeTypeInp,checkSta:checkStaInp};
+						var tradeTypeInp = $('#tradeTypeInp').val();
+						var field = {tradeType:tradeTypeInp,checkSta:checkSta};
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
@@ -113,42 +124,125 @@
 							even : true,
 							text: {none : '暂无相关数据'},
 							limits:[10,20,30,40],
+							cellMinWidth:200,
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'tradeType', title: '贸易类型',width:'120',align:'center',templet:function(d){
-										return d.tradeType == 1 ? '租赁' : '买卖';
+									{field : 'TradeTypeName', title: '贸易类型',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										str += '<span>'+ d.TradeTypeName +'</span>';
+										return str;
 									}},
-									{field : 'trucksNo', title: '槽车车牌号',width:'150',align:'center'},
-									{field : 'trucksType', title: '槽车类型',width:'120',align:'center',templet:function(d){
-										return d.trucksType.name;
+									{field : 'CompanyName', title: '公司名称', align:'center',templet:function(d){
+										var str = '';
+										str += d.CompanyName == undefined ? '个人' : d.CompanyName; 
+										return str;
 									}},
-									{field : 'spYear', title: '车头上牌日期',width:'150',align:'center'},
-									{field : 'trucksHeadType', title: '车头类型',width:'150',align:'center',templet : function(d){
-										return d.trucksHeadType.name;
-									}},
-									{field : 'trucksHeadPp', title: '车头品牌',width:'120',align:'center',templet:function(d){
-										return d.trucksHeadPp.name;
-									}},
-									{field : 'xsDistance', title: '行驶里程(公里)',width:'140',align:'center'},
-									{field : 'wqPfbz', title: '尾气排放标准',width:'120',align:'center',templet:function(d){
-										return d.wqPfbz.name;
+									{field : 'trucksTypes', title: '槽车类型',align:'center'},
+									{field : 'trucksTypeName', title: '槽车车型',align:'center'},
+									{field : 'pfbz', title: '尾气排放标准',align:'center'},
+									{field : 'xsDistance', title: '行驶里程(公里)',align:'center'},
+									{field : 'spYear', title: '上牌年份',align:'center'},
+									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
+										var str = '';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" ttId="'+ d.ttId +'" facName="'+ d.name +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										if(d.checkStatus == 0){
+											str += '<a href="javascript:void(0)" ttId="'+ d.ttId +'" name="'+ d.name +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+										}else if(d.checkStatus == 1){//审核通过
+											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" ttId="'+ d.ttId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
+										}else if(d.checkStatus == 2){//审核未通过
+											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" ttId="'+ d.ttId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
+										}
+										return str;
 									}}
-									// {field : 'potPpId', title: '储罐品牌',width:'120',align:'center'},
-									// {field : 'bankName', title: '公司银行名称',width:'180',align:'center'},
-									// {field : 'bankAccount', title: '公司银行账户',width:'180',align:'center'},
-									// {field : 'bankNo', title: '公司银行账号',width:'220',align:'center'},
-									// {field : 'addTime', title: '公司注册平台时间',width:'220',align:'center'},
-									// {field : '', title: '操作', fixed: 'right',width:'120', align:'center'}
 								]
 							],
 							done : function(res, curr, count){
 								console.log(res)
+								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
 						});
 					}
 				};
+				form.on('switch(verifyInfo_spec)',function(data){
+					var checkSta = $(this).attr('checkSta'),
+						showSta = $(this).attr('showSta');
+					var currTit = '';
+					var checkStatus = data.elem.checked;
+					ttId = $(this).attr('ttId');
+					if(checkSta == 1){//审核通过
+						currTit = '<span style="color:green;">审核通过</span>';
+					}else if(checkSta == 2){//审核不通过
+						currTit = '<span style="color:red;">不通过</span>';
+					}
+					layer.confirm('是否要将当前槽车租卖信息审核状态变更为['+ currTit +']?', {
+					  title:'修改槽车租卖审核状态',
+					  skin: 'layui-layer-molv',
+					  btn: ['确定','取消'],//按钮
+					  closeBtn:0,
+					},function(index){
+						data.elem.checked = checkStatus;
+						layer.load();
+						var field = {id:ttId,checkSta:checkSta,showSta:showSta};
+						$.ajax({
+							type:'PUT',
+							dataType:"json",
+							data :field,
+							url:'/trucksTrade/updateTrTrByStatus',
+							success:function (json){
+								layer.closeAll('loading');
+								layer.close(index);
+								if(json.code == 200){
+									layer.msg("变更槽车租卖审核状态成功",{icon:1,time:1000},function(){
+										//checkStatus = -1;
+										page.loadTrucksTradeList();
+									});
+								}else if(json.code == 50001){
+									layer.msg("修改失败，当前槽车租卖信息不存在", {icon:5,anim:6,time:2000});
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+								}else if(json.code == 70001){
+									layer.msg("抱歉，您暂无权限修改槽车租卖信息审核状态", {icon:5,anim:6,time:1500});
+								}
+							}
+						});
+					},function(index){
+						data.elem.checked=!checkStatus;
+						form.render();
+						layer.close(index);
+					});
+				});
+				table.on('tool(truckTradeTab)',function(obj){
+					if(obj.event == 'editInfo'){
+						ttId = $(this).attr('ttId');
+						globalOpts = 'editBtn';
+						page.commonLayer();
+					}else if(obj.event == 'verifyInfo'){
+						checkFlag = true;
+						ttId = $(this).attr('ttId'),
+						checkSta = $(this).attr('checkSta');
+						showSta = $(this).attr('showSta');
+						layer.open({
+							title : '审核槽车租卖信息',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../trucksTrade/verifyTruckTrade.html',
+							end : function(){
+								if(checkFlag){
+									page.loadTrucksTradeList();
+								}
+							}
+						});
+					}
+				});
 				page.init();
 			});
 		</script>

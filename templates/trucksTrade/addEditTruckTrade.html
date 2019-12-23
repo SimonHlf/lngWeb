@@ -28,12 +28,19 @@
 			</div>
 			<div class="layui-form-item addEditItem">
 				<input type="hidden" id="truckTypeInp">
-				<label class="layui-form-label"><span class="mustItem">*</span>货车类型</label>
+				<label class="layui-form-label"><span class="mustItem">*</span>槽车类型</label>
 				<div class="layui-input-block" id="truckTypeWrap">
 					<p class="tipInfo">请先选择企业类型</p>
 				</div>		
 			</div>
-			
+			<!-- 通过普货或危货选择对应车辆 -->
+			<div id="truckTypeNameWrap" class="layui-form-item addEditItem">
+				<input type="hidden" id="truckTypeNameInp">
+				<label class="layui-form-label"><span class="mustItem">*</span><span id="truckNameTxt"></span></label>
+				<div class="layui-input-block comInpItem">
+					<select id="truckTypeNameSel" lay-filter="truckTypeNameSel"></select>
+				</div>		
+			</div>
 			<div id="compNameWrap" class="layui-form-item addEditItem">
 				<input type="hidden" id="compNameInp"/>
 				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
@@ -58,7 +65,21 @@
 					<span class="viewMainBigImg">查看原图</span>
 				</div>		
 			</div>
-			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>车辆注册地</label>
+				<input type="hidden" id="provInp" />
+				<input type="hidden" id="cityInp" />
+				<div class="itemDet provItemDet">
+					<select id="provinceSel" name="province" lay-filter="province">
+						<option value="">请选择省</option>
+					</select>
+				</div>
+				<div class="itemDet">
+					<select id="citySel" name="city" lay-filter="city" disabled>
+						<option value="">请选择市区</option>
+					</select>
+				</div>
+			</div>
 			<div class="layui-form-item addEditItem">
 				<input type="hidden" id="cardTitInp">
 				<input type="hidden" id="cardWordsInp">
@@ -75,20 +96,29 @@
 					</div>
 				</div>		
 			</div>
-			
 			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>车头上牌时间</label>
+				<label class="layui-form-label"><span class="mustItem">*</span>购置年份</label>
 				<div class="layui-input-block comInpItem">
-					<input id="truckHeadTimeInp" type="text" placeholder="请选择车头上牌时间" readonly class="layui-input"/>
+					<input id="truckBuyTime" type="text" placeholder="请选择车辆购置年份" readonly class="layui-input"/>
+					<span class="danweiTxt">年</span>
+				</div>		
+			</div>
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>车头上牌年月</label>
+				<div class="layui-input-block comInpItem">
+					<input id="truckHeadTimeInp" type="text" placeholder="请选择车头上牌年月" readonly class="layui-input"/>
+					<span class="danweiTxt">月</span>
 				</div>		
 			</div>
 			
 			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label">购置时间</label>
+				<label class="layui-form-label"><span class="mustItem">*</span><span id="priceLableTxt">价格</span></label>
 				<div class="layui-input-block comInpItem">
-					<input id="truckBuyTime" type="text" placeholder="请选择车辆购置时间" readonly class="layui-input"/>
+					<input id="priceNumInp" type="text" placeholder="请输入价格(输入0为格面议)" class="layui-input" autocomplete="off"/>
+					<span class="danweiTxt">元</span>
 				</div>		
 			</div>
+			
 			
 			<div class="layui-form-item addEditItem">
 				<input type="hidden" id="truckHeadTypeInp"/>
@@ -124,23 +154,35 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label"><span class="mustItem">*</span>储罐容积</label>
 					<div class="layui-input-block comInpItem">
-						<input id="volumeInp" type="text" placeholder="请输入储罐容积(1-1000立方)" class="layui-input" autocomplete="off" maxlength="4"/>
+						<input id="volumeInp" type="text" placeholder="请输入储罐容积(1-1000立方米)" class="layui-input" autocomplete="off" maxlength="4"/>
+						<span class="danweiTxt">m³</span>
 					</div>
 				</div>
 				
 				<div class="layui-form-item">
-					<label class="layui-form-label"><span class="mustItem">*</span>储罐上牌日期</label>
+					<label class="layui-form-label"><span class="mustItem">*</span>储罐上牌年月</label>
 					<div class="layui-input-block comInpItem">
-						<input id="potYearInp" type="text" placeholder="请选择储罐上牌日期" class="layui-input" readonly/>
+						<input id="potYearInp" type="text" placeholder="请选择储罐上牌年月" class="layui-input" readonly/>
+						<span class="danweiTxt">月</span>
 					</div>
 				</div>
 				
+			</div>
+			
+			<div id="jgzzWrap" class="layui-form-item addEditItem">
+				<label class="layui-form-label"><span class="mustItem">*</span>进港资质</label>
+				<div id="jgzzList" class="layui-input-block comInpItem">
+					<!-- <select id="jgzzSel" lay-filter="jgzzSel">
+						<option value="">请选择进港资质</option>
+					</select> -->
+				</div>
 			</div>
 			
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label"><span class="mustItem">*</span>行驶里程</label>
 				<div class="layui-input-block comInpItem">
 					<input id="driveMileInp" type="text" placeholder="请输入车辆行驶里程(公里)" autocomplete="off" class="layui-input"/>
+					<span class="danweiTxt">公里</span>
 				</div>		
 			</div>
 			
@@ -258,7 +300,18 @@
 				</div>		
 			</div>
 			
-			
+			<div class="layui-form-item addEditItem">
+				<label class="layui-form-label">槽车详情图</label>
+				<span class="tipsTxt">最多上传9张</span>
+				<div class="layui-input-block comInpItem">
+					<div class="detImgList">
+						<ul id="detImgListUl"></ul>
+					</div>
+					<a id="addYzbgImgBtn" title="添加图片" class="addDetImgBtn" href="javascript:void(0)">
+						<i class="iconfont icon-add"></i>
+					</a>
+				</div>
+			</div>
 			
 			<div class="layui-form-item comInpItem hasAlign">
 				<button id="saveBtn" class="layui-btn">保存槽车租卖信息</button>
@@ -271,24 +324,32 @@
 			<script type="text/javascript">
 				var cardTitle = ["京", "沪", "津", "渝", "冀", "豫", "云", "辽", "黑", "湘", "鲁", "新", "苏",  "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "川", "青", "藏", "琼", "宁"];
 				var cardWords = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-				var tmpProvNameArr = [];
+				var tmpProvNameArr = [],jjzzIdArr = [];
 				var mainImgSucc = '', headXszSucc = '',gcXszSucc = '',clyxzSucc = '',cgHgzSucc = '',aqfjySucc = '';
-				var globalOpts = parent.globalOpts,isRightCardNum = false,isRightDriveMile = false,isRightVolume = false;
+				var globalOpts = parent.globalOpts,isRightCardNum = false,isRightDriveMile = false,isRightVolume = false,isRightPrice = false;
+				var tmpDetImgArr = [];
+				var ttId = parent.ttId;
 				layui.config({
 					base: '/js/frame/js/'
-				}).use(['layer','upload','form','laydate','basicInfo'],function(){
-					var layer = layui.layer,form = layui.form,upload = layui.upload,laydate = layui.laydate,basicInfo=layui.basicInfo;
-					laydate.render({'elem':'#truckHeadTimeInp',trigger: 'click'});
-					laydate.render({'elem':'#truckBuyTime',trigger: 'click'});
+				}).use(['layer','upload','form','laydate','basicInfo','address','uploadImg'],function(){
+					var layer = layui.layer,form = layui.form,upload = layui.upload,laydate = layui.laydate,basicInfo=layui.basicInfo,uploadImg = layui.uploadImg;
+					laydate.render({'elem':'#truckHeadTimeInp',trigger: 'click',type:'month'});
+					laydate.render({'elem':'#truckBuyTime',trigger: 'click',type:'year'});
 					//贸易类型radio
 					form.on('radio(tradeTypeFilter)',function(data){
 						$('#tradeTypeInp').val(data.value);
-						if(data.value == 1){//租赁时显示运输范围
+						if(data.value == 1){//租赁时显示运输范围 显示进港资质
 							$('#transformArea').show();
+							$('#jgzzWrap').show();
+							basicInfo.getJgzz();
 							page.loadProvList();
+							$('#priceLableTxt').html('租赁价格');
 						}else{
+							$('#jgzzWrap').hide();
 							$('#transformArea').hide();
+							$('#priceLableTxt').html('买卖价格');
 						}
+						jjzzIdArr.length = 0;
 						tmpProvNameArr.length = 0;
 						form.render();
 					})
@@ -314,17 +375,24 @@
 					})
 					//货车类型radio
 					form.on('radio(truckTypeFilter)',function(data){
+						layer.load('1');
 						$('#truckTypeInp').val(data.value);
+						$('#truckTypeNameWrap').show();
 						if(data.value == 1){//普货
 							$('#gasTypeWrap').hide();
 							$('.dangerItemWrap').hide();
+							$('#truckNameTxt').html('普货车型');
 						}else{//危货
 							$('.dangerItemWrap').show();
 							$('#gasTypeWrap').show();
 							basicInfo.getGasType();
 							basicInfo.getTankBrand();
-							laydate.render({'elem':'#potYearInp',trigger: 'click'});
+							$('#truckNameTxt').html('危货车型');
+							laydate.render({'elem':'#potYearInp',trigger: 'click',type:'month'});
 						}
+						//执行加载对应车辆
+						$('#truckTypeNameInp').val('');
+						basicInfo.getTrucksByTruckType(data.value);
 						$('#gasTypeInp').val('');
 						$('#tankBandInp').val('');
 						$('#volumeInp').val('');
@@ -366,6 +434,85 @@
 							basicInfo.getWqpfbz();
 							basicInfo.getTrucksHeadType();
 							basicInfo.getTrucksHeadBrand();
+							uploadImg.uploadMultiImg('addYzbgImgBtn','detImgListUl',9);
+							if(globalOpts == 'editBtn'){
+								this.loadTruckTradeInfo();
+							}else{
+								layui.address();
+							}
+						},
+						loadTruckTradeInfo : function(){
+							var field = {id:ttId},_this = this;
+							$.ajax({
+							    type:"get",
+								data : field,
+							    dataType:"json",
+							    url:"/trucksTrade/getSpecTrucksTrade",
+							    success:function (json){
+							    	layer.closeAll('loading');
+									console.log(json)
+									if(json.code == 200){
+										_this.renderTruckTradeInfo(json.datas[0]);
+									}else if(json.code == 1000){
+										layer.msg('服务器错误');
+									}else if(json.code == 10002){
+										layer.msg('请求参数为空');
+									}else if(json.code == 50001){
+										layer.msg('当前槽车租卖信息不存在');
+									}
+							    }
+							});
+						},
+						renderTruckTradeInfo : function(list){
+							var tmpCompType = 0;
+							var strPuhuo = '<input type="radio" value="1" name="truckTypeName" title="普货" lay-filter="truckTypeFilter"/>';
+							var strWeihuo = '<input type="radio" value="2" name="truckTypeName" title="危货" lay-filter="truckTypeFilter"/>';
+							var trucksNo = list.trucksNo;
+							$('#tradeTypeInp').val(list.tradeType);
+							$('input[name=tradeTypeName]').each(function(i){
+								if($('input[name=tradeTypeName]').eq(i).val() == list.tradeType){
+									$('input[name=tradeTypeName]').eq(i).attr('checked',true);
+								}
+							});
+							if(list.companyId != ''){
+								tmpCompType = 2;
+								$('#compTypeInp').val(list.companyId);
+								$('#truckTypeWrap').html(strPuhuo + strWeihuo);
+								$('#priceLableTxt').html('买卖价格');
+							}else{
+								tmpCompType = 1;
+								$('#truckTypeWrap').html(strPuhuo);
+								$('#priceLableTxt').html('租赁价格');
+							}
+							$('input[name=compTypeName]').each(function(i){
+								if($('input[name=compTypeName]').eq(i).val() == tmpCompType){
+									$('input[name=compTypeName]').eq(i).attr('checked',true);
+								}
+							});
+							$('#provInp').val(list.regPlace.split('-')[0]);
+							$('#cityInp').val(list.regPlace.split('-')[1]);
+							provVal = list.regPlace.split('-')[0];
+							cityVal = list.regPlace.split('-')[1];
+							$('#cardTitInp').val(trucksNo.substr(0,1));
+							$('#cardWordsInp').val(list.trucksNo.substr(1,1));
+							$('#cardNumInp').val(list.trucksNo.substr(2,5));
+							
+							$('#cardTitSel option').each(function(i){
+								if($('#cardTitSel option').eq(i).val() == trucksNo.substr(0,1)){
+									$('#cardTitSel option').eq(i).attr('selected','selected');
+								}
+							});
+							$('#cardWordSel option').each(function(i){
+								if($('#cardWordSel option').eq(i).val() == trucksNo.substr(1,1)){
+									$('#cardWordSel option').eq(i).attr('selected','selected');
+								}
+							});
+							$('#truckBuyTime').val(list.buyYear);
+							$('#truckHeadTimeInp').val(list.spYear);
+							$('#priceNumInp').val();
+							
+							form.render();
+							layui.address();
 						},
 						uploadMainImg : function(){
 							upload.render({
@@ -413,7 +560,6 @@
 										}else if(idBehind == 'aqf'){
 											aqfjySucc = res.datas;
 										}
-										
 								    }
 								});
 							});
@@ -489,17 +635,32 @@
 									}
 								}
 							});
+							$('#priceNumInp').on('blur',function(){
+								var regNum = /^(0|[1-9][0-9]*)$/;
+								if($(this).val() != ''){
+									if(!regNum.test( $.trim($(this).val()) )){
+										layer.msg('买卖/租赁价格应是大于等于0的正整数');
+										isRightPrice = false;
+									}else{
+										isRightPrice = true;
+									}
+								}
+							});
 							$('#saveBtn').on('click',function(){
 								var tradeTypeInp = $('#tradeTypeInp').val(),
 									compTypeInp = $('#compTypeInp').val(),
 									truckTypeInp = $('#truckTypeInp').val(),
+									truckTypeNameInp = $('#truckTypeNameInp').val(),
 									compNameInp = $('#compNameInp').val(),
+									provInp = $('#provInp').val(),
+									cityInp = $('#cityInp').val(),
 									cardTitInp = $('#cardTitInp').val(),
 									
 									cardWordsInp = $('#cardWordsInp').val(),
 									cardNumInp = $.trim($('#cardNumInp').val()),
 									truckHeadTimeInp = $('#truckHeadTimeInp').val(),
 									truckBuyTime = $('#truckBuyTime').val(),
+									priceNumInp = $('#priceNumInp').val(),
 									
 									truckHeadTypeInp = $('#truckHeadTypeInp').val(),
 									truckHeadBrandInp = $('#truckHeadBrandInp').val(),
@@ -514,7 +675,7 @@
 									wxpfbzInp = $('#wxpfbzInp').val(),
 									gasTypeInp = $('#gasTypeInp').val(),
 									remark = $.trim($('#remark').val()),
-									regPhone = /^1\d{10}$/;
+									regPhone = /^1\d{10}$/,detImgInpLen = $('input[name=detImgInp]').length,imgDetStr='',jgzzStr='';
 									
 								if(tradeTypeInp == ''){
 									layer.msg('请选择贸易类型');
@@ -522,18 +683,28 @@
 									layer.msg('请选择企业类型');
 								}else if(truckTypeInp == ''){
 									layer.msg('请选择货车类型');
+								}else if(truckTypeNameInp == ''){
+									layer.msg('请选择货车类型对应车辆类型');
 								}else if(compTypeInp == 2 && compNameInp == ''){
 									layer.msg('请选择公司');
 								}else if(mainImgSucc == ''){
 									layer.msg('请上传车辆主图');
+								}else if(provInp == ''){
+									layer.msg('请选择车辆注册地(省份)');
+								}else if(cityInp == ''){
+									layer.msg('请选择车辆注册地(市区)');
 								}else if(cardNumInp == ''){
 									layer.msg('请输入车牌号码');
 								}else if(isRightCardNum == false){
 									layer.msg('车牌号码应由数字和字母构成，不能含有其他特殊字符');
-								}else if(truckHeadTimeInp == ''){
-									layer.msg('请选择车头上牌时间');
 								}else if(truckBuyTime == ''){
-									layer.msg('请选择车辆购置时间');
+									layer.msg('请选择车辆购置年份');
+								}else if(truckHeadTimeInp == ''){
+									layer.msg('请选择车头上牌年月');
+								}else if(priceNumInp == ''){
+									layer.msg('请输入租赁/买卖价格');
+								}else if(isRightPrice == false){
+									layer.msg('买卖/租赁价格应是大于等于0的正整数');
 								}else if(truckHeadTypeInp == ''){
 									layer.msg('请选择车头类型');
 								}else if(truckHeadBrandInp == ''){
@@ -545,7 +716,9 @@
 								}else if(truckTypeInp == 2 && isRightVolume == false){
 									layer.msg('储罐容积是大于0的正整数');
 								}else if(truckTypeInp == 2 && potYearInp == ''){
-									layer.msg('请选择储罐上牌日期');
+									layer.msg('请选择储罐上牌年月');
+								}else if(tradeTypeInp == 1 && jjzzIdArr.length == 0){
+									layer.msg('请选择进港资质');
 								}else if(driveMileInp == ''){
 									layer.msg('请输入行驶里程数(公里)');
 								}else if(isRightDriveMile == false){
@@ -579,14 +752,22 @@
 								}else{
 									var cardNum = cardTitInp + cardWordsInp + cardNumInp;
 									var area = tmpProvNameArr.join(',');
+									var signPlace = $('#provInp').val() + '-' + $('#cityInp').val();
 									var url = '',type = '';
 									var index= parent.layer.getFrameIndex(window.name);
+									jgzzStr = jjzzIdArr.join(',');
+									if(detImgInpLen > 0){
+										$('input[name=detImgInp]').each(function(i){
+											tmpDetImgArr.push($('input[name=detImgInp]').eq(i).val());
+										});
+										imgDetStr = tmpDetImgArr.join(',');
+									}
 									if(globalOpts == 'addBtn'){
-										var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeInp,mainImg:mainImgSucc,trucksNo:cardNum,
+										var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeNameInp,mainImg:mainImgSucc,trucksNo:cardNum,
 													spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
 													xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
 													lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
-													tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc};
+													tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr};
 										url = '/trucksTrade/addTrucksTrade';
 										type = 'post';
 									}else if(globalOpts == 'editBtn'){
@@ -594,8 +775,10 @@
 										url = '/trucksTrade/updateTrucksTrade';
 										type = 'put';
 									}
-									console.log(field)
-									/*layer.load('1');
+									console.log(JSON.stringify(field))
+									console.log(imgDetStr)
+									console.log(jgzzStr)
+									layer.load('1');
 									$.ajax({
 									    type:type,
 										data : field,
@@ -619,7 +802,7 @@
 												layer.msg('当前槽车租卖信息审核已通过，暂不能修改');
 											}
 									    }
-									});*/
+									});
 								}
 							});
 						},

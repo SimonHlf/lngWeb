@@ -1,3 +1,6 @@
+.addEditItem{
+	position: relative;
+}
 .layui-form-label{
 	width: 120px;
 }
@@ -64,15 +67,25 @@
 	margin-right:15px;
 }
 .carNumInpWrap{
-	width: 63.5%;
+	width:631px;
 	float: left;
 }
 .comInpItem{
-	/* width: 67.5%; */
 	width: 800px;
+	position: relative;
 }
 .comInpItem textarea{
 	resize:none;
+}
+.comInpItem span.danweiTxt{
+	width: 40px;
+	height: 100%;
+	line-height: 38px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	text-align: center;
+	color: #999;
 }
 .comInpItem.hasAlign{
 	text-align: center;
@@ -120,7 +133,8 @@
 	display: none;
 }
 .viewBigImg:hover,
-.viewMainBigImg:hover{
+.viewMainBigImg:hover,
+.detImgList li span:hover{
 	color: #F47837;
 }
 .tipInfo{
@@ -131,7 +145,11 @@
 #compNameWrap,
 #gasTypeWrap,
 .dangerItemWrap,
-#transformArea{
+#transformArea,
+#jgzzWrap,
+#truckTypeNameWrap,
+#zulinPriceWrap,
+#xsPriceWrap{
 	display: none;
 }
 .viewMainBigImg{
@@ -144,9 +162,67 @@
 }
 .itemDet{
 	float: left;
-	width: 397px;
+	width: 393px;
 }
 .provItemDet{
 	margin-right: 15px;
 	margin-left: 9px;
+}
+.tipsTxt {
+    position: absolute;
+    left: 66px;
+    top: 32px;
+    font-size: 12px;
+    color: #999;
+}
+.addDetImgBtn{
+	width: 84px;
+	height: 84px;
+	display: block;
+	position: relative;
+	border: 1px solid #ccc;
+	text-align: center;
+	line-height: 86px;
+	float: left;
+}
+.addDetImgBtn i{
+	font-size: 30px;
+	color: #666;
+	position: relative;
+	z-index: 1;
+}
+.detImgList li{
+	float: left;
+	margin-right: 33px;
+	position: relative;
+	margin-bottom: 20px;
+}
+.detImgList li:nth-of-type(7n){
+	margin-right: 0;
+}
+.detImgList li a{
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+}
+.detImgList li a i{
+	color: #fff;
+	font-size: 20px;
+}
+.detImgList li img{
+	width: 86px;
+	height: 86px;
+}
+.detImgList li span{
+	display: block;
+	width: 86px;
+	line-height: 26px;
+	text-align: center;
+	cursor: pointer;
+	color:#009688 ;
 }

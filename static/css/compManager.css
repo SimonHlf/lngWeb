@@ -265,3 +265,6 @@ body.hasMargTop{
 	font-size: 12px;
 	color: #999;
 }
+.layui-form-radio{
+	margin:0 10px 0;
+}

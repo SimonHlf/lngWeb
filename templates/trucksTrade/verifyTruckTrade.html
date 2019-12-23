@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/lqType.css"/>
+		<title>审核槽车租卖</title>
+	</head>
+	<body class="addEditBody">
+		<div class="addEditItem layui-form" style="margin-top:10px;">
+			<span class="itemTit" style="margin-top:3px;"><em style="color:#f00;font-style:normal;">*</em>审核状态：</span>
+			<input type="radio" name="checkSta" value="1" title="通过" lay-filter="verifyFilter"/>
+			<input type="radio" name="checkSta" value="2" title="不通过" lay-filter="verifyFilter"/>
+		</div>
+		<div class="addEidtBtnWrap layui-clear">
+			<a class="saveBtn" href="javascript:void(0)">保存</a>
+			<a class="cancelBtn" href="javascript:void(0)">取消</a>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var checkSta = parent.checkSta;
+			var ttId = parent.ttId;
+			var showSta = parent.showSta;
+			layui.use(['form','layer'],function(){
+				var layer = layui.layer,form = layui.form;
+				form.on('radio(verifyFilter)', function(data){
+					checkSta = data.value;
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('.cancelBtn').on('click',function(){
+							var index= parent.layer.getFrameIndex(window.name);
+							parent.checkFlag = false;
+							parent.layer.close(index);
+						});
+						$('.saveBtn').on('click',function(){
+							var index= parent.layer.getFrameIndex(window.name);
+							if(checkSta == 0){
+								layer.msg("请选择审核状态", {icon:5,anim:6,time:1500});
+							}else{
+								var field = {id:ttId,checkSta:checkSta,showSta:showSta};
+								$.ajax({
+									type:'PUT',
+									dataType:"json",
+									data :field,
+									url:'/trucksTrade/updateTrTrByStatus',
+									success:function (json){
+										layer.closeAll('loading');
+										layer.close(index);
+										if(json.code == 200){
+											layer.msg("变更槽车租卖审核状态成功",{icon:1,time:1000},function(){
+												parent.checkFlag = true;
+												parent.layer.close(index);
+											});
+										}else if(json.code == 50001){
+											layer.msg("修改失败，当前槽车租卖信息不存在", {icon:5,anim:6,time:2000});
+										}else if(json.code == 1000){
+											layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+										}else if(json.code == 70001){
+											layer.msg("抱歉，您暂无权限修改槽车租卖信息审核状态", {icon:5,anim:6,time:1500});
+										}
+									}
+								});
+							}
+						});
+					}
+				};
+				page.init();
+			});
+		</script>
+		
+	</body>
+</html>
