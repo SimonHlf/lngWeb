@@ -77,7 +77,7 @@
 						var _this = this;
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
-							_this.commonLayer();
+							_this.commonLayer(); 
 						});
 					},
 					commonLayer : function(){
@@ -169,6 +169,7 @@
 						});
 					}
 				};
+				// 贸易商名称  液厂 液质类型 液源地 发布时间 单价 
 				form.on('switch(verifyInfo_spec)',function(data){
 					var checkSta = $(this).attr('checkSta'),
 						showSta = $(this).attr('showSta');

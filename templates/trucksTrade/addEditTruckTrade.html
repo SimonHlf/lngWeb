@@ -443,6 +443,7 @@
 									console.log(json)
 									if(json.code == 200){
 										_this.renderTruckTradeInfo(json.datas[0]);
+										basicInfo.getTrucksByTruckType(json.datas[0].trucksTypes);
 									}else if(json.code == 1000){
 										layer.msg('服务器错误');
 									}else if(json.code == 10002){
@@ -457,28 +458,143 @@
 							var tmpCompType = 0;
 							var strPuhuo = '<input type="radio" value="1" name="truckTypeName" title="普货" lay-filter="truckTypeFilter"/>';
 							var strWeihuo = '<input type="radio" value="2" name="truckTypeName" title="危货" lay-filter="truckTypeFilter"/>';
+							isRightCardNum = true;
+							isRightDriveMile = true;
+							isRightPrice = true;
 							var trucksNo = list.trucksNo;
 							$('#tradeTypeInp').val(list.tradeType);
+							mainImgSucc = list.mainImg.replace('_small','');
+							$('#thubImg_main').show().attr('src','../' + list.mainImg);
+							$('.viewMainBigImg').show();
+							
 							$('input[name=tradeTypeName]').each(function(i){
 								if($('input[name=tradeTypeName]').eq(i).val() == list.tradeType){
 									$('input[name=tradeTypeName]').eq(i).attr('checked',true);
 								}
 							});
+							if(list.tradeType == 1){
+								basicInfo.loadProvList();
+								basicInfo.getJgzz();
+								$('#priceLableTxt').html('租赁价格');
+								$('#transformArea').show();
+								$('#jgzzWrap').show();
+								var areaArr = list.area.split(',');
+								tmpProvNameArr = areaArr;
+								for(var i=0;i<list.tqList.length;i++){
+									jjzzIdArr.push(list.tqList[i].qualId);
+								}
+								setTimeout(function(){
+									for(var j=0;j<jjzzIdArr.length;j++){
+										$('input[name=jjzzInpName]').each(function(i){
+											if($('input[name=jjzzInpName]').eq(i).val() == jjzzIdArr[j]){
+												$('input[name=jjzzInpName]').eq(i).attr('checked',true);
+												return false;
+											}
+										});
+									}
+									for(var j=0;j<areaArr.length;j++){
+										$('input[name=areaInp]').each(function(i){
+											if($('input[name=areaInp]').eq(i).val() == areaArr[j]){
+												$('input[name=areaInp]').eq(i).attr('checked',true);
+												return false;
+											}
+										});
+									}
+									form.render();
+								},200);
+							}else if(list.tradeType == 2){
+								$('#priceLableTxt').html('买卖价格');
+							}
 							if(list.companyId != ''){
 								tmpCompType = 2;
-								$('#compTypeInp').val(list.companyId);
+								$('#compTypeInp').val(2);
+								$('#compNameWrap').show();
+								$('#compNameInp').val(list.companyId);
 								$('#truckTypeWrap').html(strPuhuo + strWeihuo);
-								$('#priceLableTxt').html('买卖价格');
+								basicInfo.getCompanyList();
+								setTimeout(function(){
+									$('#compNameSel option').each(function(i){
+										if($('#compNameSel option').eq(i).val() == list.companyId){
+											$('#compNameSel option').eq(i).attr('selected','selected');
+										}
+									});
+								},200);
 							}else{
 								tmpCompType = 1;
+								$('#compTypeInp').val(1);
 								$('#truckTypeWrap').html(strPuhuo);
-								$('#priceLableTxt').html('租赁价格');
 							}
+							//企业类型
 							$('input[name=compTypeName]').each(function(i){
 								if($('input[name=compTypeName]').eq(i).val() == tmpCompType){
 									$('input[name=compTypeName]').eq(i).attr('checked',true);
 								}
 							});
+							$('#truckTypeNameWrap').show();
+							$('input[name=truckTypeName]').each(function(i){
+								if($('input[name=truckTypeName]').eq(i).val() == list.trucksTypes){
+									$('input[name=truckTypeName]').eq(i).attr('checked',true);
+								}
+							});
+							$('#truckTypeInp').val(list.trucksTypes);
+							if(list.trucksTypes == 1){//普货
+								$('#truckNameTxt').html('普货车型');
+							}else if(list.trucksTypes == 2){//危货
+								isRightVolume = true;
+								basicInfo.getTankBrand();
+								basicInfo.getGasType();
+								laydate.render({'elem':'#potYearInp',trigger: 'click',type:'month'});
+								$('#truckNameTxt').html('危货车型');
+								$('.dangerItemWrap').show();
+								$('#gasTypeWrap').show();
+								$('#tankBandInp').val(list.potPpId);
+								$('#volumeInp').val(list.potVol);
+								$('#potYearInp').val(list.spYearPot);
+								$('#gasTypeInp').val(list.qyTypeId);
+								setTimeout(function(){
+									$('#tankBandSel option').each(function(i){
+										if($('#tankBandSel option').eq(i).val() == list.potPpId){
+											$('#tankBandSel option').eq(i).attr('selected','selected');
+										}
+									});
+									$('#gasTypeSel option').each(function(i){
+										if($('#gasTypeSel option').eq(i).val() == list.qyTypeId){
+											$('#gasTypeSel option').eq(i).attr('selected','selected');
+										}
+									});
+									form.render();
+								},200);
+								headXszSucc = list.tructsHeadxsz.replace('_small','');
+								gcXszSucc = list.gcXsz.replace('_small','');
+								clyxzSucc = list.tructsYyz.replace('_small','');
+								cgHgzSucc = list.potjyz.replace('_small','');
+								aqfjySucc = list.aqfBg.replace('_small','');
+								
+								$('#thubImg_headXsz').show().attr('src','../' + list.tructsHeadxsz);
+								$('#viewBigImg_headXsz').show();
+								
+								$('#thubImg_gcXsz').show().attr('src','../' + list.gcXsz);
+								$('#viewBigImg_gcXsz').show();
+								
+								$('#thubImg_yyz').show().attr('src','../' + list.tructsYyz);
+								$('#viewBigImg_yyz').show();
+								
+								$('#thubImg_jyz').show().attr('src','../' + list.potjyz);
+								$('#viewBigImg_jyz').show();
+								
+								$('#thubImg_aqf').show().attr('src','../' + list.aqfBg);
+								$('#viewBigImg_aqf').show();
+								
+							}
+							$('#truckTypeNameInp').val(list.trucksTypeId);
+							setTimeout(function(){
+								$('#truckTypeNameSel option').each(function(i){
+									if($('#truckTypeNameSel option').eq(i).val() == list.trucksTypeId){
+										$('#truckTypeNameSel option').eq(i).attr('selected','selected');
+									}
+								});
+								form.render();
+							},200);
 							$('#provInp').val(list.regPlace.split('-')[0]);
 							$('#cityInp').val(list.regPlace.split('-')[1]);
 							provVal = list.regPlace.split('-')[0];
@@ -499,7 +615,7 @@
 							});
 							$('#truckBuyTime').val(list.buyYear);
 							$('#truckHeadTimeInp').val(list.spYear);
-							//$('#priceNumInp').val();
+							$('#priceNumInp').val(list.price);
 							$('#truckHeadTypeInp').val(list.headTypeId);
 							$('#truckHeadTypeSel option').each(function(i){
 								if($('#truckHeadTypeSel option').eq(i).val() == list.headTypeId){
@@ -513,6 +629,7 @@
 								}
 							});
 							$('#driveMileInp').val(list.xsDistance);
+							$('#accidentInp').val(list.accidentFlag);
 							$('input[name=accidentInpName]').each(function(i){
 								if($('input[name=accidentInpName]').eq(i).val() == list.accidentFlag){
 									$('input[name=accidentInpName]').eq(i).attr('checked',true);
@@ -541,8 +658,6 @@
 								$('#detImgListUl').html(str);
 								
 							}
-							
-							
 							form.render();
 							layui.address();
 						},
@@ -798,7 +913,7 @@
 												spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
 												xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
 												lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
-												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr};
+												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr,price:priceNumInp};
 									if(globalOpts == 'addBtn'){
 										url = '/trucksTrade/addTrucksTrade';
 										type = 'post';
@@ -808,9 +923,7 @@
 										url = '/trucksTrade/updateTrucksTrade';
 										type = 'put';
 									}
-									console.log(JSON.stringify(field))
-									console.log(imgDetStr)
-									console.log(jgzzStr)
+									//console.log(JSON.stringify(field))
 									layer.load('1');
 									$.ajax({
 									    type:type,

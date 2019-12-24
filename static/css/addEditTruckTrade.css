@@ -239,6 +239,15 @@
 	float: left;
 	margin-right: 16px;
 }
+.imgDetTit{
+	margin-top: 68px;
+}
+.qianfengItem p.imgTit{
+	text-align: center;
+}
+.qianfengItem p.imgTit span.mustItem{
+	color: red;
+}
 .qianfengItem.noMargR{
 	margin-right: 0;
 }

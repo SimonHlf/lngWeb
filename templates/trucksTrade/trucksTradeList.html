@@ -57,7 +57,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var checkFlag = false,checkSta=0,globalOpts = '',addEditFlag = false,currPage='compListPage';
+			var checkFlag = false,checkSta=0,globalOpts = '',addEditFlag = false,currPage = 'trucksListPage';
 			var ttId = 0,showSta = 0;
 			layui.use(['layer','table','form'],function(){ 
 				var layer = layui.layer,table = layui.table,form = layui.form;
@@ -146,7 +146,9 @@
 									{field : 'trucksTypes', title: '槽车类型',align:'center'},
 									{field : 'trucksTypeName', title: '槽车车型',align:'center'},
 									{field : 'pfbz', title: '尾气排放标准',align:'center'},
-									{field : 'xsDistance', title: '行驶里程(公里)',align:'center'},
+									{field : 'xsDistance', title: '行驶里程(公里)',align:'center',templet:function(d){
+										return d.xsDistance + '公里'
+									}},
 									{field : 'spYear', title: '上牌年份',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
@@ -163,7 +165,7 @@
 								]
 							],
 							done : function(res, curr, count){
-								console.log(res)
+								//console.log(res)
 								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
@@ -205,10 +207,16 @@
 									});
 								}else if(json.code == 50001){
 									layer.msg("修改失败，当前槽车租卖信息不存在", {icon:5,anim:6,time:2000});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改槽车租卖信息审核状态", {icon:5,anim:6,time:1500});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}
 							}
 						});

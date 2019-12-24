@@ -84,7 +84,7 @@
 					layer.load();
 					table.render({
 						elem: '#lngTable',
-						height: 'full-150',
+						height: 'full-120',
 						url : '/lng/getLngPriceData',
 						method : 'get',
 						parseData : function(res){
@@ -97,7 +97,6 @@
 						page : false,
 						even : true,
 						text: {none : '暂无相关数据'},
-						// cellMinWidth:150,
 						cols : [
 							[
 								{field : '', title: '序号',type:'numbers', align:'center'},

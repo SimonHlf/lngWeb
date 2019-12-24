@@ -61,7 +61,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var compId = '',lmId = '',zlId='',checkSta=0,checkFlag = false,globalOpts = '',addEditFlag = false;
+			var compId = '',ptId='',lmId = '',zlId='',checkSta=0,checkFlag = false,globalOpts = '',addEditFlag = false,currPage = 'rqDevTradeListPage';
 			layui.config({
 				base: '/js/frame/js/'
 			}).use(['layer','table','form','basicInfo'],function(){
@@ -122,10 +122,7 @@
 					loadRqDevTradeList : function(){
 						var _this = this;
 						layer.load();
-						var checkStaInp = $('#checkStaInp').val(),
-							tankBandInp = $('#tankBandInp').val();
 						var field = {compId:compId,lmId:lmId,zlId:zlId,checkSta:checkSta};
-						console.log(field)
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
@@ -147,7 +144,25 @@
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									
+									{field : 'cpyName', title: '公司名称', align:'center'},
+									{field : 'devName', title: '燃气设备名称', align:'center'},
+									{field : 'devPrice', title: '设备价格', align:'center',templet:function(d){
+										return d.devPrice + '元';
+									}},
+									{field : 'lmName', title: '设备类目', align:'center'},
+									{field : 'zlName', title: '设备类型', align:'center'},
+									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
+										var str = '';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" ptId="'+ d.rdtId +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										if(d.checkStatus == 0){
+											str += '<a href="javascript:void(0)" ptId="'+ d.rdtId +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+										}else if(d.checkStatus == 1){//审核通过
+											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" ptId="'+ d.rdtId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
+										}else if(d.checkStatus == 2){//审核未通过
+											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" ptId="'+ d.rdtId +'" showSta="'+ d.showStatus +'"  lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
+										}
+										return str;
+									}}
 								]
 							],
 							done : function(res, curr, count){
@@ -157,6 +172,85 @@
 						});
 					}
 				};
+				form.on('switch(verifyInfo_spec)',function(data){
+					var checkSta = $(this).attr('checkSta'),
+						showSta = $(this).attr('showSta');
+					var currTit = '';
+					var checkStatus = data.elem.checked;
+					ptId = $(this).attr('ptId');
+					if(checkSta == 1){//审核通过
+						currTit = '<span style="color:green;">审核通过</span>';
+					}else if(checkSta == 2){//审核不通过
+						currTit = '<span style="color:red;">不通过</span>';
+					}
+					layer.confirm('是否要将当前燃气设备买卖信息审核状态变更为['+ currTit +']?', {
+					  title:'修改燃气设备审核状态',
+					  skin: 'layui-layer-molv',
+					  btn: ['确定','取消'],//按钮
+					  closeBtn:0,
+					},function(index){
+						data.elem.checked = checkStatus;
+						layer.load();
+						var field = {id:ptId,checkSta:checkSta,showSta:showSta};
+						$.ajax({
+							type:'PUT',
+							dataType:"json",
+							data :field,
+							url:'/rqDevTrade/updateRqDevTradeByStatus',
+							success:function (json){
+								layer.closeAll('loading');
+								layer.close(index);
+								if(json.code == 200){
+									layer.msg("变更燃气设备审核状态成功",{icon:1,time:1000},function(){
+										ptId = '';
+										page.loadRqDevTradeList();
+									});
+								}else if(json.code == 50001){
+									layer.msg("修改失败，当前燃气设备信息不存在", {icon:5,anim:6,time:2000});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}else if(json.code == 70001){
+									layer.msg("抱歉，您暂无权限修改燃气设备信息审核状态", {icon:5,anim:6,time:1500});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}
+							}
+						});
+					},function(index){
+						data.elem.checked=!checkStatus;
+						form.render();
+						layer.close(index);
+					});
+				});
+				table.on('tool(truckTradeTab)',function(obj){
+					if(obj.event == 'editInfo'){
+						ptId = $(this).attr('ptId');
+						globalOpts = 'editBtn';
+						page.commonLayer();
+					}else if(obj.event == 'verifyInfo'){
+						checkFlag = true;
+						ptId = $(this).attr('ptId'),
+						checkSta = $(this).attr('checkSta');
+						showSta = $(this).attr('showSta');
+						layer.open({
+							title : '审核燃气设备信息',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../trucksTrade/verifyTruckTrade.html',
+							end : function(){
+								if(checkFlag){
+									page.loadRqDevTradeList();
+								}
+							}
+						});
+					}
+				});
 				page.init();
 			});
 		</script>

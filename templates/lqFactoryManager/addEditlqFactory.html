@@ -413,7 +413,7 @@
 						});
 					},
 					renderLqFacInfo : function(list){
-						
+						console.log(list)
 						$('#factoryName').val(list[0].name);
 						$('#provInp').val(list[0].province);
 						//$('#cityInp').val(list[0].city);
@@ -444,7 +444,7 @@
 							var tmpYzBgImg_sm = list[0].yzbg.split(',');
 							var tmpYzBgImg = [],str = '';
 							maxNum = tmpYzBgImg_sm.length;
-							if(list.zzlist.length == 5){
+							if(tmpYzBgImg_sm.length == 5){
 								$('#addYzbgImgBtn').hide();
 							}
 							for(var i=0;i<tmpYzBgImg_sm.length;i++){

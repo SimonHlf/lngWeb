@@ -10,14 +10,31 @@
 		<div class="truckTradeWrap layui-form">
 			<div id="compNameWrap" class="layui-form-item addEditItem" style="display: block;">
 				<input type="hidden" id="compNameInp"/>
-				<label class="layui-form-label"><span class="mustItem">*</span>公司名称</label>
+				<label class="layui-form-label"><span class="mustItem">*</span>贸易商名称</label>
 				<div class="layui-input-block comInpItem">
 					<select id="compNameSel" lay-filter="compNameSel">
-						<option value="">请选择公司</option>
+						<option value="">请选择贸易商</option>
 					</select>
 				</div>
 			</div>
 			
+			
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="lqFactoryInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>液厂</label>
+				<div class="layui-input-block comInpItem">
+					<select id="lqFactorySel" lay-filter="lqFactorySel">
+						<option value="">请选择液厂</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item addEditItem">
+				<input type="hidden" id="lqTypeInp"/>
+				<label class="layui-form-label"><span class="mustItem">*</span>液质类型</label>
+				<div class="layui-input-block comInpItem">
+					<p id="lqTypeName" class="tipInfo">请先选择液厂</p>
+				</div>
+			</div>
 			<div class="layui-form-item">
 				<label class="layui-form-label"><span class="mustItem">*</span>燃气买卖主图</label>
 				<div class="layui-input-block">
@@ -29,29 +46,9 @@
 						<i class="iconfont icon-gonggao"></i>
 						<span>请上传燃气买卖主图主图，建议图片宽高尺寸750*400</span>
 					</p>
-					<span class="viewMainBigImg">查看原图</span>
+					<span id="viewMainBigImg" class="viewMainBigImg">查看原图</span>
 				</div>		
 			</div>
-			
-			<div class="layui-form-item addEditItem">
-				<input type="hidden" id="lqTypeInp"/>
-				<label class="layui-form-label"><span class="mustItem">*</span>液质类型</label>
-				<div class="layui-input-block comInpItem">
-					<select id="lqTypeSel" lay-filter="lqTypeSel">
-						<option value="">请选择液质类型</option>
-					</select>
-				</div>
-			</div>
-			<div class="layui-form-item addEditItem">
-				<input type="hidden" id="lqFactoryInp"/>
-				<label class="layui-form-label"><span class="mustItem">*</span>液厂</label>
-				<div class="layui-input-block comInpItem">
-					<select id="lqFactorySel" lay-filter="lqFactorySel">
-						<option value="">请选择液厂</option>
-					</select>
-				</div>
-			</div>
-			
 			<div class="layui-form-item addEditItem">
 				<input type="hidden" id="cardTitInp">
 				<input type="hidden" id="cardWordsInp">
@@ -64,7 +61,7 @@
 						<select id="cardWordSel" lay-filter="cardWordSel"></select>
 					</div>
 					<div class="carNumInpWrap">
-						<input id="cardNumInp" type="text" class="layui-input" placeholder="请输入槽车车牌号码" maxlength="5" autocomplete="off" />
+						<input id="cardNumInp" type="text" class="layui-input" placeholder="请输入槽车车牌号码(5位)" maxlength="5" autocomplete="off" />
 					</div>
 				</div>		
 			</div>
@@ -80,7 +77,7 @@
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label"><span class="mustItem">*</span>驾驶员电话</label>
 				<div class="layui-input-block comInpItem">
-					<input id="jsyTelInp" type="text" placeholder="请输入驾驶员手机号码" maxlength="11" class="layui-input" autocomplete="off"/>
+					<input id="jsyTelInp" type="text" placeholder="请先选择驾驶员" readonly maxlength="11" class="layui-input" autocomplete="off"/>
 				</div>		
 			</div>
 			<div class="layui-form-item addEditItem">
@@ -95,7 +92,7 @@
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label"><span class="mustItem">*</span>押运员电话</label>
 				<div class="layui-input-block comInpItem">
-					<input id="yyyTelInp" type="text" placeholder="请输入押运员手机号码" maxlength="11" class="layui-input" autocomplete="off"/>
+					<input id="yyyTelInp" type="text" placeholder="请先选择押运员" readonly maxlength="11" class="layui-input" autocomplete="off"/>
 				</div>		
 			</div>
 			
@@ -110,7 +107,7 @@
 				<label class="layui-form-label"><span class="mustItem">*</span>单价</label>
 				<div class="layui-input-block comInpItem">
 					<input id="gasPriceInp" type="text" placeholder="请输入单价" class="layui-input" autocomplete="off"/>
-					<span class="danweiTxt">吨</span>
+					<span class="danweiTxt">/吨</span>
 				</div>		
 			</div>
 			<div class="layui-form-item addEditItem">
@@ -129,7 +126,7 @@
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg1"/>
 						</a>
-						<span class="viewQfBigImg">查看原图</span>
+						<span id="viewBigImg_qfImg1" class="viewQfBigImg">查看原图</span>
 					</div>
 					
 					<div class="qianfengItem">
@@ -138,7 +135,7 @@
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg2"/>
 						</a>
-						<span class="viewQfBigImg">查看原图</span>
+						<span id="viewBigImg_qfImg2" class="viewQfBigImg">查看原图</span>
 					</div>
 					
 					<div class="qianfengItem noMargR">
@@ -147,7 +144,7 @@
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg3"/>
 						</a>
-						<span class="viewQfBigImg">查看原图</span>
+						<span id="viewBigImg_qfImg3" class="viewQfBigImg">查看原图</span>
 					</div>
 				</div>
 			</div>
@@ -156,27 +153,6 @@
 				<div class="layui-input-block comInpItem" id="provList"></div>
 			</div>
 			
-			
-			
-			
-			<!-- <div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(一)</label>
-				<div class="layui-input-block comInpItem">
-					<input id="qfTxtInp1" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
-				</div>		
-			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(二)</label>
-				<div class="layui-input-block comInpItem">
-					<input id="qfTxtInp2" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
-				</div>		
-			</div>
-			<div class="layui-form-item addEditItem">
-				<label class="layui-form-label"><span class="mustItem">*</span>铅封文字信息(三)</label>
-				<div class="layui-input-block comInpItem">
-					<input id="qfTxtInp3" type="text" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off"/>
-				</div>		
-			</div> -->
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label">GPS信息</label>
 				<div class="layui-input-block comInpItem">
@@ -195,81 +171,44 @@
 					<input id="lxrTel" type="text" class="layui-input" placeholder="请输入联系人手机号码" autocomplete="off" maxlength="11"/>
 				</div>		
 			</div>
+			
+			<div class="layui-form-item qianfengWrap">
+				<label class="layui-form-label imgDetTit"><span class="mustItem">*</span>相关图片</label>
+				<div class="layui-input-block comInpItem innerQianfeng">
+					<div class="qianfengItem">
+						<p class="imgTit"><span class="mustItem">*</span>磅单图片</p>
+						<a href="javascript:void(0)" id="addImgBtn_bdImg" class="addQfImgBtn" title="请添加磅单图片">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_bdImg"/>
+						</a>
+						<span id="viewBdBigImg" class="viewQfBigImg">查看原图</span>
+					</div>
+					
+					<div class="qianfengItem">
+						<p class="imgTit"><span class="mustItem">*</span>危化品许可证</p>
+						<a href="javascript:void(0)" id="addImgBtn_wxpImg" class="addQfImgBtn" title="请添加危化品许可证">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_wxpImg"/>
+						</a>
+						<span id="viewWhpBigImg" class="viewQfBigImg">查看原图</span>
+					</div>
+					
+					<div class="qianfengItem noMargR">
+						<p class="imgTit"><span class="mustItem">*</span>车辆照片</p>
+						<a href="javascript:void(0)" id="addImgBtn_clImg" class="addQfImgBtn" title="请添加车辆照片">
+							<i class="iconfont icon-add"></i>
+							<img id="thubImg_clImg"/>
+						</a>
+						<span id="viewClBigImg" class="viewQfBigImg">查看原图</span>
+					</div>
+				</div>
+			</div>
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label">备注</label>
 				<div class="layui-input-block comInpItem">
 					<textarea id="remark" placeholder="请输入备注(200字以内)" maxlength="200" class="layui-textarea"></textarea>
 				</div>		
 			</div>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			<!-- 货车类型为危货 -->
-			<!-- <div class="dangerItemWrap layui-clear">
-				<div class="dangerItem hasMargL">
-					<p><span class="mustItem">*</span>车头行驶证</p>
-					<div class="addImgWrap">
-						<a id="addImgBtn_headXsz" title="添加车头行驶证" class="addImgBtn" href="javascript:void(0)">
-							<i class="iconfont icon-add"></i>
-							<img id="thubImg_headXsz"/>
-						</a>
-						<span id="viewBigImg_headXsz" class="viewBigImg">查看原图</span>
-					</div>		
-				</div>
-				
-				<div class="dangerItem">
-					<p><span class="mustItem">*</span>罐车行驶证</p>
-					<div class="addImgWrap">
-						<a id="addImgBtn_gcXsz" title="添加罐车行驶证" class="addImgBtn" href="javascript:void(0)">
-							<i class="iconfont icon-add"></i>
-							<img id="thubImg_gcXsz"/>
-						</a>
-						<span id="viewBigImg_gcXsz" class="viewBigImg">查看原图</span>
-					</div>		
-				</div>
-				
-				<div class="dangerItem">
-					<p><span class="mustItem">*</span>车辆运营证</p>
-					<div class="addImgWrap">
-						<a id="addImgBtn_yyz" title="添加车辆运营证" class="addImgBtn" href="javascript:void(0)">
-							<i class="iconfont icon-add"></i>
-							<img id="thubImg_yyz"/>
-						</a>
-						<span id="viewBigImg_yyz" class="viewBigImg">查看原图</span>
-					</div>		
-				</div>
-				
-				<div class="dangerItem">
-					<p><span class="mustItem">*</span>储罐检验合格证</p>
-					<div class="addImgWrap">
-						<a id="addImgBtn_jyz" title="添加储罐检验合格证" class="addImgBtn" href="javascript:void(0)">
-							<i class="iconfont icon-add"></i>
-							<img id="thubImg_jyz"/>
-						</a>
-						<span id="viewBigImg_jyz" class="viewBigImg">查看原图</span>
-					</div>		
-				</div>
-				
-				<div class="dangerItem">
-					<p><span class="mustItem">*</span>安全阀校验报告</p>
-					<div class="addImgWrap">
-						<a id="addImgBtn_aqf" title="添加安全阀校验报告" class="addImgBtn" href="javascript:void(0)">
-							<i class="iconfont icon-add"></i>
-							<img id="thubImg_aqf"/>
-						</a>
-						<span id="viewBigImg_aqf" class="viewBigImg">查看原图</span>
-					</div>		
-				</div>
-			</div> -->
-			
-			
 			
 			<div class="layui-form-item addEditItem">
 				<label class="layui-form-label">燃气买卖详情图</label>
@@ -295,8 +234,8 @@
 			var cardTitle = ["京", "沪", "津", "渝", "冀", "豫", "云", "辽", "黑", "湘", "鲁", "新", "苏",  "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "川", "青", "藏", "琼", "宁"];
 			var cardWords = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 			var tmpProvNameArr = [];
-			var mainImgSucc = '', bdImgSucc = '',whpImgSucc = '',trucksImgSucc = '';
-			var globalOpts = parent.globalOpts;
+			var mainImgSucc = '', bdImgSucc = '',whpImgSucc = '',trucksImgSucc = '',qfImgSucc1='',qfImgSucc2='',qfImgSucc3='';
+			var globalOpts = parent.globalOpts,isRightVolume = false,isRightPrice = false,isRightCardNum = false;
 			var tmpDetImgArr = [],currPage = 'addEditRqTradePage';
 			layui.config({
 				base: '/js/frame/js/'
@@ -307,7 +246,245 @@
 					init : function(){
 						basicInfo.renderCardNumWords();
 						basicInfo.loadProvList();
-					}
+						uploadImg.uploadMultiImg('addDetImgBtn','detImgListUl',9);
+						basicInfo.getCompanyList();
+						this.uploadMainImg('addImgBtn_main','thubImg_main','viewMainBigImg','mainImg');
+						this.uploadMainImg('addImgBtn_qfImg1','thubImg_qfImg1','viewBigImg_qfImg1','qfImg1');
+						this.uploadMainImg('addImgBtn_qfImg2','thubImg_qfImg2','viewBigImg_qfImg2','qfImg2');
+						this.uploadMainImg('addImgBtn_qfImg3','thubImg_qfImg3','viewBigImg_qfImg3','qfImg3');
+						this.uploadMainImg('addImgBtn_bdImg','thubImg_bdImg','viewBdBigImg','viewBd');
+						this.uploadMainImg('addImgBtn_wxpImg','thubImg_wxpImg','viewWhpBigImg','viewWhp');
+						this.uploadMainImg('addImgBtn_clImg','thubImg_clImg','viewClBigImg','viewCl');
+						this.bindEvent();
+					},
+					viewOriginImg : function(succUrl){
+						if(globalOpts == 'addBtn'){
+							window.open('/temp/' + succUrl);
+						}else{
+							window.open('../' + succUrl);
+						}
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#viewMainBigImg').on('click',function(){
+							_this.viewOriginImg(mainImgSucc);
+						});
+						$('#viewBigImg_qfImg1').on('click',function(){
+							_this.viewOriginImg(qfImgSucc1);
+						});
+						$('#viewBigImg_qfImg2').on('click',function(){
+							_this.viewOriginImg(qfImgSucc2);
+						});
+						$('#viewBigImg_qfImg3').on('click',function(){
+							_this.viewOriginImg(qfImgSucc3);
+						});
+						$('#viewBdBigImg').on('click',function(){
+							_this.viewOriginImg(bdImgSucc);
+						});
+						$('#viewWhpBigImg').on('click',function(){
+							_this.viewOriginImg(whpImgSucc);
+						});
+						$('#viewClBigImg').on('click',function(){
+							_this.viewOriginImg(trucksImgSucc);
+						});
+						
+						$('#gasVolumeInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('装载量应是大于0的正整数');
+									isRightVolume = false;
+								}else{
+									isRightVolume = true;
+								}
+							}else{
+								isRightVolume = false;
+							}
+						});
+						$('#gasPriceInp').on('blur',function(){
+							var regNum = /^\+?[1-9]\d*$/;
+							if($(this).val() != ''){
+								if(!regNum.test( $.trim($(this).val()) )){
+									layer.msg('单价应是大于0的正整数');
+									isRightPrice = false;
+								}else{
+									isRightPrice = true;
+								}
+							}else{
+								isRightPrice = false;
+							}
+						});
+						$('#cardNumInp').blur(function(){
+							var reg =  /^[0-9a-zA-Z]+$/;
+							if($(this).val() != ''){
+								if(!reg.test( $.trim($(this).val()) )){
+									layer.msg('车牌号码应由数字和字母(共5位)构成，不能含有其他特殊字符');
+									isRightCardNum = false;
+								}else if($(this).val().length != 5){
+									layer.msg('车牌号码长度应是5位');
+									isRightCardNum = false;
+								}else{
+									isRightCardNum = true;
+									$(this).val( $(this).val().toUpperCase() );
+								}
+							}
+						});
+						//保存
+						$('#saveBtn').on('click',function(){
+							var compNameInp = $('#compNameInp').val(),
+								lqFactoryInp = $('#lqFactoryInp').val(),
+								lqTypeInp = $('#lqTypeInp').val(),
+								cardTitInp = $('#cardTitInp').val(),
+								cardWordsInp = $('#cardWordsInp').val(),
+								cardNumInp = $.trim($('#cardNumInp').val()),
+								jsyNameInp = $('#jsyNameInp').val(),
+								jsyTelInp = $('#jsyTelInp').val(),
+								yyyNameInp = $('#yyyNameInp').val(),
+								yyyTelInp = $('#yyyTelInp').val(),
+								gasVolumeInp = $.trim($('#gasVolumeInp').val()),
+								gasPriceInp = $.trim($('#gasPriceInp').val()),
+								zcDateInp = $('#zcDateInp').val(),
+								qfTxtInp1 = $.trim($('#qfTxtInp1').val()),
+								qfTxtInp2 = $.trim($('#qfTxtInp2').val()),
+								qfTxtInp3 = $.trim($('#qfTxtInp3').val()),
+								GPSInfoInp = $.trim($('#GPSInfoInp').val()),
+								lxrNameInp = $.trim($('#lxrNameInp').val()),
+								lxrTel = $.trim($('#lxrTel').val()),
+								remark = $.trim($('#remark').val()),
+								regPhone = /^1\d{10}$/,imgDetStr='',detImgInpLen = $('input[name=detImgInp]').length;
+							
+							if(compNameInp == ''){
+								layer.msg('请选择贸易商');
+							}else if(lqFactoryInp == ''){
+								layer.msg('请选择液厂');
+							}else if(lqTypeInp == ''){
+								layer.msg('请指定液质类型');
+							}else if(mainImgSucc == ''){
+								layer.msg('请上传燃气买卖主图');
+							}else if(cardNumInp == ''){
+								layer.msg('请输入车牌号码');
+							}else if(isRightCardNum == false){
+								layer.msg('车牌号码应由数字和字母构成，不能含有其他特殊字符');
+							}else if(jsyNameInp == ''){
+								layer.msg('请选择驾驶员');
+							}else if(yyyNameInp == ''){
+								layer.msg('请选择押运员');
+							}else if(gasVolumeInp == ''){
+								layer.msg('请输入装载量');
+							}else if(isRightVolume == false){
+								layer.msg('装载量应是大于0的正整数');
+							}else if(gasPriceInp == ''){
+								layer.msg('请输入单价');
+							}else if(isRightPrice == false){
+								layer.msg('单价应是大于0的正整数');
+							}else if(zcDateInp == ''){
+								layer.msg('请选择装车日期');
+							}else if(qfTxtInp1 == '' && qfTxtInp2 == '' && qfTxtInp3 == ''){
+								layer.msg('至少要填一项铅封文字信息');
+							}else if(qfImgSucc1 == '' && qfImgSucc2 == '' && qfImgSucc3 == ''){
+								layer.msg('至少要上传一张铅封图片');
+							}else if(tmpProvNameArr.length == 0){
+								layer.msg('请选择配送区域');
+							}else if(GPSInfoInp == ''){
+								layer.msg('请输入GPS信息');
+							}else if(lxrNameInp == ''){
+								layer.msg('请输入联系人姓名');
+							}else if(lxrTel == ''){
+								layer.msg('请输入联系人手机号码');
+							}else if(!regPhone.test(lxrTel) && lxrTel.length != 11){
+								layer.msg('手机号码格式不对，请重新填写');
+							}else if(bdImgSucc == ''){
+								layer.msg('请上传磅单图片');
+							}else if(whpImgSucc == ''){
+								layer.msg('请上传危化品许可证');
+							}else if(trucksImgSucc == ''){
+								layer.msg('请上传车辆照片');
+							}else{
+								var url = '',type = '';
+								var index= parent.layer.getFrameIndex(window.name);
+								var area = tmpProvNameArr.join(',');
+								var cardNum = cardTitInp + cardWordsInp + cardNumInp;
+								if(detImgInpLen > 0){
+									$('input[name=detImgInp]').each(function(i){
+										tmpDetImgArr.push($('input[name=detImgInp]').eq(i).val());
+									});
+									imgDetStr = tmpDetImgArr.join(',');
+								}
+								var field = {cpyId:compNameInp,gasFactotyId:lqFactoryInp,gasTypeId:lqTypeInp,gasVolume:gasVolumeInp,headImg:mainImgSucc,gasPrice:gasPriceInp,zcDate:zcDateInp,psArea:area,
+									cpNo:cardNum,jsyName:jsyNameInp,jsyMobile:jsyTelInp,yyrName:yyyNameInp,yyrMobile:yyyTelInp,qfTxt1:qfTxtInp1,qfTxt2:qfTxtInp2,qfTxt3:qfTxtInp3,
+									qfImg1:qfImgSucc1,qfImg2:qfImgSucc2,qfImg3:qfImgSucc3,gpsInfo:GPSInfoInp,lxName:lxrNameInp,lxTel:lxrTel,remark:remark,bdImg:bdImgSucc,whpImg:whpImgSucc,tructsImg:trucksImgSucc,otherImg:imgDetStr};
+								if(globalOpts == 'addBtn'){
+									url = '/gasTrade/addGasTrade';
+									type = 'post';
+								}else if(globalOpts == 'editBtn'){
+									var editField ={gasTradeId:ptId};
+									field = Object.assign(field,editField);
+									url = '/gasTrade/upGasTrade';
+									type = 'put';
+								}
+								console.log(JSON.stringify( field ))
+								layer.load('1');
+								$.ajax({
+								    type:type,
+									data : field,
+								    dataType:"json",
+								    url:url,
+								    success:function (json){
+								    	layer.closeAll('loading');
+										if(json.code == 200){
+											var title = globalOpts == 'addBtn' ? '添加燃气买卖信息成功' : '编辑燃气买卖信息成功';
+											layer.msg(title,{icon:1,time:1200},function(){
+												parent.addEditFlag = true;
+												parent.ptId = '';
+												parent.layer.close(index);
+											});
+										}else if(json.code == 1000){
+											layer.msg('服务器错误');
+										}else if(json.code == 50001){
+											layer.msg('当前燃气买卖信息不存在');
+										}else if(json.code == 70001){
+											layer.msg('抱歉，您暂无对燃气买卖信息添加或编辑的权限');
+										}else if(json.code == 80001){
+											layer.msg('当前储燃气买卖信息审核已通过，暂不能修改');
+										}
+								    }
+								});
+							}	
+						});
+					},
+					uploadMainImg : function(elem,imgObj,viewObj,succOpt){
+						upload.render({
+						    elem: '#'+elem
+						    ,url: '/upload/uploadSingle'
+							,method : 'post'
+						    ,accept : 'images'
+							,auto: true
+							,before: function(obj){
+								layer.load();
+						    }
+						    ,done: function(res){
+								layer.closeAll('loading');
+							    $('#'+imgObj).show().attr('src','/temp/' + res.datas);
+							    $('#' + viewObj).show().css({'display':'block'});
+								if(succOpt == 'mainImg'){
+									mainImgSucc = res.datas;
+								}else if(succOpt == 'qfImg1'){
+									qfImgSucc1 = res.datas;
+								}else if(succOpt == 'qfImg2'){
+									qfImgSucc2 = res.datas;
+								}else if(succOpt == 'qfImg3'){
+									qfImgSucc3 = res.datas;
+								}else if(succOpt == 'viewBd'){
+									bdImgSucc = res.datas;
+								}else if(succOpt == 'viewWhp'){
+									whpImgSucc = res.datas;
+								}else if(succOpt == 'viewCl'){
+									trucksImgSucc = res.datas;
+								}
+						    },
+						});
+					},
+					
 				};
 				page.init();
 			});

@@ -8,12 +8,17 @@ layui.define(['form'],function(exports){
     var obj = {
 		//获取公司列表
 		getCompanyList : function(){
-			var field = {typeId:'',name:'',checkSta:1},_this = this;
+			var _this = this;
+			if(currPage == 'addEditRqTradePage'){
+				var field = {typeName:'LNG贸易商'};
+			}else{
+				var field = {};
+			}
 			$.ajax({
 			    type:"get",
 				data : field,
 			    dataType:"json",
-			    url:"/company/queryCompany",
+			    url:"/company/getCompanyList",
 			    success:function (json){
 			    	layer.closeAll('loading');
 					if(json.code == 200){
@@ -21,36 +26,23 @@ layui.define(['form'],function(exports){
 					}else if(json.code == 1000){
 						layer.msg('服务器错误');
 					}else if(json.code == 50001){
-						layer.msg('暂无公司,请先添加公司');
+						if(currPage == 'addEditRqTradePage'){
+							layer.msg('暂无公司,请先添加贸易商');
+						}else{
+							layer.msg('暂无公司,请先添加公司');
+						}
 					}
 			    }
 			});
-			/*
-			
-				var field = {typeName:'LNG贸易商',checkSta:1},_this = this;
-				$.ajax({
-				    type:"get",
-					data : field,
-				    dataType:"json",
-				    url:"/company/getCompanyList",
-				    success:function (json){
-						console.log(json)
-				    	layer.closeAll('loading');
-						if(json.code == 200){
-							_this.renderCompSelList(json.datas);
-						}else if(json.code == 1000){
-							layer.msg('服务器错误');
-						}else if(json.code == 50001){
-							layer.msg('暂无公司,请先添加公司');
-						}
-				    }
-				});
-			*/
 		},
 		renderCompSelList : function(list){
-			var str = '<option value="">请选择公司</option>';
+			if(currPage == 'addEditRqTradePage'){
+				var str = '<option value="">请选择贸易商</option>';
+			}else{
+				var str = '<option value="">请选择公司</option>';
+			}
 			for(var i=0;i<list.length;i++){
-				str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
+				str += '<option value="'+ list[i].cpyId +'">'+ list[i].cpyName +'</option>';
 			}
 			$('#compNameSel').html(str);
 			form.render();
@@ -370,10 +362,6 @@ layui.define(['form'],function(exports){
 			$('#lqTypeSel').html(str);
 			form.render();
 		},
-		//获取液厂
-		getLqFactory : function(){
-			
-		},
 		loadProvList : function(){
 			var _this = this;
 			$.ajax({
@@ -383,7 +371,6 @@ layui.define(['form'],function(exports){
 			    url:"/common/getProvinceList",
 			    success:function (json){
 			    	layer.closeAll('loading');
-					console.log(json)
 					if(json.code == 200){
 						_this.renderProvHtml(json.datas);
 					}else if(json.code == 1000){
@@ -419,9 +406,107 @@ layui.define(['form'],function(exports){
 			$('#cardTitSel').html(strNum);
 			$('#cardWordSel').html(strWord);
 			form.render();
+		},
+		//根据贸易商获取指定液厂
+		getLqFactoryByCpyId : function(cpyId){
+			var _this = this;
+			layer.load('1');
+			$.ajax({
+			    type:"get",
+				data : {cpyId:cpyId},
+			    dataType:"json",
+			    url:"/gsf/getGasFactoryList",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					console.log(json)
+					if(json.code == 200){
+						_this.renderLqFacList(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('该贸易商暂未加入液厂');
+					}
+			    }
+			});
+		},
+		renderLqFacList : function(list){
+			var str = '<option value="">请选择液厂</option>';
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].gfId +'&hlf&'+ list[i].yzImg +'@@'+ list[i].gasTypeId +'@@'+ list[i].gasTypeName +'">'+ list[i].gfName +'</option>'
+			}
+			$('#lqFactorySel').html(str);
+			form.render();
+		},
+		//获取公司押运员 司机
+		getCompYyy : function(cpyId){
+			var _this = this;
+			$.ajax({
+			    type:"get",
+				data : {cpyId:cpyId},
+			    dataType:"json",
+			    url:"/company/queryCompanyPsr",
+			    success:function (json){
+			    	layer.closeAll('loading');
+					console.log(json)
+					if(json.code == 200){
+						_this.renderYyyHtml(json.datas);
+					}else if(json.code == 1000){
+						layer.msg('服务器错误');
+					}else if(json.code == 50001){
+						layer.msg('该贸易商暂未添加司机押运员');
+					}
+			    }
+			});
+		},
+		renderYyyHtml : function(list){
+			var str = '<option value="">请选择公司驾驶员/押运员</option>';
+			for(var i=0;i<list.length;i++){
+				str += '<option value="'+ list[i].psrName +'&hlf&'+ list[i].psrMobile +'">'+ list[i].psrName +'</option>';
+			}
+			$('#jsyNameSel').html(str);
+			$('#yyyNameSel').html(str);
+			form.render();
 		}
 	};
 	//basicInfo 基础表单select
+	form.on('select(jsyNameSel)',function(data){
+		if(data.value != ''){
+			$('#jsyNameInp').val(data.value.split('&hlf&')[0]);
+			$('#jsyTelInp').val(data.value.split('&hlf&')[1]);
+		}else{
+			$('#jsyNameInp').val('');
+			$('#jsyTelInp').val('');
+		}
+	})
+	form.on('select(yyyNameSel)',function(data){
+		if(data.value != ''){
+			$('#yyyNameInp').val(data.value.split('&hlf&')[0]);
+			$('#yyyTelInp').val(data.value.split('&hlf&')[1]);
+		}else{
+			$('#yyyNameInp').val('');
+			$('#yyyTelInp').val('');
+		}
+	})
+	form.on('select(lqFactorySel)',function(data){
+		if(data.value != ''){
+			$('#lqFactoryInp').val(data.value.split('&hlf&')[0]);
+			var otherKeyStr = data.value.split('&hlf&')[1];
+			var newKeyArr = otherKeyStr.split('@@');
+			$('#lqTypeName').html(newKeyArr[2]).css({"color":"#333"});
+			$('#lqTypeInp').val(newKeyArr[1]);
+			mainImgSucc = newKeyArr[0].replace('_small','');
+			$('#thubImg_main').show().attr('src','../' + newKeyArr[0]);
+			$('#viewMainBigImg').show();
+		}else{
+			$('#lqFactoryInp').val('');
+			$('#lqTypeName').html('请先选择液厂').css({"color":"#999"});
+			$('#lqTypeInp').val('');
+			mainImgSucc = '';
+			$('#thubImg_main').hide().attr('src','');
+			$('#viewMainBigImg').hide();
+		}
+	});
+	
 	//运输范围checkbox
 	form.on('checkbox(areaFilter)',function(data){
 		var value = data.value;
@@ -462,6 +547,10 @@ layui.define(['form'],function(exports){
 	//选择公司
 	form.on('select(compNameSel)',function(data){
 		data.value == '' ? $('#compNameInp').val('') : $('#compNameInp').val(data.value);
+		if(currPage == 'addEditRqTradePage' && data.value != ''){
+			obj.getLqFactoryByCpyId(data.value);
+			obj.getCompYyy(data.value);
+		}
 	});
 	//选择车头类型
 	form.on('select(truckHeadTypeSel)',function(data){

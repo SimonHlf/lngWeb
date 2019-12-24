@@ -268,3 +268,9 @@ body.hasMargTop{
 .layui-form-radio{
 	margin:0 10px 0;
 }
+.hasCol{
+	color:#01AAED;
+}
+.hasNotCol{
+	color:#FF5722;
+}
