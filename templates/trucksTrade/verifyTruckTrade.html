@@ -57,6 +57,10 @@
 									var field = {id:parent.ptId,checkSta:checkSta,showSta:showSta};
 									url = '/rqDevTrade/updateRqDevTradeByStatus';
 									title='燃气设备';
+								}else if(currPage == 'rqTradeListPage'){
+									var field = {gasTradeId:parent.rqId,checkStatus:checkSta,showStatus:showSta,opt:0};
+									url = '/gasTrade/setGasTrade';
+									title='燃气买卖';
 								}
 								$.ajax({
 									type:'PUT',

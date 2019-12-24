@@ -55,7 +55,7 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var checkFlag = false,checkSta=1,globalOpts = '',addEditFlag = false;
-			var compId = '',gasTypeId = '',gfId = '';
+			var compId = '',gasTypeId = '',gfId = '',rqId = '',currPage = 'rqTradeListPage';
 			layui.config({
 				base: '/js/frame/js/'
 			}).use(['layer','table','form','basicInfo'],function(){ 
@@ -126,36 +126,34 @@
 							cellMinWidth:200,
 							cols : [
 								[
+									//贸易商名称  液厂 液质类型 液源地 发布时间 单价
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'TradeTypeName', title: '贸易类型',align:'center',templet : function(d){
+									{field : 'cpyName', title: '贸易商名称',align:'center',templet : function(d){
 										var str = '';
 										if(d.checkStatus == 1){//通过
 											str += '<span class="currCheckFlag passBg"></span>';
 										}else if(d.checkStatus == 2){//不通过
 											str += '<span class="currCheckFlag noPassBg"></span>';
 										}
-										str += '<span>'+ d.TradeTypeName +'</span>';
+										str += '<span>'+ d.cpyName +'</span>';
 										return str;
 									}},
-									{field : 'CompanyName', title: '公司名称', align:'center',templet:function(d){
-										var str = '';
-										str += d.CompanyName == undefined ? '个人' : d.CompanyName; 
-										return str;
+									{field : 'gfName', title: '液厂名称', align:'center'},
+									{field : 'yyd', title: '液源地',align:'center'},
+									{field : 'gasTypeName', title: '液质类型',align:'center'},
+									{field : 'price', title: '单价',align:'center',templet:function(d){
+										return d.price + '元';
 									}},
-									{field : 'trucksTypes', title: '槽车类型',align:'center'},
-									{field : 'trucksTypeName', title: '槽车车型',align:'center'},
-									{field : 'pfbz', title: '尾气排放标准',align:'center'},
-									{field : 'xsDistance', title: '行驶里程(公里)',align:'center'},
-									{field : 'spYear', title: '上牌年份',align:'center'},
+									{field : 'addTime', title: '发布时间',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
-										str += '<a href="javascript:void(0)" style="margin-right:10px" ttId="'+ d.ttId +'" facName="'+ d.name +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" rqId="'+ d.id +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
 										if(d.checkStatus == 0){
-											str += '<a href="javascript:void(0)" ttId="'+ d.ttId +'" name="'+ d.name +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+											str += '<a href="javascript:void(0)" rqId="'+ d.id +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
 										}else if(d.checkStatus == 1){//审核通过
-											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" ttId="'+ d.ttId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
+											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" rqId="'+ d.id +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
 										}else if(d.checkStatus == 2){//审核未通过
-											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" ttId="'+ d.ttId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
+											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" rqId="'+ d.id +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
 										}
 										return str;
 									}}
@@ -175,7 +173,7 @@
 						showSta = $(this).attr('showSta');
 					var currTit = '';
 					var checkStatus = data.elem.checked;
-					ttId = $(this).attr('ttId');
+					rqId = $(this).attr('rqId');
 					if(checkSta == 1){//审核通过
 						currTit = '<span style="color:green;">审核通过</span>';
 					}else if(checkSta == 2){//审核不通过
@@ -189,26 +187,26 @@
 					},function(index){
 						data.elem.checked = checkStatus;
 						layer.load();
-						var field = {id:ttId,checkSta:checkSta,showSta:showSta};
+						var field = {gasTradeId:rqId,checkStatus:checkSta,showStatus:showSta,opt:0};
+						console.log(field)
 						$.ajax({
 							type:'PUT',
 							dataType:"json",
 							data :field,
-							url:'/trucksTrade/updateTrTrByStatus',
+							url:'/gasTrade/setGasTrade',
 							success:function (json){
 								layer.closeAll('loading');
 								layer.close(index);
 								if(json.code == 200){
-									layer.msg("变更槽车租卖审核状态成功",{icon:1,time:1000},function(){
-										//checkStatus = -1;
-										page.loadTrucksTradeList();
+									layer.msg("变更燃气买卖审核状态成功",{icon:1,time:1000},function(){
+										page.loadRqTradeList();
 									});
 								}else if(json.code == 50001){
-									layer.msg("修改失败，当前槽车租卖信息不存在", {icon:5,anim:6,time:2000});
+									layer.msg("修改失败，当前燃气买卖信息不存在", {icon:5,anim:6,time:2000});
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
 								}else if(json.code == 70001){
-									layer.msg("抱歉，您暂无权限修改槽车租卖信息审核状态", {icon:5,anim:6,time:1500});
+									layer.msg("抱歉，您暂无权限修改燃气买卖信息审核状态", {icon:5,anim:6,time:1500});
 								}
 							}
 						});
@@ -220,16 +218,16 @@
 				});
 				table.on('tool(truckTradeTab)',function(obj){
 					if(obj.event == 'editInfo'){
-						ttId = $(this).attr('ttId');
+						rqId = $(this).attr('rqId');
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
 						checkFlag = true;
-						ttId = $(this).attr('ttId'),
+						rqId = $(this).attr('rqId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');
 						layer.open({
-							title : '审核槽车租卖信息',
+							title : '审核燃气买卖信息',
 							type: 2,
 							skin:'layui-layer-molv', //样式类名
 							closeBtn: 0, //不显示关闭按钮
@@ -237,7 +235,7 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
-									page.loadTrucksTradeList();
+									page.loadRqTradeList();
 								}
 							}
 						});

@@ -237,9 +237,10 @@
 			var mainImgSucc = '', bdImgSucc = '',whpImgSucc = '',trucksImgSucc = '',qfImgSucc1='',qfImgSucc2='',qfImgSucc3='';
 			var globalOpts = parent.globalOpts,isRightVolume = false,isRightPrice = false,isRightCardNum = false;
 			var tmpDetImgArr = [],currPage = 'addEditRqTradePage';
+			var rqId = parent.rqId;
 			layui.config({
 				base: '/js/frame/js/'
-			}).use(['layer','upload','form','laydate','basicInfo','address','uploadImg'],function(){
+			}).use(['layer','upload','form','laydate','basicInfo','uploadImg'],function(){
 				var layer = layui.layer,form = layui.form,upload = layui.upload,laydate = layui.laydate,basicInfo=layui.basicInfo,uploadImg = layui.uploadImg;
 				laydate.render({'elem':'#zcDateInp',trigger: 'click'});
 				var page = {
@@ -256,6 +257,145 @@
 						this.uploadMainImg('addImgBtn_wxpImg','thubImg_wxpImg','viewWhpBigImg','viewWhp');
 						this.uploadMainImg('addImgBtn_clImg','thubImg_clImg','viewClBigImg','viewCl');
 						this.bindEvent();
+						if(globalOpts == 'editBtn'){
+							var _this = this;
+							setTimeout(function(){
+								_this.loadRqTradeInfo();
+							},200);
+						}
+					},
+					loadRqTradeInfo : function(){
+						var field = {gasTradeId:rqId,opt:0},_this = this;
+						$.ajax({
+						    type:"get",
+							data : field,
+						    dataType:"json",
+						    url:"/gasTrade/getSpecGasTradeDetail",
+						    success:function (json){
+						    	layer.closeAll('loading');
+								console.log(json)
+								if(json.code == 200){
+									_this.renderRqTradeInfo(json.datas[0]);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 10002){
+									layer.msg('请求参数为空');
+								}else if(json.code == 50001){
+									layer.msg('当前燃气买卖信息不存在');
+								}
+						    }
+						});
+					},
+					renderRqTradeInfo : function(list){
+						isRightVolume = true;
+						isRightPrice = true;
+						isRightCardNum = true
+						$('#lqTypeName').html(list.gasTypeName).css({'color':'#333'});
+						$('#lqTypeInp').val(list.gasTypeId);
+						
+						$('#cardTitInp').val(list.cpNo.substr(0,1));
+						$('#cardWordsInp').val(list.cpNo.substr(1,1));
+						$('#cardNumInp').val(list.cpNo.substr(2,5));
+						$('#cardTitSel option').each(function(i){
+							if($('#cardTitSel option').eq(i).val() == list.cpNo.substr(0,1)){
+								$('#cardTitSel option').eq(i).attr('selected','selected');
+							}
+						});
+						$('#cardWordSel option').each(function(i){
+							if($('#cardWordSel option').eq(i).val() == list.cpNo.substr(1,1)){
+								$('#cardWordSel option').eq(i).attr('selected','selected');
+							}
+						});
+						$('#gasVolumeInp').val(list.gasVolume);
+						$('#gasPriceInp').val(list.gasPrice);
+						$('#zcDateInp').val(list.zcDate);
+						$('#qfTxtInp1').val(list.qfTxt1);
+						$('#qfTxtInp2').val(list.qfTxt2);
+						$('#qfTxtInp3').val(list.qfTxt3);
+						if(list.qfImg1 != ''){
+							qfImgSucc1 = list.qfImg1.replace('_small','');
+							$('#thubImg_qfImg1').show().attr('src','../' + list.qfImg1);
+							$('#viewBigImg_qfImg1').show().css({'display':'block'});
+						}
+						if(list.qfImg2 != ''){
+							qfImgSucc2 = list.qfImg2.replace('_small','');
+							$('#thubImg_qfImg2').show().attr('src','../' + list.qfImg2);
+							$('#viewBigImg_qfImg2').show().css({'display':'block'});
+						}
+						if(list.qfImg3 != ''){
+							qfImgSucc3 = list.qfImg3.replace('_small','');
+							$('#thubImg_qfImg3').show().attr('src','../' + list.qfImg3);
+							$('#viewBigImg_qfImg3').show().css({'display':'block'});
+						}
+						var tmpPsArea = [];
+						for(var j=0;j<list.psArea.length;j++){
+							if(list.psArea[j].selFlag){
+								tmpPsArea.push(list.psArea[j].provName);
+							}
+							/*$('input[name=areaInp]').each(function(i){
+								if(list.psArea[j].selFlag){
+									if(list.psArea[j].provName == $('input[name=areaInp]').eq(i).val()){
+										$('input[name=areaInp]').eq(i).attr('checked',true);
+										$('input[name=areaInp]').eq(i).attr('disabled',false);
+										return false;
+									}
+								}
+							});*/
+						}
+						// for(var j=0;j<tmpPsArea.length;j++){
+						// 	$('input[name=areaInp]').each(function(i){
+						// 		if($('input[name=areaInp]').eq(i).val() == tmpPsArea[j]){
+						// 			if(tmpPsArea[j] == '全国'){
+										
+						// 			}
+						// 			$('input[name=areaInp]').eq(i).attr('checked',true);
+						// 			return false;
+						// 		}
+						// 	});
+						// }
+						bdImgSucc = list.bdImg.replace('_small','');
+						$('#thubImg_bdImg').show().attr('src','../' + list.bdImg);
+						$('#viewBdBigImg').show().css({'display':'block'});
+						
+						whpImgSucc = list.whpImg.replace('_small','');
+						$('#thubImg_wxpImg').show().attr('src','../' + list.whpImg);
+						$('#viewWhpBigImg').show().css({'display':'block'});
+						
+						trucksImgSucc = list.tructsImg.replace('_small','');
+						$('#thubImg_clImg').show().attr('src','../' + list.tructsImg);
+						$('#viewClBigImg').show().css({'display':'block'});
+						
+						
+						$('#lxrNameInp').val(list.lxName);
+						$('#lxrTel').val(list.lxTel);
+						
+						
+						
+						
+						
+						$('#remark').val(list.remark);
+						if(list.otherImgList.length > 0){
+							var str = '';
+							hasUpNum = list.otherImgList.length;
+							var tmpDetBigImg = [];
+							if(list.otherImgList.length == 9){
+								$('#addDetImgBtn').hide();
+							}
+							for(var i=0;i<list.otherImgList.length;i++){
+								tmpDetBigImg.push( list.otherImgList[i].gtiImg.replace('_small','') );
+								str += '<li><input type="hidden" name="detImgInp" value="'+ tmpDetBigImg[i] +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="../' + list.otherImgList[i].gtiImg + '"/><span onclick=viewBigImg(\''+ tmpDetBigImg[i] +'\')>查看原图</span></li>';
+							}
+							$('#detImgListUl').html(str);
+							
+						}
+						
+						
+						
+						$('#GPSInfoInp').val(list.gpsInfo);
+						
+						
+						
+						form.render();
 					},
 					viewOriginImg : function(succUrl){
 						if(globalOpts == 'addBtn'){
@@ -287,7 +427,6 @@
 						$('#viewClBigImg').on('click',function(){
 							_this.viewOriginImg(trucksImgSucc);
 						});
-						
 						$('#gasVolumeInp').on('blur',function(){
 							var regNum = /^\+?[1-9]\d*$/;
 							if($(this).val() != ''){
