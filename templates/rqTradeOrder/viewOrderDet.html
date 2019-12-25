@@ -114,7 +114,6 @@
 							data :field,
 							url:'/gtOrder/queryGtOrderByGtoId',
 							success:function (json){
-								console.log(json)
 								layer.closeAll('loading');
 								if(json.code == 200){
 									_this.renderOrderInfo(json.datas[0]);

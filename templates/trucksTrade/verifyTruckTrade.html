@@ -61,6 +61,10 @@
 									var field = {gasTradeId:parent.rqId,checkStatus:checkSta,showStatus:showSta,opt:0};
 									url = '/gasTrade/setGasTrade';
 									title='燃气买卖';
+								}else if(currPage == 'driverZpListPage'){
+									var field = {id:parent.driverId,checkSta:checkSta,showSta:showSta};
+									url = '/driverZp/updateZpByStatus';
+									title='司机招聘';
 								}
 								$.ajax({
 									type:'PUT',

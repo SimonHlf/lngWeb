@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/orderDet.css"/>
+		<title>查看订单详情</title>
+	</head>
+	<body>
+		<div id="basicInfo" class="layui-form layui-tab-item layui-show">
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">公司名称：</label>
+				<p id="compName" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">公司地址：</label>
+				<p id="compNameAdd" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">驾照类型：</label>
+				<p id="jzType" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">要求驾龄：</label>
+				<p id="jlYear"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">招聘人数：</label>
+				<p id="zpNum" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">要求最低学历：</label>
+				<p id="xlTxt" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">要求年龄段：</label>
+				<p id="ageRange" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">工作经验：</label>
+				<p id="workYear" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">福利待遇：</label>
+				<p id="welftare" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">联系人：</label>
+				<p id="lxrName" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">联系电话：</label>
+				<p id="lxTel" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">审核时间：</label>
+				<p id="checkTime" class="orderInfoTxt"></p>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var zpId = parent.driverId;
+			layui.use(['form','layer'],function(){
+				var form = layui.form,layer=layui.layer;
+				var page = {
+					init : function(){
+						this.loadZpDet();
+					},
+					loadZpDet : function(){
+						var _this = this;
+						layer.load('1');
+						var field = {id:zpId};
+						$.ajax({
+							type:'get',
+							dataType:"json",
+							data :field,
+							url:'/driverZp/getDriverZpById',
+							success:function (json){
+								console.log(json)
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderOrderInfo(json.datas[0]);
+								}else if(json.code == 50001){
+									layer.msg("当前司机招聘信息不存在");
+								}else if(json.code == 1000){
+									layer.msg("系统错误");
+								}
+							}
+						});
+					},
+					renderOrderInfo : function(list){
+						$('#compName').html(list.companyName);
+						$('#compNameAdd').html(list.province + list.city + list.address);
+						$('#jzType').html(list.jzType);
+						$('#jlYear').html(list.jlYear + '年');
+						$('#zpNum').html(list.num + '人');
+						$('#xlTxt').html(list.education);
+						$('#ageRange').html(list.sjAge + '岁');
+						$('#workYear').html(list.workYear + '年');
+						$('#welftare').html(list.welftare);
+						$('#lxrName').html(list.lxName);
+						$('#lxTel').html(list.lxTel);
+						$('#checkTime').html(list.checkTime);
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>
