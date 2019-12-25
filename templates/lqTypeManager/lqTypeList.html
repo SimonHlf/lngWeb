@@ -111,7 +111,7 @@
 						lqId = $(this).attr('lqId');
 						page.commonLayer();
 					}else if(obj.event == 'viewBigImg'){
-						var yzImgSrc = $(this).attr('yzImg');
+						var yzImgSrc = $(this).attr('yzImg').replace('_small','');
 						window.open('../' + yzImgSrc);
 					}
 				});

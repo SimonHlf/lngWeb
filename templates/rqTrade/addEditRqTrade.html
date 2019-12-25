@@ -246,9 +246,7 @@
 				var page = {
 					init : function(){
 						basicInfo.renderCardNumWords();
-						basicInfo.loadProvList();
 						uploadImg.uploadMultiImg('addDetImgBtn','detImgListUl',9);
-						basicInfo.getCompanyList();
 						this.uploadMainImg('addImgBtn_main','thubImg_main','viewMainBigImg','mainImg');
 						this.uploadMainImg('addImgBtn_qfImg1','thubImg_qfImg1','viewBigImg_qfImg1','qfImg1');
 						this.uploadMainImg('addImgBtn_qfImg2','thubImg_qfImg2','viewBigImg_qfImg2','qfImg2');
@@ -262,6 +260,9 @@
 							setTimeout(function(){
 								_this.loadRqTradeInfo();
 							},200);
+						}else{
+							basicInfo.getCompanyList();
+							basicInfo.loadProvList();
 						}
 					},
 					loadRqTradeInfo : function(){
@@ -287,12 +288,41 @@
 						});
 					},
 					renderRqTradeInfo : function(list){
+						var provInpStr = '';
+						var cpyStr = '<option value="">请选择贸易商</option>';
+						var lqFacStr = '<option value="">请选择液厂</option>';
+						var jsyStr = '<option value="">请选择公司驾驶员/押运员</option>';
+						var yyyStr = '<option value="">请选择公司驾驶员/押运员</option>';
 						isRightVolume = true;
 						isRightPrice = true;
 						isRightCardNum = true
+						if(list.cpyList.length != 0){
+							for(var i=0;i<list.cpyList.length;i++){
+								if(list.cpyList[i].selFlag){
+									$('#compNameInp').val(list.cpyList[i].cpyId);
+									cpyStr += '<option selected="selected" value="'+ list.cpyList[i].cpyId +'">'+ list.cpyList[i].cpyName +'</option>';
+								}else{
+									cpyStr += '<option value="'+ list.cpyList[i].cpyId +'">'+ list.cpyList[i].cpyName +'</option>';
+								}
+							}
+							$('#compNameSel').html(cpyStr);
+						}
+						if(list.gasFacotryList.length != 0){
+							for(var i=0;i<list.gasFacotryList.length;i++){
+								if(list.gasFacotryList[i].selFlag){
+									$('#lqFactoryInp').val(list.gasFacotryList[i].gfId);
+									lqFacStr += '<option selected="selected" value="'+ list.gasFacotryList[i].gfId +'&hlf&'+ list.gasFacotryList[i].headImg +'@@'+ list.gasFacotryList[i].gasTypeId +'@@'+ list.gasFacotryList[i].gasTypeName +'">'+ list.gasFacotryList[i].gfName +'</option>'
+								}else{
+									lqFacStr += '<option value="'+ list.gasFacotryList[i].gfId +'&hlf&'+ list.gasFacotryList[i].headImg +'@@'+ list.gasFacotryList[i].gasTypeId +'@@'+ list.gasFacotryList[i].gasTypeName +'">'+ list.gasFacotryList[i].gfName +'</option>'
+								}
+							}
+							$('#lqFactorySel').html(lqFacStr);
+						}
 						$('#lqTypeName').html(list.gasTypeName).css({'color':'#333'});
 						$('#lqTypeInp').val(list.gasTypeId);
-						
+						mainImgSucc = list.headImg.replace('_small','');
+						$('#thubImg_main').show().attr('src','../' + list.headImg);
+						$('#viewMainBigImg').show();
 						$('#cardTitInp').val(list.cpNo.substr(0,1));
 						$('#cardWordsInp').val(list.cpNo.substr(1,1));
 						$('#cardNumInp').val(list.cpNo.substr(2,5));
@@ -306,6 +336,30 @@
 								$('#cardWordSel option').eq(i).attr('selected','selected');
 							}
 						});
+						if(list.jsrList.length != 0){
+							for(var i=0;i<list.jsrList.length;i++){
+								if(list.jsrList[i].selFlag){
+									$('#jsyNameInp').val(list.jsrList[i].jsyName);
+									$('#jsyTelInp').val(list.jsrList[i].jsyMobile);
+									jsyStr += '<option selected="selected" value="'+ list.jsrList[i].jsyName +'&hlf&'+ list.jsrList[i].jsyMobile +'">'+ list.jsrList[i].jsyName +'</option>';
+								}else{
+									jsyStr += '<option value="'+ list.jsrList[i].jsyName +'&hlf&'+ list.jsrList[i].jsyMobile +'">'+ list.jsrList[i].jsyName +'</option>';
+								}
+							}
+							$('#jsyNameSel').html(jsyStr);
+						}
+						if(list.yyrList.length != 0){
+							for(var i=0;i<list.yyrList.length;i++){
+								if(list.yyrList[i].selFlag){
+									$('#yyyNameInp').val(list.yyrList[i].yyrName);
+									$('#yyyTelInp').val(list.yyrList[i].yyrMobile);
+									yyyStr += '<option selected="selected" value="'+ list.yyrList[i].yyrName +'&hlf&'+ list.yyrList[i].yyrMobile +'">'+ list.yyrList[i].yyrName +'</option>';
+								}else{
+									yyyStr += '<option value="'+ list.yyrList[i].yyrName +'&hlf&'+ list.yyrList[i].yyrMobile +'">'+ list.yyrList[i].yyrName +'</option>';
+								}
+							}
+							$('#yyyNameSel').html(yyyStr);
+						}
 						$('#gasVolumeInp').val(list.gasVolume);
 						$('#gasPriceInp').val(list.gasPrice);
 						$('#zcDateInp').val(list.zcDate);
@@ -327,32 +381,20 @@
 							$('#thubImg_qfImg3').show().attr('src','../' + list.qfImg3);
 							$('#viewBigImg_qfImg3').show().css({'display':'block'});
 						}
-						var tmpPsArea = [];
-						for(var j=0;j<list.psArea.length;j++){
-							if(list.psArea[j].selFlag){
-								tmpPsArea.push(list.psArea[j].provName);
+						for(var i=0;i<list.psArea.length;i++){
+							if(list.psArea[i].selFlag){
+								tmpProvNameArr.push(list.psArea[i].provName);
+								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psArea[i].provName +'" value="'+ list.psArea[i].provName +'" lay-skin="primary" checked';
+							}else{
+								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psArea[i].provName +'" value="'+ list.psArea[i].provName +'" lay-skin="primary"';
 							}
-							/*$('input[name=areaInp]').each(function(i){
-								if(list.psArea[j].selFlag){
-									if(list.psArea[j].provName == $('input[name=areaInp]').eq(i).val()){
-										$('input[name=areaInp]').eq(i).attr('checked',true);
-										$('input[name=areaInp]').eq(i).attr('disabled',false);
-										return false;
-									}
-								}
-							});*/
+							if(list.psArea[i].disableFlag){
+								provInpStr += ' disabled/>';
+							}else{
+								provInpStr += '/>';
+							}
 						}
-						// for(var j=0;j<tmpPsArea.length;j++){
-						// 	$('input[name=areaInp]').each(function(i){
-						// 		if($('input[name=areaInp]').eq(i).val() == tmpPsArea[j]){
-						// 			if(tmpPsArea[j] == '全国'){
-										
-						// 			}
-						// 			$('input[name=areaInp]').eq(i).attr('checked',true);
-						// 			return false;
-						// 		}
-						// 	});
-						// }
+						$('#provList').html(provInpStr);
 						bdImgSucc = list.bdImg.replace('_small','');
 						$('#thubImg_bdImg').show().attr('src','../' + list.bdImg);
 						$('#viewBdBigImg').show().css({'display':'block'});
@@ -364,15 +406,8 @@
 						trucksImgSucc = list.tructsImg.replace('_small','');
 						$('#thubImg_clImg').show().attr('src','../' + list.tructsImg);
 						$('#viewClBigImg').show().css({'display':'block'});
-						
-						
 						$('#lxrNameInp').val(list.lxName);
 						$('#lxrTel').val(list.lxTel);
-						
-						
-						
-						
-						
 						$('#remark').val(list.remark);
 						if(list.otherImgList.length > 0){
 							var str = '';
@@ -386,15 +421,8 @@
 								str += '<li><input type="hidden" name="detImgInp" value="'+ tmpDetBigImg[i] +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="../' + list.otherImgList[i].gtiImg + '"/><span onclick=viewBigImg(\''+ tmpDetBigImg[i] +'\')>查看原图</span></li>';
 							}
 							$('#detImgListUl').html(str);
-							
 						}
-						
-						
-						
 						$('#GPSInfoInp').val(list.gpsInfo);
-						
-						
-						
 						form.render();
 					},
 					viewOriginImg : function(succUrl){
@@ -543,6 +571,7 @@
 								var index= parent.layer.getFrameIndex(window.name);
 								var area = tmpProvNameArr.join(',');
 								var cardNum = cardTitInp + cardWordsInp + cardNumInp;
+								tmpDetImgArr.length = 0;
 								if(detImgInpLen > 0){
 									$('input[name=detImgInp]').each(function(i){
 										tmpDetImgArr.push($('input[name=detImgInp]').eq(i).val());
@@ -556,7 +585,7 @@
 									url = '/gasTrade/addGasTrade';
 									type = 'post';
 								}else if(globalOpts == 'editBtn'){
-									var editField ={gasTradeId:ptId};
+									var editField ={gasTradeId:rqId};
 									field = Object.assign(field,editField);
 									url = '/gasTrade/upGasTrade';
 									type = 'put';

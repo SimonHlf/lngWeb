@@ -2,9 +2,167 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
 		<title>燃气交易订单</title>
 	</head>
-	<body>
-		燃气交易订单
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">燃气交易订单管理</span>
+					</div>
+					<div class="layui-card-body">
+						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
+							<div class="filterItemSel layui-form" style="width: 140px;">
+								<input type="hidden" id="orderStaInp" value="-3"/>
+								<select id="orderSel" lay-filter="orderSel">
+									<option value="">订单状态(全部)</option>
+									<option value="-2">未完成</option>
+									<option value="7">已完成</option>
+								</select>
+							</div>
+							<div class="filterItemSel layui-form">
+								<div class="layui-input-inline" style="width:130px;">
+									 <input id="stDate" type="text" placeholder="请选择起始时间" readonly class="layui-input"/>
+								</div>
+								<span style="margin:0 5px;">至</span>
+								<div class="layui-input-inline" style="width:130px;">
+									 <input id="edDate" type="text" placeholder="请选择结束时间" readonly class="layui-input"/>
+								</div>
+							</div>
+							<div class="filterItem">
+								<button id="queryBtn" class="layui-btn"><i class="layui-icon layui-icon-search"></i></button>
+							</div>
+							<a class="resetBtn" href="javascript:void(0)" title="重置">
+								<i class="layui-icon layui-icon-refresh-3"></i>
+							</a>
+						</div>
+						<table id="truckTradeTab" class="layui-table" lay-filter="truckTradeTab"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var orderId = '';
+			layui.use(['layer','table','form','laydate'],function(){
+				var layer = layui.layer,table = layui.table,form = layui.form,laydate=layui.laydate;
+				laydate.render({elem:"#stDate"});
+				laydate.render({elem:"#edDate"});
+				form.on('select(orderSel)',function(data){
+					data.value == '' ? $('#orderStaInp').val(-3) : $('#orderStaInp').val(data.value);
+					page.loadOrderList();
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.loadOrderList();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#queryBtn').on('click',function(){
+							var stDate = $('#stDate').val(),
+								edDate = $('#edDate').val();
+							if(stDate == ''){
+								layer.msg('请选择开始时间');
+								return;
+							}
+							if(edDate == ''){
+								layer.msg('请选择结束时间');
+								return;
+							}
+							if(stDate != '' && edDate != ''){
+								if(stDate > edDate){
+									layer.msg('开始时间不能大于结束时间');
+									return;
+								}
+							}
+							_this.loadOrderList();
+						});
+						$('.resetBtn').on('click',function(){
+							$('#stDate').val('');
+							$('#edDate').val('');
+							$('#orderStaInp').val(-3);
+							$('#orderSel').val('');
+							form.render();
+							_this.loadOrderList();
+						});
+					},
+					loadOrderList : function(){
+						var _this = this;
+						layer.load();
+						var stDateInp = $('#stDate').val(),
+							edDateInp = $('#edDate').val(),
+							orderStaInp = $('#orderStaInp').val();
+						var field = {sDate:stDateInp,eDate:edDateInp,orderSta:orderStaInp};
+						table.render({
+							elem: '#truckTradeTab',
+							height: 'full-200',
+							url : '/gtOrder/getPageGtOrder',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas,
+									"count":res.count
+								}
+							},
+							where:field,
+							page : true,
+							limit:20,
+							even : true,
+							text: {none : '暂无相关数据'},
+							limits:[10,20,30,40],
+							cellMinWidth:200,
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'title', title: '商品名称', align:'center'},
+									{field : 'sellCpyName', title: '卖家',align:'center'},
+									{field : 'buyCpyName', title: '买家',align:'center'},
+									{field : 'orderNo', title: '订单编号',align:'center'},
+									{field : 'orderStatusChi', title: '订单状态',align:'center'},
+									{field : 'sellPrice', title: '销售价格',align:'center',templet:function(d){
+										return d.sellPrice + '元';
+									}},
+									{field : 'addTime', title: '创建时间',align:'center'},
+									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
+										var str = '';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" orderId="'+ d.id +'" lay-event="viewDetInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看</a>';
+										return str;
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								$('.layui-table-fixed').removeClass('layui-hide');
+								layer.closeAll('loading');
+							}
+						});
+					}
+				};
+				table.on('tool(truckTradeTab)',function(obj){
+					if(obj.event == 'viewDetInfo'){
+						orderId = $(this).attr('orderId');
+						var fullScreenIndex = layer.open({
+							title : '',
+							type: 2,
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../rqTradeOrder/viewOrderDet.html'
+						});
+						layer.full(fullScreenIndex);
+					}
+				});
+				page.init();
+			});
+		</script>
+		
 	</body>
 </html>

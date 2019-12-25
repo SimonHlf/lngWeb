@@ -6,6 +6,15 @@
 layui.define(['form'],function(exports){
 	var form=layui.form;
     var obj = {
+		//生成驾照类型
+		createJzType : function(){
+			var jzTypeArr = ["A1","A2","A3","B1","B2","C1","C2","C3","C4","D","E","F","M","N","P"],jzTypeStr = '<option value="">请选择驾照类型</option>';
+			for(var i=0;i<jzTypeArr.length;i++){
+				jzTypeStr += '<option value="'+ jzTypeArr[i] +'">'+ jzTypeArr[i] +'</option>';
+			}
+			$('#jzTypeSel').html(jzTypeStr);
+			form.render();
+		},
 		//获取公司列表
 		getCompanyList : function(){
 			var _this = this;
@@ -432,7 +441,7 @@ layui.define(['form'],function(exports){
 		renderLqFacList : function(list){
 			var str = '<option value="">请选择液厂</option>';
 			for(var i=0;i<list.length;i++){
-				str += '<option value="'+ list[i].gfId +'&hlf&'+ list[i].yzImg +'@@'+ list[i].gasTypeId +'@@'+ list[i].gasTypeName +'">'+ list[i].gfName +'</option>'
+				str += '<option value="'+ list[i].gfId +'&hlf&'+ list[i].headImg +'@@'+ list[i].gasTypeId +'@@'+ list[i].gasTypeName +'">'+ list[i].gfName +'</option>'
 			}
 			$('#lqFactorySel').html(str);
 			form.render();
@@ -442,7 +451,7 @@ layui.define(['form'],function(exports){
 			var _this = this;
 			$.ajax({
 			    type:"get",
-				data : {cpyId:cpyId},
+				data : {compId:cpyId},
 			    dataType:"json",
 			    url:"/company/queryCompanyPsr",
 			    success:function (json){
@@ -534,10 +543,12 @@ layui.define(['form'],function(exports){
 					if(value == '全国'){
 						$('input[name=areaInp]').eq(i+1).attr('disabled',false);
 						$('input[name=areaInp]').eq(i+1).next().find('span').removeClass('disColor');
+						$('input[name=areaInp]').eq(i+1).next().removeClass('layui-checkbox-disbaled layui-disabled');
 					}else{
 						if(tmpProvNameArr.length == 0){
 							$('input[name=areaInp]').eq(0).attr('disabled',false);
 							$('input[name=areaInp]').eq(0).next().find('span').removeClass('disColor');
+							$('input[name=areaInp]').eq(0).next().removeClass('layui-checkbox-disbaled layui-disabled');
 						}
 					}
 				});
@@ -547,9 +558,25 @@ layui.define(['form'],function(exports){
 	//选择公司
 	form.on('select(compNameSel)',function(data){
 		data.value == '' ? $('#compNameInp').val('') : $('#compNameInp').val(data.value);
-		if(currPage == 'addEditRqTradePage' && data.value != ''){
-			obj.getLqFactoryByCpyId(data.value);
-			obj.getCompYyy(data.value);
+		if(currPage == 'addEditRqTradePage'){
+			$('#lqFactoryInp').val('');
+			$('#jsyNameInp').val('');
+			$('#yyyNameInp').val('');
+			$('#jsyTelInp').val('');
+			$('#yyyTelInp').val('');
+			$('#lqTypeInp').val('');
+			$('#thubImg_main').attr('src','').hide();
+			$('#viewMainBigImg').hide();
+			mainImgSucc = '';
+			$('#lqTypeName').html('请选选择液厂').css({'color':'#999'});
+			$("#lqFactorySel").html('<option value="">请选择液厂</option>');
+			$('#jsyNameSel').html('<option value="">请选择公司驾驶员/押运员</option>');
+			$('#yyyNameSel').html('<option value="">请选择公司驾驶员/押运员</option>');
+			if(data.value != ''){
+				obj.getLqFactoryByCpyId(data.value);
+				obj.getCompYyy(data.value);
+			}
+			form.render();
 		}
 	});
 	//选择车头类型

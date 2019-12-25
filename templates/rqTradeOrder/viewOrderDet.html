@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/orderDet.css"/>
+		<title>查看订单详情</title>
+	</head>
+	<body class="hasMargTop">
+		<div id="layuiTab" class="layui-tab" lay-filter="compFilter">
+			<div class="compTabNav  layui-tab-brief">
+				<ul class="layui-tab-title">
+					<li class="layui-this">订单详情</li>
+					<li class="otherItem">订单日志</li>
+				</ul> 
+				<a class="closeBtns" href="javascript:void(0)" opts="closeGlobal"><i class="layui-icon layui-icon-close"></i></a>
+			</div>
+			<div class="layui-tab-content">
+				<!-- 订单详情 -->
+				<div id="basicInfo" class="layui-form layui-tab-item layui-show">
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">商品名称：</label>
+						<p id="goodsName" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem_1">
+						<label class="layui-form-label orderTit">商品主图：</label>
+						<p id="goodsImg"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">商品价格：</label>
+						<p id="goodsPrice" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">卖家名称：</label>
+						<p id="sellerName" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">买家公司名称：</label>
+						<p id="buyerCopmName" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">买家姓名：</label>
+						<p id="buyerName" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">买家联系方式：</label>
+						<p id="phoneTxt" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">订单编号：</label>
+						<p id="orderNo" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">GPS信息：</label>
+						<p id="gpsInfo" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">订单状态：</label>
+						<p id="orderStaTxt" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">买家地址：</label>
+						<p id="buyerAdd" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">评价分数：</label>
+						<p id="judgeTxt" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">评价详情：</label>
+						<p id="pjDetInfo" class="orderInfoTxt"></p>
+					</div>
+					<div class="layui-form-item infoItem">
+						<label class="layui-form-label orderTit">备注：</label>
+						<p id="remark" class="orderInfoTxt"></p>
+					</div>
+				</div>
+				<!-- 订单日志 -->
+				<div id="orderDiary" class="layui-form layui-tab-item"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var gtId = parent.orderId;
+			layui.use(['form','layer','element','rate'],function(){
+				var form = layui.form,layer=layui.layer,element = layui.element,rate=layui.rate;
+				//tab点击事件的监听
+				element.on('tab(compFilter)', function(data){
+					if(data.index == 0){
+					}else if(data.index == 1){
+						page.loadOrderDiary();
+					}
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.loadOrderDet();
+					},
+					bindEvent : function(){
+						$('.closeBtns').on('click',function(){
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						});
+					},
+					loadOrderDet : function(){
+						var _this = this;
+						layer.load('1');
+						var field = {gtoId:gtId};
+						$.ajax({
+							type:'get',
+							dataType:"json",
+							data :field,
+							url:'/gtOrder/queryGtOrderByGtoId',
+							success:function (json){
+								console.log(json)
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderOrderInfo(json.datas[0]);
+								}else if(json.code == 50001){
+									layer.msg("当前订单信息不存在");
+								}else if(json.code == 1000){
+									layer.msg("系统错误");
+								}
+							}
+						});
+					},
+					renderOrderInfo : function(list){
+						$('#goodsName').html(list.title);
+						$('#goodsPrice').html(list.price + '元');
+						$('#goodsImg').html('<img src="../'+ list.headImg +'"/>');
+						$('#sellerName').html(list.sellCpyName);
+						$('#buyerCopmName').html(list.buyCpyName);
+						$('#buyerName').html(list.buyUserName);
+						$('#phoneTxt').html(list.buyUserMobile);
+						$('#orderNo').html(list.orderNo);
+						$('#gpsInfo').html(list.gpsInfo);
+						$('#orderStaTxt').html(list.orderStatusChi);
+						$('#buyerAdd').html(list.userProv + list.userCity + list.userAddress);
+						rate.render({
+						    elem: '#judgeTxt'
+						    ,value: list.pjNumber
+						    ,readonly: true
+							,length:3
+						});
+						$('#remark').html(list.remark);
+					},
+					loadOrderDiary : function(){
+						var _this = this;
+						layer.load('1');
+						var field = {gtoId:gtId};
+						$.ajax({
+							type:'get',
+							dataType:"json",
+							data :field,
+							url:'/gtOrder/queryGtoLogByGtoId',
+							success:function (json){
+								console.log(json)
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderOrderLogInfo(json.datas);
+								}else if(json.code == 50001){
+									layer.msg("当前订单信息不存在");
+								}else if(json.code == 1000){
+									layer.msg("系统错误");
+								}
+							}
+						});
+					},
+					renderOrderLogInfo : function(list){
+						var timeStr = '<ul class="layui-timeline">';
+						for(var i=0;i<list.length;i++){
+							timeStr += '<li class="layui-timeline-item">';
+								timeStr += '<i class="layui-icon layui-timeline-axis layui-icon-circle-dot"></i>';
+								timeStr += '<div class="layui-timeline-content layui-text">';
+								timeStr += '<h3 class="layui-timeline-title">'+ list[i].addTime +'</h3>';
+								timeStr += '<p>'+ list[i].detailTxt +'</p>';
+								timeStr += '<p class="detImg"><img src="../'+ list[i].detailImg +'"/></p>';
+								timeStr += '</div>';
+							timeStr += '</li>';
+							
+						}
+						timeStr += '</ul>';
+						$('#orderDiary').html(timeStr);
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>

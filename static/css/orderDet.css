@@ -1,0 +1,42 @@
+.orderInfoTxt{
+	height: 38px;
+	line-height: 38px;
+	color: #333;
+	float: left;
+	font-size: 15px;
+}
+.closeBtns{
+	position:absolute;
+	right:15px;
+	top:15px;
+	width:25px;
+	height:25px;
+	line-height:25px;
+	text-align:center;
+}
+.closeBtns i{
+	font-size:24px;
+	font-weight:600;
+}
+.closeBtns:hover i{
+	color:red;
+}
+.orderTit{
+	color: #666;
+	font-size: 15px;
+}
+.layui-form-label{
+	width: 120px;
+}
+.layui-rate{
+	padding: 2px 5px 10px 0;
+}
+#orderDiary{
+	padding: 20px;
+}
+.detImg{
+	margin-top: 5px;
+}
+.infoItem_1{
+	min-height: 38px;
+}

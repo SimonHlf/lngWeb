@@ -6,29 +6,26 @@
 		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
 		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
 		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
-		<title>燃气买卖管理</title>
-		<style>
-			.checkBtn{margin-right: 10px;}
-		</style>
+		<title>司机招聘</title>
 	</head>
 	<body style="background:#f2f2f2;">
 		<div class="layui-fluid" style="margin-top:15px;">
 			<div class="layui-row">
 				<div class="layui-card">
 					<div class="layui-card-header posRel">
-						<span class="itemDivs">燃气买卖管理</span>
-						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加燃气买卖</a>
+						<span class="itemDivs">司机招聘管理</span>
 					</div>
 					<div class="layui-card-body">
 						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
-							<div class="filterItem" style="margin-right: 15px;">
+							<div class="filterItem" style="margin-right: 5px;">
 								<input type="radio" name="validStatus" value="0" title="未审核" lay-filter="checkStaFilter" checked/>
 								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>
 							<div class="filterItemSel layui-form" style="width: 140px;">
-								<select id="lqTypeSel" lay-filter="lqTypeSel">
-									<option value="">请选择液质类型</option>
+								<input type="hidden" id="jzTypeInp">
+								<select id="jzTypeSel" lay-filter="jzTypeSel">
+									<option value="">请选择驾照类型</option>
 								</select>
 							</div>
 							<div class="filterItem">
@@ -54,44 +51,45 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var checkFlag = false,checkSta=0,globalOpts = '',addEditFlag = false;
-			var compId = '',gasTypeId = '',gfId = '',rqId = '',currPage = 'rqTradeListPage';
+			var ptId = '',potVol = '',sxInfo='',zzjzTypeId='',checkFlag = false,globalOpts = '',addEditFlag = false,currPage = 'potListPage';
+			var checkSta = 0; 
 			layui.config({
 				base: '/js/frame/js/'
-			}).use(['layer','table','form','basicInfo'],function(){ 
+			}).use(['layer','table','form','basicInfo'],function(){
 				var layer = layui.layer,table = layui.table,form = layui.form,basicInfo = layui.basicInfo;
 				form.on('radio(checkStaFilter)',function(data){
 					checkSta = data.value;
-					page.loadRqTradeList();
+					page.loadDriverZpList();
 				});
-				form.on('select(lqTypeSel)',function(data){
-					data.value == '' ? gasTypeId = '' : gasTypeId = data.value;
+				form.on('select(jzTypeSel)',function(data){
+					
 				});
+				
 				var page = {
 					init : function(){
 						this.bindEvent();
-						basicInfo.getLqType();
-						this.loadRqTradeList();
+						basicInfo.createJzType();
+						this.loadDriverZpList();
 					},
 					bindEvent : function(){
 						var _this = this;
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
-							_this.commonLayer(); 
+							_this.commonLayer();
 						});
 					},
 					commonLayer : function(){
 						addEditFlag = true;
-						var title = globalOpts == 'addBtn' ? '添加燃气买卖信息' : '编辑燃气买卖信息'
+						var title = globalOpts == 'addBtn' ? '添加储罐买卖信息' : '编辑储罐买卖信息'
 						var fullScreenIndex = layer.open({
 							title : title,
 							type: 2,
 							closeBtn: 1, //不显示关闭按钮
 							area : ['500px','300px'],
-							content: '../rqTrade/addEditRqTrade.html',
+							content: '../potTrade/addEditPotTrade.html',
 							end : function(){
 								if(addEditFlag){
-									page.loadRqTradeList();
+									page.loadPotTradeList();
 								}
 							},
 							cancel: function () {
@@ -100,15 +98,17 @@
 						});
 						layer.full(fullScreenIndex);
 					},
-					loadRqTradeList : function(){
+					loadDriverZpList : function(){
 						var _this = this;
 						layer.load();
-						var tradeTypeInp = $('#tradeTypeInp').val();
-						var field = {cpyId:compId,gasTypeId:gasTypeId,gfId:gfId,checkStatus:checkSta};
+						var checkStaInp = $('#checkStaInp').val(),
+							jzTypeInp = $('#jzTypeInp').val();
+						var field = {compId:'',jzType:jzTypeInp,checkSta:checkStaInp};
+						console.log(field)
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
-							url : '/gasTrade/getPageGasTradeList',
+							url : '/driverZp/queryDriverZp',
 							method : 'get',
 							parseData : function(res){
 								return {
@@ -126,34 +126,40 @@
 							cellMinWidth:200,
 							cols : [
 								[
-									//贸易商名称  液厂 液质类型 液源地 发布时间 单价
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'cpyName', title: '贸易商名称',align:'center',templet : function(d){
+									{field : 'companyName', title: '公司名称',align:'center',templet : function(d){
 										var str = '';
 										if(d.checkStatus == 1){//通过
 											str += '<span class="currCheckFlag passBg"></span>';
 										}else if(d.checkStatus == 2){//不通过
 											str += '<span class="currCheckFlag noPassBg"></span>';
 										}
-										str += '<span>'+ d.cpyName +'</span>';
+										str += d.companyName;
 										return str;
 									}},
-									{field : 'gfName', title: '液厂名称', align:'center'},
-									{field : 'yyd', title: '液源地',align:'center'},
-									{field : 'gasTypeName', title: '液质类型',align:'center'},
-									{field : 'price', title: '单价',align:'center',templet:function(d){
-										return d.price + '元';
+									{field : '', title: '招聘地区', align:'center',templet:function(d){
+										return d.province + '-' + d.city
 									}},
-									{field : 'addTime', title: '发布时间',align:'center'},
+									{field : 'age', title: '要求学历',align:'center',templet:function(d){
+										return d.age + '岁';
+									}},
+									{field : 'education', title: '要求学历',align:'center'},
+									{field : 'jlYear', title: '驾龄',align:'center',templet:function(d){
+										return d.jlYear + '年';
+									}},
+									{field : 'wage', title: '薪资范围',align:'center',templet:function(d){
+										return d.wage + 'k';
+									}},
+									{field : 'welfare', title: '福利待遇',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
-										str += '<a href="javascript:void(0)" style="margin-right:10px" rqId="'+ d.id +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>查看/编辑</a>';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" ptId="'+ d.ptId +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看详情</a>';
 										if(d.checkStatus == 0){
-											str += '<a href="javascript:void(0)" rqId="'+ d.id +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
+											str += '<a href="javascript:void(0)" ptId="'+ d.ptId +'" lay-event="verifyInfo" checkSta="0" showSta="'+ d.showStatus +'" class="layui-btn layui-btn-xs"><i class="iconfont icon-vercode"></i>审核</a>';
 										}else if(d.checkStatus == 1){//审核通过
-											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" rqId="'+ d.id +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
+											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="2" lay-skin="switch" ptId="'+ d.ptId +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过" checked>';
 										}else if(d.checkStatus == 2){//审核未通过
-											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" rqId="'+ d.id +'" showSta="'+ d.showStatus +'" lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
+											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="1" lay-skin="switch" ptId="'+ d.ptId +'" showSta="'+ d.showStatus +'"  lay-filter="verifyInfo_spec" lay-text="通过|不通过"/>';
 										}
 										return str;
 									}}
@@ -167,46 +173,51 @@
 						});
 					}
 				};
-				// 贸易商名称  液厂 液质类型 液源地 发布时间 单价 
 				form.on('switch(verifyInfo_spec)',function(data){
 					var checkSta = $(this).attr('checkSta'),
 						showSta = $(this).attr('showSta');
 					var currTit = '';
 					var checkStatus = data.elem.checked;
-					rqId = $(this).attr('rqId');
+					ptId = $(this).attr('ptId');
 					if(checkSta == 1){//审核通过
 						currTit = '<span style="color:green;">审核通过</span>';
 					}else if(checkSta == 2){//审核不通过
 						currTit = '<span style="color:red;">不通过</span>';
 					}
-					layer.confirm('是否要将当前燃气买卖信息审核状态变更为['+ currTit +']?', {
-					  title:'修改燃气买卖审核状态',
+					layer.confirm('是否要将当前储罐租卖信息审核状态变更为['+ currTit +']?', {
+					  title:'修改储罐租卖审核状态',
 					  skin: 'layui-layer-molv',
 					  btn: ['确定','取消'],//按钮
 					  closeBtn:0,
 					},function(index){
 						data.elem.checked = checkStatus;
 						layer.load();
-						var field = {gasTradeId:rqId,checkStatus:checkSta,showStatus:showSta,opt:0};
-						console.log(field)
+						var field = {id:ptId,checkSta:checkSta,showSta:showSta};
 						$.ajax({
 							type:'PUT',
 							dataType:"json",
 							data :field,
-							url:'/gasTrade/setGasTrade',
+							url:'/potTrade/updatePotTradeByStatus',
 							success:function (json){
 								layer.closeAll('loading');
 								layer.close(index);
 								if(json.code == 200){
-									layer.msg("变更燃气买卖审核状态成功",{icon:1,time:1000},function(){
-										page.loadRqTradeList();
+									layer.msg("变更储罐租卖审核状态成功",{icon:1,time:1000},function(){
+										ptId = '';
+										page.loadPotTradeList();
 									});
 								}else if(json.code == 50001){
-									layer.msg("修改失败，当前燃气买卖信息不存在", {icon:5,anim:6,time:2000});
+									layer.msg("修改失败，当前储罐租卖信息不存在", {icon:5,anim:6,time:2000});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}else if(json.code == 70001){
-									layer.msg("抱歉，您暂无权限修改燃气买卖信息审核状态", {icon:5,anim:6,time:1500});
+									layer.msg("抱歉，您暂无权限修改储罐租卖信息审核状态", {icon:5,anim:6,time:1500});
+									data.elem.checked=!checkStatus;
+									form.render();
 								}
 							}
 						});
@@ -218,16 +229,16 @@
 				});
 				table.on('tool(truckTradeTab)',function(obj){
 					if(obj.event == 'editInfo'){
-						rqId = $(this).attr('rqId');
+						ptId = $(this).attr('ptId');
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
 						checkFlag = true;
-						rqId = $(this).attr('rqId'),
+						ptId = $(this).attr('ptId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');
 						layer.open({
-							title : '审核燃气买卖信息',
+							title : '审核槽车租卖信息',
 							type: 2,
 							skin:'layui-layer-molv', //样式类名
 							closeBtn: 0, //不显示关闭按钮
@@ -235,7 +246,7 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
-									page.loadRqTradeList();
+									page.loadPotTradeList();
 								}
 							}
 						});
