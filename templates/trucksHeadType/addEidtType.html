@@ -38,6 +38,7 @@
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
 							parent.typeId = '';
+							parent.typeName = '';
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){
@@ -58,8 +59,6 @@
 									type = 'put';
 								}
 								layer.load('1');
-								console.log(url)
-								console.log(field)
 								$.ajax({
 									type:type,
 									dataType:"json",
@@ -77,6 +76,7 @@
 												layer.msg("编辑车头类型成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
 													parent.typeId = '';
+													parent.typeName = '';
 													parent.layer.close(index);
 												});
 											}

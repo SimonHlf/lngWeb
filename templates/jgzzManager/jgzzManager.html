@@ -32,7 +32,7 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = "addBtn",addFlag = false;
-			var testId='',validStatus= -1;
+			var testId='',validStatus= -1,jgzzName = '';
 			layui.use(['layer','table','form'],function(){
 				var layer = layui.layer,table = layui.table,form = layui.form;
 				form.on('radio(validStatus)', function(data){
@@ -109,7 +109,7 @@
 										}else if(d.validStatus == 1){
 											str += '<a class="layui-btn layui-bg-blue layui-btn-xs" lay-event="setAccStatus" jgzzId="'+ d.id +'" accSta="0" name="'+ d.name +'" accStaTxt="有效"><i class="layui-icon layui-icon-set"></i>设为有效</a>';
 										}
-										str += '<a href="javascript:void(0)" jgzzId="'+ d.id +'" lay-event="editJgzz" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										str += '<a href="javascript:void(0)" jgzzId="'+ d.id +'" jgzzName="'+ d.name +'" validSta="'+ d.validStatus +'" lay-event="editJgzz" class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
 										return str;
 									}}
 								]
@@ -124,6 +124,8 @@
 					if(obj.event == 'editJgzz'){
 						globalOpts = 'editBtn';
 						testId = $(this).attr('jgzzId');
+						jgzzName = $(this).attr('jgzzName');
+						validStatus = $(this).attr('validSta');
 						page.commonLayer();
 					}else if(obj.event == 'setAccStatus'){
 						var accSta = $(this).attr('accSta'),

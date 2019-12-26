@@ -72,6 +72,7 @@
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
 							parent.provId = '';
+							parent.provName = '';
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){
@@ -110,6 +111,7 @@
 												layer.msg("编辑省份气质类型成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
 													parent.provId = '';
+													parent.provName = '';
 													parent.layer.close(index);
 												});
 											}

@@ -38,6 +38,7 @@
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
 							parent.gasId = '';
+							parent.gasTypeName = '';
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){
@@ -75,6 +76,7 @@
 												layer.msg("编辑气源类型成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
 													parent.gasId = '';
+													parent.gasTypeName = '';
 													parent.layer.close(index);
 												});
 											}

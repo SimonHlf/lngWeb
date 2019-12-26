@@ -38,6 +38,7 @@
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
 							parent.gasEquipId = '';
+							parent.gasEquipName = '';
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){
@@ -75,6 +76,7 @@
 												layer.msg("编辑燃气设备类型成功",{icon:1,time:1000},function(){
 													parent.addFlag = true;
 													parent.gasEquipId = '';
+													parent.gasEquipName = '';
 													parent.layer.close(index);
 												});
 											}
