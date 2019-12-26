@@ -37,6 +37,7 @@
 						$('.cancelBtn').on('click',function(){
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
+							parent.wqPfBzId = '';
 							parent.layer.close(index);
 						});
 						$('.saveBtn').on('click',function(){

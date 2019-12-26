@@ -63,6 +63,7 @@
 						$('.cancelBtn').on('click',function(){
 							var index= parent.layer.getFrameIndex(window.name);
 							parent.addFlag = false;
+							parent.lqId = '';
 							parent.layer.close(index);
 						});
 						//查看原图

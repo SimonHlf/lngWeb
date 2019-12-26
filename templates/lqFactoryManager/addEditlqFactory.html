@@ -305,6 +305,7 @@
 						if(!isSetFlag){
 							parent.addEditFlag = false;
 						}
+						parent.gfId = '';
 						parent.layer.close(index);
 					},
 					bindEvent : function(){
@@ -373,6 +374,7 @@
 												parent.addEditFlag = true;
 												if(globalOpts == 'addBtn'){
 													parent.layer.close(index);
+													parent.gfId = '';
 												}else{
 													isSetFlag = true;
 												}
@@ -416,19 +418,7 @@
 						console.log(list)
 						$('#factoryName').val(list[0].name);
 						$('#provInp').val(list[0].province);
-						//$('#cityInp').val(list[0].city);
-						//$('#countyInp').val(list[0].county);
 						provVal = list[0].province;
-						/*if(list[0].city != ''){
-							cityVal = list[0].city;
-						}
-						if(list[0].county != ''){
-							countyVal = list[0].county;
-						}
-						
-						$('#citySel').attr('disabled',false);
-						$('#areaSel').attr('disabled',false);*/
-
 						$('#lqTypeSel').val(list[0].gasTypeId);
 						$('#lqTypeInp').val(list[0].gasTypeId);
 						
@@ -453,8 +443,6 @@
 							}
 							$('#yzBgImgListUl').html(str);
 						}
-						
-						
 						form.render();
 						layui.address();
 						
