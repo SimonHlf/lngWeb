@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{margin:0;padding: 0;}
+			img{display: inline-block;}
+		</style>
+	</head>
+	<body>
+		<div style="text-align: center;">
+			<img id="welcomeImg" src="../images/welcome.png" alt="欢迎进入燃气之家管理平台"/>
+		</div>
+		
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			if($(window).height() <= 600){
+				$("#welcomeImg").height(500);
+			}else if($(window).height() > 600 && $(window).height() <= 750){
+				$("#welcomeImg").height(660);
+			}else{
+				$("#welcomeImg").height(840);
+			}
+		</script>
+	</body>
+</html>

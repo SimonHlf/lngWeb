@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/orderDet.css"/>
+		<title>查看司机求职详情</title>
+	</head>
+	<body>
+		<div id="basicInfo" class="layui-form layui-tab-item layui-show">
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">求职人：</label>
+				<p id="qzUserName" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">性别：</label>
+				<p id="sex" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">联系电话：</label>
+				<p id="userMobile" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">年龄：</label>
+				<p id="age" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">婚否：</label>
+				<p id="marriage" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">驾照类型：</label>
+				<p id="jzType" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">驾龄：</label>
+				<p id="jlYear"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">毕业院校：</label>
+				<p id="colleges" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">最高学历：</label>
+				<p id="education" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">期望工作地点：</label>
+				<p id="workAdd" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">工作年限：</label>
+				<p id="workYear" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">工作经验：</label>
+				<p id="workExp" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">期望薪资：</label>
+				<p id="wage" class="orderInfoTxt"></p>
+			</div>
+			<div class="layui-form-item infoItem">
+				<label class="layui-form-label orderTit">备注：</label>
+				<p id="remark" class="orderInfoTxt"></p>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var zpId = parent.driverId;
+			layui.use(['form','layer'],function(){
+				var form = layui.form,layer=layui.layer;
+				var page = {
+					init : function(){
+						this.loadZpDet();
+					},
+					loadZpDet : function(){
+						var _this = this;
+						layer.load('1');
+						var field = {id:zpId};
+						$.ajax({
+							type:'get',
+							dataType:"json",
+							data :field,
+							url:'/driverZp/getDriverQzById',
+							success:function (json){
+								console.log(json)
+								layer.closeAll('loading');
+								if(json.code == 200){
+									_this.renderOrderInfo(json.datas[0]);
+								}else if(json.code == 50001){
+									layer.msg("当前司机求职信息不存在");
+								}else if(json.code == 1000){
+									layer.msg("系统错误");
+								}
+							}
+						});
+					},
+					renderOrderInfo : function(list){
+						$('#qzUserName').html(list.userName);
+						$('#sex').html(list.sex);
+						$('#userMobile').html(list.userMobile);
+						$('#age').html(list.age + '岁');
+						$('#marriage').html(list.marriage);
+						$('#jzType').html(list.jzType);
+						$('#jlYear').html(list.jzYear + '年');
+						$('#colleges').html(list.colleges);
+						$('#education').html(list.education);
+						$('#workAdd').html(list.privince + list.city);
+						$('#workYear').html(list.workYear + '年');
+						$('#workExp').html(list.workExp + '年');
+						$('#wage').html(list.wage + 'K');
+						$('#remark').html(list.remark);
+					}
+				};
+				page.init();
+			});
+		</script>
+	</body>
+</html>
