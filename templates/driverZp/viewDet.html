@@ -7,53 +7,58 @@
 		<title>查看司机招聘详情</title>
 	</head>
 	<body>
-		<div id="basicInfo" class="layui-form layui-tab-item layui-show">
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">公司名称：</label>
+		<div id="basicInfo" class="layui-form">
+			<div class="basicInfoTit">
+				<span></span>
+				<p>招聘信息详情</p>
+				<a class="closeBtns" href="javascript:void(0)" opts="closeGlobal"><i class="layui-icon layui-icon-close"></i></a>
+			</div>
+			<div class="infoItem">
+				<label class="orderTit">公司名称：</label>
 				<p id="compName" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">公司地址：</label>
+			<div class="infoItem">
+				<label class="orderTit">公司地址：</label>
 				<p id="compNameAdd" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">驾照类型：</label>
+			<div class="infoItem">
+				<label class="orderTit">驾照类型：</label>
 				<p id="jzType" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">要求驾龄：</label>
-				<p id="jlYear"></p>
+			<div class="infoItem">
+				<label class="orderTit">要求驾龄：</label>
+				<p id="jlYear" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">招聘人数：</label>
+			<div class="infoItem">
+				<label class="orderTit">招聘人数：</label>
 				<p id="zpNum" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">要求最低学历：</label>
+			<div class="infoItem">
+				<label class="orderTit">要求最低学历：</label>
 				<p id="xlTxt" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">要求年龄段：</label>
+			<div class="infoItem">
+				<label class="orderTit">要求年龄段：</label>
 				<p id="ageRange" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">工作经验：</label>
+			<div class="infoItem">
+				<label class="orderTit">工作经验：</label>
 				<p id="workYear" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">福利待遇：</label>
+			<div class="infoItem">
+				<label class="orderTit">福利待遇：</label>
 				<p id="welftare" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">联系人：</label>
+			<div class="infoItem">
+				<label class="orderTit">联系人：</label>
 				<p id="lxrName" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">联系电话：</label>
+			<div class="infoItem">
+				<label class="orderTit">联系电话：</label>
 				<p id="lxTel" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">审核时间：</label>
+			<div class="infoItem">
+				<label class="orderTit">审核时间：</label>
 				<p id="checkTime" class="orderInfoTxt"></p>
 			</div>
 		</div>
@@ -67,6 +72,13 @@
 				var page = {
 					init : function(){
 						this.loadZpDet();
+						this.bindEvent();
+					},
+					bindEvent : function(){
+						$('.closeBtns').on('click',function(){
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						});
 					},
 					loadZpDet : function(){
 						var _this = this;

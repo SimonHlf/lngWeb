@@ -62,6 +62,7 @@
 			layui.use(['layer','table','form'],function(){ 
 				var layer = layui.layer,table = layui.table,form = layui.form;
 				form.on('radio(checkStaFilter)',function(data){
+					ttId = '';
 					checkSta = data.value;
 					page.loadTrucksTradeList();
 				});

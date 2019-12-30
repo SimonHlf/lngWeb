@@ -1,9 +1,11 @@
+body{
+	background: #f8f8f8;
+}
 .orderInfoTxt{
-	height: 38px;
-	line-height: 38px;
 	color: #333;
 	float: left;
 	font-size: 15px;
+	font-weight: 620;
 }
 .closeBtns{
 	position:absolute;
@@ -14,7 +16,7 @@
 	line-height:25px;
 	text-align:center;
 }
-.closeBtns i{
+.closeBtns i{ 
 	font-size:24px;
 	font-weight:600;
 }
@@ -23,20 +25,88 @@
 }
 .orderTit{
 	color: #666;
+	height: 50px;
+	line-height: 50px;
 	font-size: 15px;
-}
-.layui-form-label{
+	display: block;
 	width: 120px;
-}
-.layui-rate{
-	padding: 2px 5px 10px 0;
+	float: left;
+	text-align: right;
+	margin-right: 25px;
 }
 #orderDiary{
 	padding: 20px;
 }
 .detImg{
 	margin-top: 5px;
+	max-width: 200px;
+	max-height: 200px;
 }
 .infoItem_1{
-	min-height: 38px;
+	min-height: 50px;
+}
+.infoItem{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background: #fff;
+}
+.infoItem:nth-of-type(2n){
+	background:#f0f5fb ;
+}
+.basicInfoTit{
+	height:60px;
+	line-height: 60px;
+	background: #409389;
+	position: relative;
+}
+.basicInfoTit.hasMargTop{
+	margin-top: 20px;
+}
+.basicInfoTit a{
+	top:18px;
+	color: #fff;
+}
+.basicInfoTit span{
+	width:16px ;
+	height: 16px;
+	background: #fff;
+	border-radius: 2px;
+	float: left;
+	margin:23px 0 0 15px;
+}
+.basicInfoTit p{
+	float: left;
+	margin-left: 10px;
+	font-size: 16px;
+	color: #fff;
+}
+.basicInfoTit .orderItemTit{
+	width:100px;
+	height: 100%;
+	position: relative;
+	text-align: center;
+	cursor: pointer;
+	margin-left: 0;
+	margin-right: 20px;
+}
+.basicInfoTit .orderItemTit em{
+	width: 100%;
+	height: 3px;
+	background:#F47837 ;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	display: none;
+}
+.basicInfoTit .orderItemTit.active em{
+	display: block;
+}
+.layui-rate{
+	padding: 0;
+	height: 50px;
+	margin-top: -4px;
+}
+.orderItem{
+	display: none;
 }

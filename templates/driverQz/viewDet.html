@@ -8,60 +8,70 @@
 	</head>
 	<body>
 		<div id="basicInfo" class="layui-form layui-tab-item layui-show">
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">求职人：</label>
+			<div class="basicInfoTit">
+				<span></span>
+				<p>司机基本信息</p>
+				<a class="closeBtns" href="javascript:void(0)" opts="closeGlobal"><i class="layui-icon layui-icon-close"></i></a>
+			</div>
+			<div class="infoItem">
+				<label class="orderTit">求职人：</label>
 				<p id="qzUserName" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">性别：</label>
+			<div class="infoItem">
+				<label class="orderTit">性别：</label>
 				<p id="sex" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">联系电话：</label>
+			<div class="infoItem">
+				<label class="orderTit">联系电话：</label>
 				<p id="userMobile" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">年龄：</label>
+			<div class="infoItem">
+				<label class="orderTit">年龄：</label>
 				<p id="age" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">婚否：</label>
+			<div class="infoItem">
+				<label class="orderTit">婚否：</label>
 				<p id="marriage" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">驾照类型：</label>
+			<div class="infoItem">
+				<label class="orderTit">驾照类型：</label>
 				<p id="jzType" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">驾龄：</label>
+			<div class="infoItem">
+				<label class="orderTit">驾龄：</label>
 				<p id="jlYear"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">毕业院校：</label>
+			<div class="infoItem">
+				<label class="orderTit">毕业院校：</label>
 				<p id="colleges" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">最高学历：</label>
+			<div class="infoItem">
+				<label class="orderTit">最高学历：</label>
 				<p id="education" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">期望工作地点：</label>
-				<p id="workAdd" class="orderInfoTxt"></p>
-			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">工作年限：</label>
+			<div class="infoItem">
+				<label class="orderTit">工作年限：</label>
 				<p id="workYear" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">工作经验：</label>
-				<p id="workExp" class="orderInfoTxt"></p>
+			
+			<div class="basicInfoTit hasMargTop">
+				<span></span>
+				<p>求职信息</p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">期望薪资：</label>
+			<div class="infoItem">
+				<label class="orderTit">期望工作地点：</label>
+				<p id="workAdd" class="orderInfoTxt"></p>
+			</div>
+			<div class="infoItem">
+				<label class="orderTit">期望薪资：</label>
 				<p id="wage" class="orderInfoTxt"></p>
 			</div>
-			<div class="layui-form-item infoItem">
-				<label class="layui-form-label orderTit">备注：</label>
+			<div class="infoItem">
+				<label class="orderTit">工作经验：</label>
+				<p id="workExp" class="orderInfoTxt"></p>
+			</div>
+			<div class="infoItem">
+				<label class="orderTit">备注：</label>
 				<p id="remark" class="orderInfoTxt"></p>
 			</div>
 		</div>
@@ -75,6 +85,13 @@
 				var page = {
 					init : function(){
 						this.loadZpDet();
+						this.bindEvent();
+					},
+					bindEvent : function(){
+						$('.closeBtns').on('click',function(){
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						});
 					},
 					loadZpDet : function(){
 						var _this = this;

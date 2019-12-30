@@ -70,6 +70,7 @@
 			}).use(['layer','table','form','basicInfo'],function(){
 				var layer = layui.layer,table = layui.table,form = layui.form,basicInfo = layui.basicInfo;
 				form.on('radio(checkStaFilter)',function(data){
+					ptId = '';
 					checkSta = data.value;
 					page.loadPotTradeList();
 				});
@@ -280,6 +281,7 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
+									ptId = '';potVol = '';sxInfo='';zzjzTypeId='';
 									page.loadPotTradeList();
 								}
 							}
