@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/compManager.css"/>
+		<link rel="stylesheet" type="text/css" href="../js/pace/pace-theme-flash.min.css"/>
+		<script src="../js/pace/pace.min.js" type="text/javascript" charset="utf-8"></script>
+		<title>新闻资讯管理</title>
+	</head>
+	<body style="background:#f2f2f2;">
+		<div class="layui-fluid" style="margin-top:15px;">
+			<div class="layui-row">
+				<div class="layui-card">
+					<div class="layui-card-header posRel">
+						<span class="itemDivs">新闻资讯管理</span>
+						<a id="addTruckTrade" class="posAbs newAddBtn" href="javascript:void(0)"><i class="layui-icon layui-icon-add-circle"></i>添加新闻资讯</a>
+					</div>
+					<div class="layui-card-body">
+						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
+							<input type="hidden" id="showStaInp" value="0"/>
+							<div class="filterItem" style="margin-right: 5px;">
+								<input type="radio" name="showStaInpName" value="-1" title="全部" lay-filter="checkStaFilter"/>
+								<input type="radio" name="showStaInpName" value="0" title="显示" lay-filter="checkStaFilter" checked/>
+								<input type="radio" name="showStaInpName" value="1" title="隐藏" lay-filter="checkStaFilter"/>
+							</div>
+						</div>
+						<table id="truckTradeTab" class="layui-table" lay-filter="truckTradeTab"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
+		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var globalOpts = '',addEditFlag = false;
+			layui.use(['layer','table','form'],function(){
+				var layer = layui.layer,table = layui.table,form = layui.form;
+				form.on('radio(checkStaFilter)',function(data){
+					$('#showStaInp').val(data.value);
+					page.loasNewsList();
+				});
+				var page = {
+					init : function(){
+						this.bindEvent();
+						this.loasNewsList();
+					},
+					bindEvent : function(){
+						var _this = this;
+						$('#addTruckTrade').on('click',function(){
+							globalOpts = 'addBtn';
+							_this.commonLayer();
+						});
+					},
+					commonLayer : function(){
+						addEditFlag = true;
+						var title = globalOpts == 'addBtn' ? '添加新闻资讯' : '编辑新闻资讯'
+						var fullScreenIndex = layer.open({
+							title : title,
+							type: 2,
+							closeBtn: 1, //不显示关闭按钮
+							area : ['500px','300px'],
+							content: '../newsCen/addEditNewsCen.html',
+							end : function(){
+								if(addEditFlag){
+									page.loasNewsList();
+								}
+							},
+							cancel: function () {
+								addEditFlag = false;
+							}
+						});
+						layer.full(fullScreenIndex);
+					},
+					loasNewsList : function(){
+						var _this = this;
+						layer.load();
+						var showStaInp = $('#showStaInp').val();
+						var field = {msgTypeId:1,showStatus:showStaInp};
+						table.render({
+							elem: '#truckTradeTab',
+							height: 'full-200',
+							url : '/MsgCenter/getMsgCenterPageList',
+							method : 'get',
+							parseData : function(res){
+								return {
+									"code" : 0,
+									"data" : res.datas,
+									"count":res.count
+								}
+							},
+							where:field,
+							page : true,
+							limit:20,
+							even : true,
+							text: {none : '暂无相关数据'},
+							limits:[10,20,30,40],
+							cellMinWidth:200,
+							cols : [
+								[
+									{field : '', title: '序号',type:'numbers', align:'center'},
+									{field : 'TradeTypeName', title: '贸易类型',align:'center',templet : function(d){
+										var str = '';
+										if(d.checkStatus == 1){//通过
+											str += '<span class="currCheckFlag passBg"></span>';
+										}else if(d.checkStatus == 2){//不通过
+											str += '<span class="currCheckFlag noPassBg"></span>';
+										}
+										if(d.tradeStatus == 0){
+											str += '<span>可租可卖</span>';
+										}else if(d.tradeStatus == 1){
+											str += '<span>租</span>';
+										}else if(d.tradeStatus == 2){
+											str += '<span>卖</span>';
+										}
+										return str;
+									}},
+									{field : 'cpyName', title: '公司名称', align:'center'},
+									{field : 'potPpName', title: '储罐品牌',align:'center'},
+									{field : 'potVol', title: '储罐容积',align:'center',templet:function(d){
+										return d.potVol + 'm³';
+									}},
+									{field : 'sxInfo', title: '有无手续',align:'center',templet:function(d){
+										if(d.sxInfo == 1){
+											return '<span class="hasCol">有</span>';
+										}else{
+											return '<span class="hasNotCol">无</span>';
+										}
+									}},
+									{field : 'leasePrice', title: '租卖价格',align:'center',templet:function(d){
+										return d.leasePrice + '元';
+									}},
+									{field : 'sellPrice', title: '销售价格',align:'center',templet:function(d){
+										return d.sellPrice + '元';
+									}},
+									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
+										var str = '';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										if(d.showStatus == 0){//显示
+											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="1" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏" checked>';
+										}else if(d.showStatus == 1){//隐藏
+											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="0" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏"/>';
+										}
+										str += '<a href="javascript:void(0)" style="margin-right:10px" lay-event="delInfo" class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>';
+										return str;
+									}}
+								]
+							],
+							done : function(res, curr, count){
+								console.log(res)
+								$('.layui-table-fixed').removeClass('layui-hide');
+								layer.closeAll('loading');
+							}
+						});
+					}
+				};
+				form.on('switch(verifyInfo_spec)',function(data){
+					var checkSta = $(this).attr('checkSta'),
+						showSta = $(this).attr('showSta');
+					var currTit = '';
+					var checkStatus = data.elem.checked;
+					ptId = $(this).attr('ptId');
+					if(checkSta == 1){//审核通过
+						currTit = '<span style="color:green;">显示</span>';
+					}else if(checkSta == 2){//审核不通过
+						currTit = '<span style="color:red;">隐藏</span>';
+					}
+					layer.confirm('是否要将当前新闻资讯信息显示状态变更为['+ currTit +']?', {
+					  title:'设置新闻资讯显示/隐藏',
+					  skin: 'layui-layer-molv',
+					  btn: ['确定','取消'],//按钮
+					  closeBtn:0,
+					},function(index){
+						data.elem.checked = checkStatus;
+						layer.load();
+						var field = {id:ptId,checkSta:checkSta,showSta:showSta};
+						$.ajax({
+							type:'PUT',
+							dataType:"json",
+							data :field,
+							url:'/potTrade/updatePotTradeByStatus',
+							success:function (json){
+								layer.closeAll('loading');
+								layer.close(index);
+								if(json.code == 200){
+									layer.msg("变更新闻资讯显示状态成功",{icon:1,time:1000},function(){
+										page.loasNewsList();
+									});
+								}else if(json.code == 50001){
+									layer.msg("修改失败，当前新闻资讯不存在", {icon:5,anim:6,time:2000});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}else if(json.code == 1000){
+									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}else if(json.code == 70001){
+									layer.msg("抱歉，您暂无权限修改当前新闻资讯显示状态", {icon:5,anim:6,time:1500});
+									data.elem.checked=!checkStatus;
+									form.render();
+								}
+							}
+						});
+					},function(index){
+						data.elem.checked=!checkStatus;
+						form.render();
+						layer.close(index);
+					});
+				});
+				table.on('tool(truckTradeTab)',function(obj){
+					if(obj.event == 'editInfo'){
+						//ptId = $(this).attr('ptId');
+						globalOpts = 'editBtn';
+						page.commonLayer();
+					}else if(obj.event == 'delInfo'){
+						/*ptId = $(this).attr('ptId'),
+						checkSta = $(this).attr('checkSta');
+						showSta = $(this).attr('showSta');
+						layer.open({
+							title : '审核槽车租卖信息',
+							type: 2,
+							skin:'layui-layer-molv', //样式类名
+							closeBtn: 0, //不显示关闭按钮
+							area : ['500px','200px'],
+							content: '../trucksTrade/verifyTruckTrade.html',
+							end : function(){
+								if(checkFlag){
+									ptId = '';potVol = '';sxInfo='';zzjzTypeId='';
+									page.loadPotTradeList();
+								}
+							}
+						});*/
+					}
+				});
+				page.init();
+			});
+		</script>
+		
+	</body>
+</html>
