@@ -48,6 +48,7 @@
 						var _this = this;
 						$('#addJgzzBtn').on('click',function(){
 							globalOpts = 'addBtn';
+							testId='';validStatus= -1;jgzzName = '';
 							_this.commonLayer();
 						});
 					},
@@ -115,6 +116,7 @@
 								]
 							],
 							done : function(res, curr, count){
+								console.log(res)
 								layer.closeAll('loading');
 							}
 						});
@@ -148,6 +150,7 @@
 									layer.closeAll('loading');
 									if(json.code == 200){
 										layer.msg('设置成功',{icon:1,time:1000},function(){
+											testId='';jgzzName = '';
 											page.loadJgzzList();
 										});
 									}else if(json.code == 1000){

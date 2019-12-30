@@ -67,15 +67,15 @@
 				});
 				var page = {
 					init : function(){
-						this.bindEvent();
 						basicInfo.createJzType();
 						this.loadDriverZpList();
+						this.bindEvent();
 					},
 					bindEvent : function(){
 						var _this = this;
-						$('#addTruckTrade').on('click',function(){
-							globalOpts = 'addBtn';
-							_this.commonLayer();
+						$('#queryBtn').on('click',function(){
+							driverId = '';
+							_this.loadDriverZpList();
 						});
 					},
 					commonLayer : function(){
@@ -129,17 +129,17 @@
 									{field : '', title: '招聘地区', align:'center',templet:function(d){
 										return d.province + '-' + d.city
 									}},
+									{field : 'jzType', title: '驾照类型', align:'center'},
+									{field : 'jlYear', title: '驾龄',align:'center',templet:function(d){
+										return d.jlYear + '年';
+									}},
 									{field : 'age', title: '要求学历',align:'center',templet:function(d){
 										return d.age + '岁';
 									}},
 									{field : 'education', title: '要求学历',align:'center'},
-									{field : 'jlYear', title: '驾龄',align:'center',templet:function(d){
-										return d.jlYear + '年';
-									}},
 									{field : 'wage', title: '薪资范围',align:'center',templet:function(d){
 										return d.wage + 'k';
 									}},
-									{field : 'welfare', title: '福利待遇',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
 										str += '<a href="javascript:void(0)" style="margin-right:10px" driverId="'+ d.zpId +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-search"></i>查看详情</a>';
@@ -155,7 +155,7 @@
 								]
 							],
 							done : function(res, curr, count){
-								console.log(res)
+								//console.log(res)
 								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
@@ -192,18 +192,22 @@
 								layer.close(index);
 								if(json.code == 200){
 									layer.msg("变更司机招聘审核状态成功",{icon:1,time:1000},function(){
+										driverId = '';
 										page.loadDriverZpList();
 									});
 								}else if(json.code == 50001){
 									layer.msg("修改失败，当前司机招聘信息不存在", {icon:5,anim:6,time:2000});
+									driverId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									driverId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改司机招聘信息审核状态", {icon:5,anim:6,time:1500});
+									driverId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}
@@ -211,6 +215,7 @@
 						});
 					},function(index){
 						data.elem.checked=!checkStatus;
+						driverId = '';
 						form.render();
 						layer.close(index);
 					});
@@ -220,7 +225,6 @@
 						driverId = $(this).attr('driverId');
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
-						checkFlag = true;
 						driverId = $(this).attr('driverId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');
@@ -233,8 +237,13 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
+									driverId = '';
+									checkSta = 0;
+									showSta = 0;
 									page.loadDriverZpList();
 								}
+							},cancel : function(){
+								alert("=----")
 							}
 						});
 					}

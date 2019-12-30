@@ -37,19 +37,19 @@
 						<div class="layui-form-item">
 							<label class="layui-form-label"><span class="mustItem">*</span>选择地区</label>
 							<input type="hidden" id="provInp" />
-							<div class="itemDet_1">
+							<div class="itemDet">
 								<select id="provinceSel" name="province" lay-filter="province">
 									<option value="">请选择省</option>
 								</select>
 							</div>
-							<!--div class="itemDet">
+							<div class="itemDet">
 								<input type="hidden" id="cityInp" />
 								<select id="citySel" name="city" lay-filter="city" disabled></select>
 							</div>
 							<div class="itemDet">
 								<input type="hidden" id="countyInp" />
 								<select id="areaSel" name="area" lay-filter="area" disabled></select>
-							</div-->
+							</div>
 						</div>
 						<div class="layui-form-item addEditItem">
 							<label class="layui-form-label">液厂联系人</label>
@@ -328,8 +328,8 @@
 							var factoryName = $.trim( $('#factoryName').val() ),
 								lqTypeInp = $('#lqTypeInp').val(),
 								provInp = $('#provInp').val(),
-								//cityInp = $('#cityInp').val(),
-								//countyInp = $('#countyInp').val(),
+								cityInp = $('#cityInp').val(),
+								countyInp = $('#countyInp').val(),
 								lxrNameInp = $.trim($('#lxrNameInp').val()),
 								phoneNumInp = $.trim($('#phoneNumInp').val()),
 								facAddInp = $.trim( $('#facAddInp').val() ),
@@ -343,6 +343,10 @@
 								layer.msg('请选择液质类型');
 							}else if(provInp == ''){
 								layer.msg('请选择省份');
+							}else if(cityInp == ''){
+								layer.msg('请选择市');
+							}else if(countyInp == ''){
+								layer.msg('请选择县/区');
 							}else if(phoneNumInp != '' && !regPhone.test(phoneNumInp) && phoneNumInp.length != 11){
 								layer.msg('手机号码格式不对，请重新填写');
 							}else{
@@ -354,12 +358,13 @@
 								}
 								layer.load('1');
 								if(globalOpts == 'addBtn'){
-									var field = {name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:succFacUrl,city:'',county:'',address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
+									var field = {name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:succFacUrl,city:cityInp,county:countyInp,address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
 									var url = '/gsf/addGasFactory',type='post';
 								}else{
-									var field = {gfId:gfId,name:factoryName,gasTypeId:lqTypeInp, province:provInp,facImage:succFacUrl,city:'',county:'',address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
+									var field = {gfId:gfId,name:factoryName,gasTypeId:lqTypeInp, province:provInp,city:cityInp,county:countyInp,facImage:succFacUrl,address:facAddInp,lxName:lxrNameInp,lxTel:phoneNumInp,yzbgImg:yzbgImg};
 									var url = '/gsf/upGasFactory',type='put';
 								}
+								console.log( field )
 								$.ajax({
 									type:type,
 									data : field,
@@ -417,8 +422,14 @@
 					renderLqFacInfo : function(list){
 						console.log(list)
 						$('#factoryName').val(list[0].name);
+						$('#citySel').attr('disabled',false);
+						$('#areaSel').attr('disabled',false);
 						$('#provInp').val(list[0].province);
+						$('#cityInp').val(list[0].city);
+						$('#countyInp').val(list[0].county);
 						provVal = list[0].province;
+						cityVal = list[0].city;
+						countyVal = list[0].county;
 						$('#lqTypeSel').val(list[0].gasTypeId);
 						$('#lqTypeInp').val(list[0].gasTypeId);
 						

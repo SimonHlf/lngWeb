@@ -96,6 +96,8 @@
 						var _this = this;
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
+							ptId = '';potVol = '';sxInfo='';zzjzTypeId='';
+							checkSta = 0;
 							_this.commonLayer();
 						});
 					},
@@ -125,7 +127,6 @@
 						var checkStaInp = $('#checkStaInp').val(),
 							tankBandInp = $('#tankBandInp').val();
 						var field = {potPpId:ptId,potVol:potVol,sxInfo:sxInfo,zzjzTypeId:zzjzTypeId,checkSta:checkSta};
-						console.log(field)
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
@@ -243,10 +244,12 @@
 									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									ptId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改储罐租卖信息审核状态", {icon:5,anim:6,time:1500});
+									ptId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}
@@ -254,6 +257,7 @@
 						});
 					},function(index){
 						data.elem.checked=!checkStatus;
+						ptId = '';
 						form.render();
 						layer.close(index);
 					});
@@ -264,7 +268,6 @@
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
-						checkFlag = true;
 						ptId = $(this).attr('ptId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');

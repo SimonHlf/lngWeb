@@ -121,7 +121,7 @@
 				<label class="layui-form-label"><span class="mustItem">*</span>铅封信息</label>
 				<div class="layui-input-block comInpItem innerQianfeng">
 					<div class="qianfengItem">
-						<input type="text" id="qfTxtInp1" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<input type="text" id="qfTxtInp1" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off" maxlength="30"/>
 						<a href="javascript:void(0)" id="addImgBtn_qfImg1" class="addQfImgBtn" title="请添加铅封图片">
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg1"/>
@@ -130,7 +130,7 @@
 					</div>
 					
 					<div class="qianfengItem">
-						<input type="text" id="qfTxtInp2" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<input type="text" id="qfTxtInp2" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off" maxlength="30"/>
 						<a href="javascript:void(0)" id="addImgBtn_qfImg2" class="addQfImgBtn" title="请添加铅封图片">
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg2"/>
@@ -139,7 +139,7 @@
 					</div>
 					
 					<div class="qianfengItem noMargR">
-						<input type="text" id="qfTxtInp3" placeholder="请输入铅封文字信息" class="layui-input"/>
+						<input type="text" id="qfTxtInp3" placeholder="请输入铅封文字信息" class="layui-input" autocomplete="off" maxlength="30"/>
 						<a href="javascript:void(0)" id="addImgBtn_qfImg3" class="addQfImgBtn" title="请添加铅封图片">
 							<i class="iconfont icon-add"></i>
 							<img id="thubImg_qfImg3"/>
@@ -274,7 +274,6 @@
 						    url:"/gasTrade/getSpecGasTradeDetail",
 						    success:function (json){
 						    	layer.closeAll('loading');
-								console.log(json)
 								if(json.code == 200){
 									_this.renderRqTradeInfo(json.datas[0]);
 								}else if(json.code == 1000){
@@ -288,6 +287,7 @@
 						});
 					},
 					renderRqTradeInfo : function(list){
+						console.log(list)
 						var provInpStr = '';
 						var cpyStr = '<option value="">请选择贸易商</option>';
 						var lqFacStr = '<option value="">请选择液厂</option>';
@@ -322,6 +322,7 @@
 						$('#lqTypeInp').val(list.gasTypeId);
 						mainImgSucc = list.headImg.replace('_small','');
 						$('#thubImg_main').show().attr('src','../' + list.headImg);
+						console.log(mainImgSucc)
 						$('#viewMainBigImg').show();
 						$('#cardTitInp').val(list.cpNo.substr(0,1));
 						$('#cardWordsInp').val(list.cpNo.substr(1,1));
@@ -435,7 +436,9 @@
 					bindEvent : function(){
 						var _this = this;
 						$('#viewMainBigImg').on('click',function(){
-							_this.viewOriginImg(mainImgSucc);
+							var oldSrc =  $('#thubImg_main').attr('src');
+							var newSrc = oldSrc.replace('_small','');
+							window.open(newSrc);
 						});
 						$('#viewBigImg_qfImg1').on('click',function(){
 							_this.viewOriginImg(qfImgSucc1);

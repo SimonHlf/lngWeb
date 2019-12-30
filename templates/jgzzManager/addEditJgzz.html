@@ -25,11 +25,12 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts;
-			var jgzzId = parent.testId,jgzzName = parent.jgzzName,validStatus = parent.validStatus;
+			var jgzzId = parent.testId,jgzzName = parent.jgzzName;
+			var tmpVal = 0;
 			layui.use(['form','layer'],function(){
 				var layer = layui.layer,form = layui.form;
 				form.on('radio(validStatus)', function(data){
-					validStatus = data.value;
+					tmpVal = Number(data.value);
 				});
 				var page = {
 					init : function(){
@@ -57,11 +58,11 @@
 								//var reg = /^[\u4E00-\u9FA5]+$/; 
 								var url = "",type = '';
 								if(globalOpts == "addBtn"){
-									var field = {name : inpRoleName,validstatus :validStatus};
+									var field = {name : inpRoleName,validStatus :tmpVal};
 									url = "/qual/addQual";
 									type = 'post';
 								}else{
-									var field = {qId : jgzzId,name : inpRoleName,validstatus : validStatus};
+									var field = {qId : jgzzId,name : inpRoleName,validStatus : tmpVal};
 									url = "/qual/updateQual";
 									type = 'put';
 								}

@@ -52,7 +52,7 @@
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var driverId='',checkFlag = false,addEditFlag = false,currPage='driverQzListPage';
-			var checkSta = 1; 
+			var checkSta = 0; 
 			layui.config({
 				base: '/js/frame/js/'
 			}).use(['layer','table','form','basicInfo'],function(){
@@ -67,15 +67,15 @@
 				});
 				var page = {
 					init : function(){
-						this.bindEvent();
 						basicInfo.createJzType();
 						this.loadDriverZpList();
+						this.bindEvent();
 					},
 					bindEvent : function(){
 						var _this = this;
-						$('#addTruckTrade').on('click',function(){
-							globalOpts = 'addBtn';
-							_this.commonLayer();
+						$('#queryBtn').on('click',function(){
+							driverId = '';
+							_this.loadDriverZpList();
 						});
 					},
 					commonLayer : function(){
@@ -146,7 +146,7 @@
 								]
 							],
 							done : function(res, curr, count){
-								console.log(res)
+								//console.log(res)
 								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
@@ -183,6 +183,7 @@
 								layer.close(index);
 								if(json.code == 200){
 									layer.msg("变更司机求职审核状态成功",{icon:1,time:1000},function(){
+										driverId = '';
 										page.loadDriverZpList();
 									});
 								}else if(json.code == 50001){
@@ -202,6 +203,7 @@
 						});
 					},function(index){
 						data.elem.checked=!checkStatus;
+						driverId = '';
 						form.render();
 						layer.close(index);
 					});
@@ -211,7 +213,6 @@
 						driverId = $(this).attr('driverId');
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
-						checkFlag = true;
 						driverId = $(this).attr('driverId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');
@@ -224,6 +225,7 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
+									driverId = '';
 									page.loadDriverZpList();
 								}
 							}

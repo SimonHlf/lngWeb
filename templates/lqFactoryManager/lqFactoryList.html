@@ -94,7 +94,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var owerUserId = 0,checkStatus=-1,addEditFlag = false,globalOpts='',gfId=0,checkFlag=false;
+			var checkStatus=-1,addEditFlag = false,globalOpts='',gfId=0,checkFlag=false;
 			layui.use(['layer','table','form'],function(){
 				var layer = layui.layer,form = layui.form,table=layui.table;
 				form.on('select(lqTypeSel)',function(data){
@@ -137,6 +137,7 @@
 						var _this = this;
 						$('#addFactory').on('click',function(){
 							globalOpts = 'addBtn';
+							checkStatus = -1;
 							_this.commonLayer();
 						});
 						$('#queryBtn').on('click',function(){
@@ -306,20 +307,24 @@
 									});
 								}else if(json.code == 50001){
 									layer.msg("修改失败，当前液厂不存在", {icon:5,anim:6,time:2000});
+									checkStatus = -1;
 									data.elem.checked=!currCheckStatus;
 									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									checkStatus = -1;
 									data.elem.checked=!currCheckStatus;
 									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改液厂审核状态", {icon:5,anim:6,time:1500});
+									checkStatus = -1;
 									data.elem.checked=!currCheckStatus;
 									form.render();
 								}
 							}
 						});
 					},function(index){
+						checkStatus = -1;
 						data.elem.checked=!currCheckStatus;
 						form.render();
 						layer.close(index);

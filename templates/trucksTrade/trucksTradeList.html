@@ -78,6 +78,9 @@
 						var _this = this;
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
+							checkSta = 0;
+							ttId = 0;
+							showSta = 0;
 							_this.commonLayer();
 						});
 					},
@@ -203,18 +206,22 @@
 								if(json.code == 200){
 									layer.msg("变更槽车租卖审核状态成功",{icon:1,time:1000},function(){
 										//checkStatus = -1;
+										ttId = 0;
 										page.loadTrucksTradeList();
 									});
 								}else if(json.code == 50001){
 									layer.msg("修改失败，当前槽车租卖信息不存在", {icon:5,anim:6,time:2000});
+									ttId = 0;
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									ttId = 0;
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改槽车租卖信息审核状态", {icon:5,anim:6,time:1500});
+									ttId = 0;
 									data.elem.checked=!checkStatus;
 									form.render();
 								}
@@ -222,6 +229,7 @@
 						});
 					},function(index){
 						data.elem.checked=!checkStatus;
+						ttId = 0;
 						form.render();
 						layer.close(index);
 					});
@@ -232,7 +240,6 @@
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
-						checkFlag = true;
 						ttId = $(this).attr('ttId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');

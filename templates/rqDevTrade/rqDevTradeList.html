@@ -97,6 +97,10 @@
 						var _this = this;
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
+							ptId='';
+							lmId = '';
+							zlId='';
+							compId = '';
 							_this.commonLayer();
 						});
 					},
@@ -208,14 +212,17 @@
 									});
 								}else if(json.code == 50001){
 									layer.msg("修改失败，当前燃气设备信息不存在", {icon:5,anim:6,time:2000});
+									ptId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 1000){
 									layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									ptId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}else if(json.code == 70001){
 									layer.msg("抱歉，您暂无权限修改燃气设备信息审核状态", {icon:5,anim:6,time:1500});
+									ptId = '';
 									data.elem.checked=!checkStatus;
 									form.render();
 								}
@@ -224,6 +231,7 @@
 					},function(index){
 						data.elem.checked=!checkStatus;
 						form.render();
+						ptId = '';
 						layer.close(index);
 					});
 				});
@@ -233,7 +241,7 @@
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'verifyInfo'){
-						checkFlag = true;
+						checkFlag = false;
 						ptId = $(this).attr('ptId'),
 						checkSta = $(this).attr('checkSta');
 						showSta = $(this).attr('showSta');
@@ -246,6 +254,11 @@
 							content: '../trucksTrade/verifyTruckTrade.html',
 							end : function(){
 								if(checkFlag){
+									checkSta = 0;
+									ptId='';
+									lmId = '';
+									zlId='';
+									compId = '';
 									page.loadRqDevTradeList();
 								}
 							}
