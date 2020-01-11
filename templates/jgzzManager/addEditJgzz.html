@@ -58,11 +58,11 @@
 								//var reg = /^[\u4E00-\u9FA5]+$/; 
 								var url = "",type = '';
 								if(globalOpts == "addBtn"){
-									var field = {name : inpRoleName,validStatus :tmpVal};
+									var field = {name : inpRoleName,validstatus :tmpVal};
 									url = "/qual/addQual";
 									type = 'post';
 								}else{
-									var field = {qId : jgzzId,name : inpRoleName,validStatus : tmpVal};
+									var field = {qId : jgzzId,name : inpRoleName,validstatus : tmpVal};
 									url = "/qual/updateQual";
 									type = 'put';
 								}
@@ -106,7 +106,7 @@
 					loadJgzzInfo : function(){
 						$('#inpJgzzName').val(jgzzName);
 						$('input[name=validStatus]').each(function(i){
-							if($('input[name=validStatus]').eq(i).val() == validStatus){
+							if($('input[name=validStatus]').eq(i).val() == parent.validStatus){
 								$('input[name=validStatus]').eq(i).attr('checked',true);
 							}
 						});

@@ -12,7 +12,7 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label"><span class="mustItem">*</span>新闻标题</label>
 				<div class="layui-input-block comInpItem">
-					<input id="volumeInp" type="text" placeholder="请输入新闻标题(50字内)" class="layui-input" autocomplete="off" maxlength="50"/>
+					<input id="newsTit" type="text" placeholder="请输入新闻标题(50字内)" class="layui-input" autocomplete="off" maxlength="50"/>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -54,15 +54,76 @@
 						this.bindEvent();
 						if(globalOpts == 'editBtn'){
 							var _this = this;
-						}else{
-							UE.delEditor('newsEditor');
-							this.initUeditor('newsEditor');//初始化富文本
+							this.loadNewsCon();
 						}
+						UE.delEditor('newsEditor');
+						this.initUeditor('newsEditor');//初始化富文本
+					},
+					loadNewsCon : function(){
+						var _this = this;
+						layer.load('1');
+						$.ajax({
+						    type:"get",
+							data : {id:parent.newsId},
+						    dataType:"json",
+						    url:'/MsgCenter/getSpecMsgDetail',
+						    success:function (json){
+						    	layer.closeAll('loading');
+								if(json.code == 200){
+									$('#newsTit').val(json.datas[0].title);
+									_this.initUeditorContent('newsEditor',json.datas[0].content);
+								}else if(json.code == 1000){
+									layer.msg('服务器错误');
+								}else if(json.code == 50001){
+									layer.msg('当前新闻资讯不存在');
+								}
+						    }
+						});
 					},
 					bindEvent : function(){
-						
 						$('#saveBtn').on('click',function(){
-							
+							var newsTit = $.trim($('#newsTit').val()),
+								currUeEditCon = UE.getEditor('newsEditor').getContent(),
+								index = parent.layer.getFrameIndex(window.name),url = '',field = null,type = '';
+							if(newsTit == ''){
+								layer.msg('请输入新闻标题');
+								return;
+							}
+							if(currUeEditCon == ''){
+								layer.msg('请输入新闻内容');
+								return;
+							}
+							layer.load('1');
+							if(globalOpts == 'addBtn'){
+								url = '/MsgCenter/sendMessage';
+								field = { title:newsTit,content:currUeEditCon,msgType:1};
+								type = 'post'
+							}else{
+								url = '/MsgCenter/updateDetailById';
+								field = {id:parent.newsId,title:newsTit,content:currUeEditCon};
+								type = 'put'
+							}
+							$.ajax({
+							    type:type,
+								data : field,
+							    dataType:"json",
+							    url:url,
+							    success:function (json){
+							    	layer.closeAll('loading');
+									if(json.code == 200){
+										var title = globalOpts == 'addBtn' ? '添加新闻资讯成功' : '编辑新闻资讯成功';
+										layer.msg(title,{icon:1,time:1000},function(){
+											parent.addEditFlag = true;
+											parent.newsId = 0;
+											parent.layer.close(index);
+										});
+									}else if(json.code == 1000){
+										layer.msg('服务器错误');
+									}else if(json.code == 70001){
+										layer.msg('抱歉，您暂无对新闻资讯添加或编辑的权限');
+									}
+							    }
+							});
 						});
 					}
 				};

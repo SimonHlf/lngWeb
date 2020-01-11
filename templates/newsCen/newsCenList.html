@@ -34,7 +34,7 @@
 		<script type="text/javascript" src="../js/jquery-1.8.3.min.js" charset="utf-8"></script>
 		<script src="../js/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			var globalOpts = '',addEditFlag = false;
+			var globalOpts = '',addEditFlag = false,newsId = 0;
 			layui.use(['layer','table','form'],function(){
 				var layer = layui.layer,table = layui.table,form = layui.form;
 				form.on('radio(checkStaFilter)',function(data){
@@ -54,8 +54,11 @@
 						});
 					},
 					commonLayer : function(){
-						addEditFlag = true;
-						var title = globalOpts == 'addBtn' ? '添加新闻资讯' : '编辑新闻资讯'
+						addEditFlag = false;
+						var title = globalOpts == 'addBtn' ? '添加新闻资讯' : '编辑新闻资讯';
+						if(globalOpts == 'addBtn'){
+							newsId = 0;
+						}
 						var fullScreenIndex = layer.open({
 							title : title,
 							type: 2,
@@ -96,59 +99,27 @@
 							even : true,
 							text: {none : '暂无相关数据'},
 							limits:[10,20,30,40],
-							cellMinWidth:200,
+							cellMinWidth:260,
 							cols : [
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
-									{field : 'TradeTypeName', title: '贸易类型',align:'center',templet : function(d){
-										var str = '';
-										if(d.checkStatus == 1){//通过
-											str += '<span class="currCheckFlag passBg"></span>';
-										}else if(d.checkStatus == 2){//不通过
-											str += '<span class="currCheckFlag noPassBg"></span>';
-										}
-										if(d.tradeStatus == 0){
-											str += '<span>可租可卖</span>';
-										}else if(d.tradeStatus == 1){
-											str += '<span>租</span>';
-										}else if(d.tradeStatus == 2){
-											str += '<span>卖</span>';
-										}
-										return str;
-									}},
-									{field : 'cpyName', title: '公司名称', align:'center'},
-									{field : 'potPpName', title: '储罐品牌',align:'center'},
-									{field : 'potVol', title: '储罐容积',align:'center',templet:function(d){
-										return d.potVol + 'm³';
-									}},
-									{field : 'sxInfo', title: '有无手续',align:'center',templet:function(d){
-										if(d.sxInfo == 1){
-											return '<span class="hasCol">有</span>';
-										}else{
-											return '<span class="hasNotCol">无</span>';
-										}
-									}},
-									{field : 'leasePrice', title: '租卖价格',align:'center',templet:function(d){
-										return d.leasePrice + '元';
-									}},
-									{field : 'sellPrice', title: '销售价格',align:'center',templet:function(d){
-										return d.sellPrice + '元';
-									}},
+									{field : 'title', title: '新闻标题', align:'center'},
+									{field : 'addUserName', title: '添加人', align:'center'},
+									{field : 'addTime', title: '添加时间',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
-										str += '<a href="javascript:void(0)" style="margin-right:10px" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+										str += '<a href="javascript:void(0)" style="margin-right:10px" newsId="'+ d.id +'" lay-event="editInfo" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
 										if(d.showStatus == 0){//显示
-											str += '<input type="checkbox" name="checkStaName" value="1" checkSta="1" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏" checked>';
+											str += '<input type="checkbox" name="checkStaName" value="1" newsId="'+ d.id +'" showSta="1" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏" checked>';
 										}else if(d.showStatus == 1){//隐藏
-											str += '<input type="checkbox" name="checkStaName" value="2" checkSta="0" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏"/>';
+											str += '<input type="checkbox" name="checkStaName" value="0" newsId="'+ d.id +'" showSta="0" lay-skin="switch" lay-filter="verifyInfo_spec" lay-text="显示|隐藏"/>';
 										}
-										str += '<a href="javascript:void(0)" style="margin-right:10px" lay-event="delInfo" class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>';
+										str += '<a href="javascript:void(0)" style="margin-left:10px" newsId="'+ d.id +'" newsTit="'+ d.title +'" lay-event="delInfo" class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>';
 										return str;
 									}}
 								]
 							],
 							done : function(res, curr, count){
-								console.log(res)
 								$('.layui-table-fixed').removeClass('layui-hide');
 								layer.closeAll('loading');
 							}
@@ -156,14 +127,12 @@
 					}
 				};
 				form.on('switch(verifyInfo_spec)',function(data){
-					var checkSta = $(this).attr('checkSta'),
-						showSta = $(this).attr('showSta');
+					var showSta = $(this).attr('showSta'),newsId = $(this).attr('newsId');
 					var currTit = '';
 					var checkStatus = data.elem.checked;
-					ptId = $(this).attr('ptId');
-					if(checkSta == 1){//审核通过
+					if(showSta == 0){//审核通过
 						currTit = '<span style="color:green;">显示</span>';
-					}else if(checkSta == 2){//审核不通过
+					}else if(showSta == 1){//审核不通过
 						currTit = '<span style="color:red;">隐藏</span>';
 					}
 					layer.confirm('是否要将当前新闻资讯信息显示状态变更为['+ currTit +']?', {
@@ -174,12 +143,12 @@
 					},function(index){
 						data.elem.checked = checkStatus;
 						layer.load();
-						var field = {id:ptId,checkSta:checkSta,showSta:showSta};
+						var field = {id:newsId,showSta:showSta};
 						$.ajax({
 							type:'PUT',
 							dataType:"json",
 							data :field,
-							url:'/potTrade/updatePotTradeByStatus',
+							url:'/MsgCenter/updateByshowSta',
 							success:function (json){
 								layer.closeAll('loading');
 								layer.close(index);
@@ -210,27 +179,43 @@
 				});
 				table.on('tool(truckTradeTab)',function(obj){
 					if(obj.event == 'editInfo'){
-						//ptId = $(this).attr('ptId');
+						newsId = $(this).attr('newsId');
 						globalOpts = 'editBtn';
 						page.commonLayer();
 					}else if(obj.event == 'delInfo'){
-						/*ptId = $(this).attr('ptId'),
-						checkSta = $(this).attr('checkSta');
-						showSta = $(this).attr('showSta');
-						layer.open({
-							title : '审核槽车租卖信息',
-							type: 2,
-							skin:'layui-layer-molv', //样式类名
-							closeBtn: 0, //不显示关闭按钮
-							area : ['500px','200px'],
-							content: '../trucksTrade/verifyTruckTrade.html',
-							end : function(){
-								if(checkFlag){
-									ptId = '';potVol = '';sxInfo='';zzjzTypeId='';
-									page.loadPotTradeList();
+						var newsTit = $(this).attr('newsTit');
+						newsId = $(this).attr('newsId');
+						layer.confirm('确定要删除新闻[<span style="color:#ff9403;">'+ newsTit +'</span>]吗？', {
+						  title:'提示',
+						  skin: 'layui-layer-molv',
+						  btn: ['确定','取消'] //按钮
+						},function(index){
+							layer.load('1');
+							$.ajax({
+								type:'PUT',
+								dataType:"json",
+								data :{id:newsId},
+								url:'/MsgCenter/delSpecMsg',
+								success:function (json){
+									layer.closeAll('loading');
+									if(json.code == 200){
+										layer.msg("删除新闻资讯" + newsTit + '成功',{icon:1,time:1000},function(){
+											page.loasNewsList();
+											
+										});
+									}else if(json.code == 10002){
+										layer.msg("当前执行方法参数不能为空", {icon:5,anim:6,time:2000});
+									}else if(json.code == 50001){
+										layer.msg("删除失败，当前新闻资讯不存在", {icon:5,anim:6,time:2000});
+									}else if(json.code == 1000){
+										layer.msg("系统错误，请重试", {icon:5,anim:6,time:1000});
+									}else if(json.code == 70001){
+										layer.msg("抱歉，您暂无权限删除当前新闻资讯", {icon:5,anim:6,time:1500});
+									}
+									layer.close(index);
 								}
-							}
-						});*/
+							});
+						});
 					}
 				});
 				page.init();
