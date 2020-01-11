@@ -448,6 +448,7 @@ layui.define(['form'],function(exports){
 		},
 		//获取公司押运员 司机
 		getCompYyy : function(cpyId){
+			console.log(cpyId)
 			var _this = this;
 			$.ajax({
 			    type:"get",

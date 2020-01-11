@@ -104,6 +104,15 @@
 								[
 									{field : '', title: '序号',type:'numbers', align:'center'},
 									{field : 'title', title: '新闻标题', align:'center'},
+									{field : 'title', title: '是否显示', align:'center',templet:function(d){
+										var str = '';
+										if(d.showStatus == 0){
+											str += '<span class="showTxt">显示</span>';
+										}else if(d.showStatus == 1){
+											str += '<span class="hideTxt">隐藏</span>';
+										}
+										return str;
+									}},
 									{field : 'addUserName', title: '添加人', align:'center'},
 									{field : 'addTime', title: '添加时间',align:'center'},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){

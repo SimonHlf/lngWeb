@@ -291,3 +291,9 @@ body.hasMargTop{
 .resetBtn:hover i{
 	color: #009688;
 }
+.showTxt{
+	color:#01AAED ;
+}
+.hideTxt{
+	color:#FF5722 ;
+}

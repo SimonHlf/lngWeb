@@ -10,6 +10,15 @@
 	<body>
 		<div class="truckTradeWrap layui-form">
 			<div class="layui-form-item">
+				<label class="layui-form-label">新闻缩略图</label>
+				<div class="layui-input-block">
+					<a id="addImgBtn_main" href="javascript:void(0)" class="upMainImg">
+						<i class="iconfont icon-add"></i>
+						<img id="thubImg_main"/>
+					</a>
+				</div>
+			</div>
+			<div class="layui-form-item">
 				<label class="layui-form-label"><span class="mustItem">*</span>新闻标题</label>
 				<div class="layui-input-block comInpItem">
 					<input id="newsTit" type="text" placeholder="请输入新闻标题(50字内)" class="layui-input" autocomplete="off" maxlength="50"/>
@@ -33,8 +42,9 @@
 		<script src="../js/ueditor/ueditor.all.min.js"></script>
 		<script type="text/javascript">
 			var globalOpts = parent.globalOpts;
-			layui.use(['layer','form'],function(){
-				var layer = layui.layer,form = layui.form;
+			var mainImgSucc = '';
+			layui.use(['layer','form','upload'],function(){
+				var layer = layui.layer,form = layui.form,upload = layui.upload;
 				var page = {
 					initUeditor : function(id){
 						UE.getEditor(id,{
@@ -52,12 +62,30 @@
 					},
 					init : function(){
 						this.bindEvent();
+						this.uploadMainImg();
 						if(globalOpts == 'editBtn'){
 							var _this = this;
 							this.loadNewsCon();
 						}
 						UE.delEditor('newsEditor');
 						this.initUeditor('newsEditor');//初始化富文本
+					},
+					uploadMainImg : function(){
+						upload.render({
+						    elem: '#addImgBtn_main'
+						    ,url: '/upload/uploadSingle'
+							,method : 'post'
+						    ,accept : 'images'
+							,auto: true
+							,before: function(obj){
+								layer.load();
+						    }
+						    ,done: function(res){
+								layer.closeAll('loading');
+							    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+							    mainImgSucc = res.datas;
+						    }
+						});
 					},
 					loadNewsCon : function(){
 						var _this = this;
@@ -68,8 +96,11 @@
 						    dataType:"json",
 						    url:'/MsgCenter/getSpecMsgDetail',
 						    success:function (json){
+								console.log(json)
 						    	layer.closeAll('loading');
 								if(json.code == 200){
+									$('#thubImg_main').show().attr('src','../' + json.datas[0].mainImg);
+									mainImgSucc = json.datas[0].mainImg;
 									$('#newsTit').val(json.datas[0].title);
 									_this.initUeditorContent('newsEditor',json.datas[0].content);
 								}else if(json.code == 1000){
@@ -94,13 +125,21 @@
 								return;
 							}
 							layer.load('1');
+							var tmpMainImgSucc = $('#thubImg_main').attr('src');
+							if(tmpMainImgSucc != undefined){
+								if(tmpMainImgSucc.indexOf('defaultNewsImg') > 0){
+									tmpMainImgSucc = '';
+								}else{
+									tmpMainImgSucc = mainImgSucc;
+								}
+							}
 							if(globalOpts == 'addBtn'){
 								url = '/MsgCenter/sendMessage';
-								field = { title:newsTit,content:currUeEditCon,msgType:1};
+								field = { title:newsTit,content:currUeEditCon,msgType:1,mainImg:tmpMainImgSucc};
 								type = 'post'
 							}else{
 								url = '/MsgCenter/updateDetailById';
-								field = {id:parent.newsId,title:newsTit,content:currUeEditCon};
+								field = {id:parent.newsId,title:newsTit,content:currUeEditCon,mainImg:tmpMainImgSucc};
 								type = 'put'
 							}
 							$.ajax({
