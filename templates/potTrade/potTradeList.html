@@ -95,6 +95,9 @@
 					},
 					bindEvent : function(){
 						var _this = this;
+						$('#queryBtn').on('click',function(){
+							_this.loadPotTradeList();
+						});
 						$('#addTruckTrade').on('click',function(){
 							globalOpts = 'addBtn';
 							ptId = '';potVol = '';sxInfo='';zzjzTypeId='';

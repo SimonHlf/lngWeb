@@ -39,7 +39,7 @@
 				<li class="layui-nav-item">
 					<a href="javascript:;">
 						<i class="layui-icon layui-icon-username headsmIcon"></i>
-						<span id="userName">黄利峰</span><span class="layui-nav-more"></span>
+						<span id="userName" th:text="${session.login_real_name}"></span><span class="layui-nav-more"></span>
 					</a>
 					<dl class="layui-nav-child">
 						<dd class="navLi"><a href="javascript:void(0)" tab-id="5" path="goPerInfoPage">基本资料设置</a></dd>
