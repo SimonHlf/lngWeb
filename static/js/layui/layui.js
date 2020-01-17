@@ -11,8 +11,15 @@
                  while (win != win.top){
                      win = win.top;
                  }
-			alert("由于您60分钟内没上线，系统已强制您下线，请重新登录！");
-			win.location.href= XMLHttpRequest.getResponseHeader("CONTEXTPATH");
-        }
+				alert("由于您60分钟内没上线，系统已强制您下线，请重新登录！");
+				win.location.href= XMLHttpRequest.getResponseHeader("CONTEXTPATH");
+			}else if(sessionstatus == "BASY"){
+				var win = window;
+                 while (win != win.top){
+                     win = win.top;
+                 }
+				alert("该账号已在别处登录，请重新登录！");
+				win.location.href= XMLHttpRequest.getResponseHeader("CONTEXTPATH");
+			}
 	}
  });
