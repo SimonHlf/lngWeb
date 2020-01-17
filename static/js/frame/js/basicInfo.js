@@ -19,9 +19,9 @@ layui.define(['form'],function(exports){
 		getCompanyList : function(){
 			var _this = this;
 			if(currPage == 'addEditRqTradePage'){
-				var field = {typeName:'LNG贸易商'};
+				var field = {typeName:'LNG贸易商',checkStatus:1};
 			}else{
-				var field = {};
+				var field = {checkStatus : 1};
 			}
 			$.ajax({
 			    type:"get",

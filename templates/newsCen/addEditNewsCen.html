@@ -96,7 +96,6 @@
 						    dataType:"json",
 						    url:'/MsgCenter/getSpecMsgDetail',
 						    success:function (json){
-								console.log(json)
 						    	layer.closeAll('loading');
 								if(json.code == 200){
 									$('#thubImg_main').show().attr('src','../' + json.datas[0].mainImg);

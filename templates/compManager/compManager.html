@@ -16,10 +16,11 @@
 						<span class="itemDivs">公司管理</span>
 					</div>
 					<div class="layui-card-body">
-						<input type="hidden" id="checkStaInp" value="-1" />
+						<input type="hidden" id="checkStaInp" value="0" />
 						<div class="filterWrap layui-form layui-clear" style="margin-bottom: 20px;margin-top: 10px;">
 							<div class="filterItem">
-								<input type="radio" name="validStatus" value="-1" title="全部" lay-filter="checkStaFilter" checked/>
+								<!-- <input type="radio" name="validStatus" value="-1" title="全部" lay-filter="checkStaFilter" checked/> -->
+								<input type="radio" name="validStatus" value="0" title="未审核" lay-filter="checkStaFilter" checked/>
 								<input type="radio" name="validStatus" value="1" title="审核通过" lay-filter="checkStaFilter"/>
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>

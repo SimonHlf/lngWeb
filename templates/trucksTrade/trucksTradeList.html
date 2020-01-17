@@ -27,7 +27,7 @@
 								<input type="radio" name="validStatus" value="2" title="审核未通过" lay-filter="checkStaFilter"/>
 							</div>
 							<div class="filterItemSel layui-form" style="width: 140px;">
-								<input type="hidden" id="tradeTypeInp" value=""/>
+								<input type="hidden" id="tradeTypeInp" value="-1"/>
 								<select id="tradeTypeSel" lay-filter="tradeTypeSel">
 									<option value="">请选择贸易类型</option>
 									<option value="1">租赁</option>
@@ -110,6 +110,7 @@
 						layer.load();
 						var tradeTypeInp = $('#tradeTypeInp').val();
 						var field = {tradeType:tradeTypeInp,checkSta:checkSta};
+						console.log(field)
 						table.render({
 							elem: '#truckTradeTab',
 							height: 'full-200',
