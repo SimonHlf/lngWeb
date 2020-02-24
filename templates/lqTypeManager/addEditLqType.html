@@ -52,7 +52,7 @@
 						    }
 						    ,done: function(res){
 								layer.closeAll('loading');
-							    $('#thumbnailImg').show().attr('src','/temp/' + res.datas);
+							    $('#thumbnailImg').show().attr('src','/tempImg/' + res.datas);
 							    $('.viewBigImg').show();
 							    succUrl = res.datas;
 						    }
@@ -69,7 +69,7 @@
 						//查看原图
 						$('.viewBigImg').on('click',function(){
 							if(globalOpts == 'addBtn'){
-								window.open('/temp/' + succUrl);
+								window.open('/tempImg/' + succUrl);
 							}else{
 								window.open('../' + succUrl);
 							}

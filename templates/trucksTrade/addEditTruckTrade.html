@@ -673,7 +673,7 @@
 							    }
 							    ,done: function(res){
 									layer.closeAll('loading');
-								    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+								    $('#thubImg_main').show().attr('src','/tempImg/' + res.datas);
 								    $('.viewMainBigImg').show();
 								    mainImgSucc = res.datas;
 							    }
@@ -694,7 +694,7 @@
 								    }
 								    ,done: function(res){
 										layer.closeAll('loading');
-									    $('#thubImg_' + idBehind).show().attr('src','/temp/' + res.datas);
+									    $('#thubImg_' + idBehind).show().attr('src','/tempImg/' + res.datas);
 										$('#viewBigImg_' + idBehind).show();
 										if(idBehind == 'headXsz'){
 											headXszSucc = res.datas;
@@ -721,7 +721,7 @@
 						},
 						viewOriginImg : function(succUrl){
 							if(globalOpts == 'addBtn'){
-								window.open('/temp/' + succUrl);
+								window.open('/tempImg/' + succUrl);
 							}else{
 								window.open('../' + succUrl);
 							}

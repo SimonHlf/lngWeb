@@ -428,7 +428,7 @@
 					},
 					viewOriginImg : function(succUrl){
 						if(globalOpts == 'addBtn'){
-							window.open('/temp/' + succUrl);
+							window.open('/tempImg/' + succUrl);
 						}else{
 							window.open('../' + succUrl);
 						}
@@ -635,7 +635,7 @@
 						    }
 						    ,done: function(res){
 								layer.closeAll('loading');
-							    $('#'+imgObj).show().attr('src','/temp/' + res.datas);
+							    $('#'+imgObj).show().attr('src','/tempImg/' + res.datas);
 							    $('#' + viewObj).show().css({'display':'block'});
 								if(succOpt == 'mainImg'){
 									mainImgSucc = res.datas;

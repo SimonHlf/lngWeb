@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="../js/layui/css/layui.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/addEditTruckTrade.css"/>
 		<title>添加/编辑槽车租卖</title>
-	</head>
+	</head> 
 	<body>
 		<div class="truckTradeWrap layui-form">
 			<div class="layui-form-item addEditItem">
@@ -221,7 +221,6 @@
 						    url:"/potTrade/getPotTradeById",
 						    success:function (json){
 						    	layer.closeAll('loading');
-								console.log(json)
 								if(json.code == 200){
 									_this.renderPotTradeInfo(json.datas[0]);
 								}else if(json.code == 1000){
@@ -318,7 +317,7 @@
 						    }
 						    ,done: function(res){
 								layer.closeAll('loading');
-							    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+							    $('#thubImg_main').show().attr('src','/tempImg/' + res.datas);
 							    $('.viewMainBigImg').show();
 							    mainImgSucc = res.datas;
 						    }
@@ -327,7 +326,7 @@
 					bindEvent : function(){
 						$('.viewMainBigImg').on('click',function(){
 							if(globalOpts == 'addBtn'){
-								window.open('/temp/' + mainImgSucc);
+								window.open('/tempImg/' + mainImgSucc);
 							}else{
 								window.open('../' + mainImgSucc);
 							};

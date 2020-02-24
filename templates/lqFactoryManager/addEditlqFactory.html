@@ -238,7 +238,7 @@
 						    }
 						    ,done: function(res){
 								layer.closeAll('loading');
-							    $('#facThumb').show().attr('src','/temp/' + res.datas);
+							    $('#facThumb').show().attr('src','/tempImg/' + res.datas);
 							    $('.viewBigImg').show();
 							    succFacUrl = res.datas;
 						    }
@@ -283,7 +283,7 @@
 									if(canUpFlag){
 										console.log(res)
 										var str = '';
-										str += '<li><input type="hidden" name="yzbgImgInp" value="'+ res.datas +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span onclick=viewYzbgBigImg(\'/temp/'+ res.datas +'\')>查看原图</span></li>';
+										str += '<li><input type="hidden" name="yzbgImgInp" value="'+ res.datas +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/tempImg/' + res.datas + '"/><span onclick=viewYzbgBigImg(\'/tempImg/'+ res.datas +'\')>查看原图</span></li>';
 										$('#yzBgImgListUl').append(str);
 										maxNum = $('#yzBgImgListUl li').length;
 										if($('#yzBgImgListUl li').length >= 5){
@@ -319,7 +319,7 @@
 						//查看原图
 						$('.viewBigImg').on('click',function(){
 							if(globalOpts == 'addBtn'){
-								window.open('/temp/' + succFacUrl);
+								window.open('/tempImg/' + succFacUrl);
 							}else{
 								window.open('../' + succFacUrl);
 							}

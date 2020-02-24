@@ -224,7 +224,7 @@
 						    }
 						    ,done: function(res){
 								layer.closeAll('loading');
-							    $('#thubImg_main').show().attr('src','/temp/' + res.datas);
+							    $('#thubImg_main').show().attr('src','/tempImg/' + res.datas);
 							    $('.viewMainBigImg').show();
 							    mainImgSucc = res.datas;
 						    }
@@ -233,7 +233,7 @@
 					bindEvent : function(){
 						$('.viewMainBigImg').on('click',function(){
 							if(globalOpts == 'addBtn'){
-								window.open('/temp/' + mainImgSucc);
+								window.open('/tempImg/' + mainImgSucc);
 							}else{
 								window.open('../' + mainImgSucc);
 							};
