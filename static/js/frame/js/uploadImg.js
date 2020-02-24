@@ -45,7 +45,7 @@ layui.define(['upload'],function(exports){
 					if(res.code == 200){
 						if(canUpFlag){
 							var str = '';
-							str += '<li><input type="hidden" name="detImgInp" value="'+ res.datas +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/temp/' + res.datas + '"/><span onclick=viewBigImg(\'/temp/'+ res.datas +'\')>查看原图</span></li>';
+							str += '<li><input type="hidden" name="detImgInp" value="'+ res.datas +'"/><a href="javascript:void(0)" onclick="deleteImg(this)" title="删除"><i class="layui-icon layui-icon-delete"></i></a><img src="/tempImg/' + res.datas + '"/><span onclick=viewBigImg(\'/tempImg/'+ res.datas +'\')>查看原图</span></li>';
 							$('#' + wrapObj).append(str);
 							hasUpNum = $('#' + wrapObj + ' li').length;
 							if($('#' + wrapObj + ' li').length >= maxLen){
