@@ -228,7 +228,7 @@
 			<div id="gasTypeWrap" class="layui-form-item addEditItem">
 				<!-- <input type="hidden" id="gasTypeInp"/> -->
 				<input type="hidden" id="zzjzInp"/>
-				<label class="layui-form-label"><span class="mustItem">*</span>气源类型</label>
+				<label class="layui-form-label"><span class="mustItem">*</span>装载介质</label>
 				<div class="layui-input-block comInpItem">
 					<select id="zzjzSel" lay-filter="zzjzSel">
 						<option value="">请选择装载介质</option>
@@ -372,7 +372,7 @@
 						$('#truckTypeInp').val('');
 						$('#compNameInp').val(''); 
 						page.initCleanAllWhImgSrc();
-						form.render();
+						form.render(); 
 					})
 					//货车类型radio
 					form.on('radio(truckTypeFilter)',function(data){
