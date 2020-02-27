@@ -226,11 +226,12 @@
 			</div>
 			
 			<div id="gasTypeWrap" class="layui-form-item addEditItem">
-				<input type="hidden" id="gasTypeInp"/>
+				<!-- <input type="hidden" id="gasTypeInp"/> -->
+				<input type="hidden" id="zzjzInp"/>
 				<label class="layui-form-label"><span class="mustItem">*</span>气源类型</label>
 				<div class="layui-input-block comInpItem">
-					<select id="gasTypeSel" lay-filter="gasTypeSel">
-						<option value="">请选择气源类型</option>
+					<select id="zzjzSel" lay-filter="zzjzSel">
+						<option value="">请选择装载介质</option>
 					</select>
 				</div>
 			</div>
@@ -385,7 +386,7 @@
 						}else{//危货
 							$('.dangerItemWrap').show();
 							$('#gasTypeWrap').show();
-							basicInfo.getGasType();
+							basicInfo.getZzjz();
 							basicInfo.getTankBrand();
 							$('#truckNameTxt').html('危货车型');
 							laydate.render({'elem':'#potYearInp',trigger: 'click',type:'month'});
@@ -393,7 +394,8 @@
 						//执行加载对应车辆
 						$('#truckTypeNameInp').val('');
 						basicInfo.getTrucksByTruckType(data.value);
-						$('#gasTypeInp').val('');
+						//$('#gasTypeInp').val('');
+						$('#zzjzInp').val('');
 						$('#tankBandInp').val('');
 						$('#volumeInp').val('');
 						$('#potYearInp').val('');
@@ -542,7 +544,7 @@
 							}else if(list.trucksTypes == 2){//危货
 								isRightVolume = true;
 								basicInfo.getTankBrand();
-								basicInfo.getGasType();
+								basicInfo.getZzjz();
 								laydate.render({'elem':'#potYearInp',trigger: 'click',type:'month'});
 								$('#truckNameTxt').html('危货车型');
 								$('.dangerItemWrap').show();
@@ -550,16 +552,15 @@
 								$('#tankBandInp').val(list.potPpId);
 								$('#volumeInp').val(list.potVol);
 								$('#potYearInp').val(list.spYearPot);
-								$('#gasTypeInp').val(list.qyTypeId);
 								setTimeout(function(){
 									$('#tankBandSel option').each(function(i){
 										if($('#tankBandSel option').eq(i).val() == list.potPpId){
 											$('#tankBandSel option').eq(i).attr('selected','selected');
 										}
 									});
-									$('#gasTypeSel option').each(function(i){
-										if($('#gasTypeSel option').eq(i).val() == list.qyTypeId){
-											$('#gasTypeSel option').eq(i).attr('selected','selected');
+									$('#zzjzSel option').each(function(i){
+										if($('#zzjzSel option').eq(i).val() == list.zzjzTypeId){
+											$('#zzjzSel option').eq(i).attr('selected','selected');
 										}
 									});
 									form.render();
@@ -820,7 +821,7 @@
 									lxrNameInp = $.trim($('#lxrNameInp').val()),
 									lxrTel = $.trim($('#lxrTel').val()),
 									wxpfbzInp = $('#wxpfbzInp').val(),
-									gasTypeInp = $('#gasTypeInp').val(),
+									zzjzInp = $('#zzjzInp').val(),
 									remark = $.trim($('#remark').val()),
 									regPhone = /^1\d{10}$/,detImgInpLen = $('input[name=detImgInp]').length,imgDetStr='',jgzzStr='';
 									
@@ -884,8 +885,8 @@
 									layer.msg('运输范围最多只能选择5个地区');
 								}else if(wxpfbzInp == ''){
 									layer.msg('请选择尾气排放标准');
-								}else if(truckTypeInp == 2 && gasTypeInp == ''){
-									layer.msg('请选择气源类型');
+								}else if(truckTypeInp == 2 && zzjzInp == ''){
+									layer.msg('请选择装载介质');
 								}else if(truckTypeInp == 2 && headXszSucc == ''){
 									layer.msg('请上传车头行驶证');
 								}else if(truckTypeInp == 2 && gcXszSucc == ''){
@@ -913,7 +914,7 @@
 									var field = {tradeType:tradeTypeInp,compId:compNameInp,trucksTypeId:truckTypeNameInp,mainImg:mainImgSucc,trucksNo:cardNum,
 												spYear:truckHeadTimeInp,buyYear:truckBuyTime,headTypeId:truckHeadTypeInp,headPpId:truckHeadBrandInp,
 												xsDistance:driveMileInp,wqpfbzId:wxpfbzInp,potPpId:tankBandInp,potVol:volumeInp,spYearPot:potYearInp,
-												lxName:lxrNameInp,lxTel:lxrTel,area:area,qyTypeId:gasTypeInp,remark:remark,accidentFlag:accidentInp,
+												lxName:lxrNameInp,lxTel:lxrTel,area:area,zzjzTypeId:zzjzInp,remark:remark,accidentFlag:accidentInp,
 												tructsHeadxsz:headXszSucc,gcXsz:gcXszSucc,tructsYyz:clyxzSucc,potJyz:cgHgzSucc,aqfbg:aqfjySucc,qualId:jgzzStr,regPlace:signPlace,ttImg:imgDetStr,price:priceNumInp};
 									if(globalOpts == 'addBtn'){
 										url = '/trucksTrade/addTrucksTrade';
