@@ -55,6 +55,15 @@ layui.define(['form'],function(exports){
 			}
 			$('#compNameSel').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					$('#compNameSel option').each(function(i){
+						if($('#compNameSel option').eq(i).val() == renderList.companyId){
+							$('#compNameSel option').eq(i).attr('selected','selected');
+						}
+					});
+				}
+			}
 		},
 		//获取车头类型
 		getTrucksHeadType : function(){
@@ -139,6 +148,15 @@ layui.define(['form'],function(exports){
 			}
 			$('#tankBandSel').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					$('#tankBandSel option').each(function(i){
+						if($('#tankBandSel option').eq(i).val() == renderList.potPpId){
+							$('#tankBandSel option').eq(i).attr('selected','selected');
+						}
+					});
+				}
+			}
 		},
 		//获取气源类型
 		getGasType : function(){
@@ -223,6 +241,15 @@ layui.define(['form'],function(exports){
 			}
 			$('#zzjzSel').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					$('#zzjzSel option').each(function(i){
+						if($('#zzjzSel option').eq(i).val() == renderList.zzjzTypeId){
+							$('#zzjzSel option').eq(i).attr('selected','selected');
+						}
+					});
+				}
+			}
 		},
 		//获取进港资质
 		getJgzz : function(){
@@ -245,17 +272,27 @@ layui.define(['form'],function(exports){
 			});
 		},
 		renderJgzz : function(list){
-			// var str = '<option value="">请选择进港资质</option>';
-			// for(var i=0;i<list.length;i++){
-			// 	str += '<option value="'+ list[i].id +'">'+ list[i].name +'</option>';
-			// }
-			// $('#jgzzSel').html(str);
 			var str = '';
 			for(var i=0;i<list.length;i++){
 				str += '<input type="checkbox" name="jjzzInpName" lay-filter="jjzzFilter" title="'+ list[i].name +'" value="'+ list[i].id +'" lay-skin="primary">'
 			}
 			$('#jgzzList').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					for(var i=0;i<renderList.tqList.length;i++){
+						jjzzIdArr.push(renderList.tqList[i].qualId);
+					}
+					for(var j=0;j<jjzzIdArr.length;j++){
+						$('input[name=jjzzInpName]').each(function(i){
+							if($('input[name=jjzzInpName]').eq(i).val() == jjzzIdArr[j]){
+								$('input[name=jjzzInpName]').eq(i).attr('checked',true);
+								return false;
+							}
+						});
+					}
+				}
+			}
 		},
 		//通过槽车类型获取对应类型车辆信息 普货 危货
 		getTrucksByTruckType : function(type){
@@ -288,6 +325,15 @@ layui.define(['form'],function(exports){
 			}
 			$('#truckTypeNameSel').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					$('#truckTypeNameSel option').each(function(i){
+						if($('#truckTypeNameSel option').eq(i).val() == renderList.trucksTypeId){
+							$('#truckTypeNameSel option').eq(i).attr('selected','selected');
+						}
+					});
+				}
+			}
 		},
 		getRqDevLm : function(){
 			var _this = this;
@@ -401,6 +447,19 @@ layui.define(['form'],function(exports){
 			}
 			$('#provList').html(str);
 			form.render();
+			if(currPage == 'addEditTruckTradePage'){
+				if(globalOpts == 'editBtn'){
+					var areaArr = renderList.area.split(',');
+					for(var j=0;j<areaArr.length;j++){
+						$('input[name=areaInp]').each(function(i){
+							if($('input[name=areaInp]').eq(i).val() == areaArr[j]){
+								$('input[name=areaInp]').eq(i).attr('checked',true);
+								return false;
+							}
+						});
+					}
+				}
+			}
 		},
 		renderCardNumWords : function(){
 			var strNum = '',strWord = '';

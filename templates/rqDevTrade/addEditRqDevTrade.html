@@ -167,7 +167,6 @@
 					renderRqDevTradeInfo : function(list){
 						isRightXsPrice = true;
 						$('#compNameInp').val(list.cpyId);
-						setTimeout(function(){},200);
 						$('#compNameSel option').each(function(i){
 							if($('#compNameSel option').eq(i).val() == list.cpyId){
 								$('#compNameSel option').eq(i).attr('selected','selected');

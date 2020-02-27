@@ -329,7 +329,7 @@
 				var mainImgSucc = '', headXszSucc = '',gcXszSucc = '',clyxzSucc = '',cgHgzSucc = '',aqfjySucc = '';
 				var globalOpts = parent.globalOpts,isRightCardNum = false,isRightDriveMile = false,isRightVolume = false,isRightPrice = false;
 				var tmpDetImgArr = [];
-				var ttId = parent.ttId,currPage = 'addEditTruckTradePage';
+				var ttId = parent.ttId,currPage = 'addEditTruckTradePage',renderList = [];
 				layui.config({
 					base: '/js/frame/js/'
 				}).use(['layer','upload','form','laydate','basicInfo','address','uploadImg'],function(){
@@ -426,9 +426,7 @@
 							uploadImg.uploadMultiImg('addDetImgBtn','detImgListUl',9);
 							if(globalOpts == 'editBtn'){
 								var _this = this;
-								setTimeout(function(){
-									_this.loadTruckTradeInfo();
-								},200);
+								_this.loadTruckTradeInfo();
 							}else{
 								layui.address();
 							}
@@ -446,6 +444,7 @@
 									if(json.code == 200){
 										_this.renderTruckTradeInfo(json.datas[0]);
 										basicInfo.getTrucksByTruckType(json.datas[0].trucksTypes);
+										renderList = json.datas[0];
 									}else if(json.code == 1000){
 										layer.msg('服务器错误');
 									}else if(json.code == 10002){
@@ -468,7 +467,6 @@
 							mainImgSucc = list.mainImg.replace('_small','');
 							$('#thubImg_main').show().attr('src','../' + list.mainImg);
 							$('.viewMainBigImg').show();
-							
 							$('input[name=tradeTypeName]').each(function(i){
 								if($('input[name=tradeTypeName]').eq(i).val() == list.tradeType){
 									$('input[name=tradeTypeName]').eq(i).attr('checked',true);
@@ -480,30 +478,7 @@
 								$('#priceLableTxt').html('租赁价格');
 								$('#transformArea').show();
 								$('#jgzzWrap').show();
-								var areaArr = list.area.split(',');
-								tmpProvNameArr = areaArr;
-								for(var i=0;i<list.tqList.length;i++){
-									jjzzIdArr.push(list.tqList[i].qualId);
-								}
-								setTimeout(function(){
-									for(var j=0;j<jjzzIdArr.length;j++){
-										$('input[name=jjzzInpName]').each(function(i){
-											if($('input[name=jjzzInpName]').eq(i).val() == jjzzIdArr[j]){
-												$('input[name=jjzzInpName]').eq(i).attr('checked',true);
-												return false;
-											}
-										});
-									}
-									for(var j=0;j<areaArr.length;j++){
-										$('input[name=areaInp]').each(function(i){
-											if($('input[name=areaInp]').eq(i).val() == areaArr[j]){
-												$('input[name=areaInp]').eq(i).attr('checked',true);
-												return false;
-											}
-										});
-									}
-									form.render();
-								},200);
+								tmpProvNameArr = list.area.split(',');
 							}else if(list.tradeType == 2){
 								$('#priceLableTxt').html('买卖价格');
 							}
@@ -514,13 +489,6 @@
 								$('#compNameInp').val(list.companyId);
 								$('#truckTypeWrap').html(strPuhuo + strWeihuo);
 								basicInfo.getCompanyList();
-								setTimeout(function(){
-									$('#compNameSel option').each(function(i){
-										if($('#compNameSel option').eq(i).val() == list.companyId){
-											$('#compNameSel option').eq(i).attr('selected','selected');
-										}
-									});
-								},200);
 							}else{
 								tmpCompType = 1;
 								$('#compTypeInp').val(1);
@@ -552,19 +520,6 @@
 								$('#tankBandInp').val(list.potPpId);
 								$('#volumeInp').val(list.potVol);
 								$('#potYearInp').val(list.spYearPot);
-								setTimeout(function(){
-									$('#tankBandSel option').each(function(i){
-										if($('#tankBandSel option').eq(i).val() == list.potPpId){
-											$('#tankBandSel option').eq(i).attr('selected','selected');
-										}
-									});
-									$('#zzjzSel option').each(function(i){
-										if($('#zzjzSel option').eq(i).val() == list.zzjzTypeId){
-											$('#zzjzSel option').eq(i).attr('selected','selected');
-										}
-									});
-									form.render();
-								},200);
 								headXszSucc = list.tructsHeadxsz.replace('_small','');
 								gcXszSucc = list.gcXsz.replace('_small','');
 								clyxzSucc = list.tructsYyz.replace('_small','');
@@ -588,14 +543,6 @@
 								
 							}
 							$('#truckTypeNameInp').val(list.trucksTypeId);
-							setTimeout(function(){
-								$('#truckTypeNameSel option').each(function(i){
-									if($('#truckTypeNameSel option').eq(i).val() == list.trucksTypeId){
-										$('#truckTypeNameSel option').eq(i).attr('selected','selected');
-									}
-								});
-								form.render();
-							},200);
 							$('#provInp').val(list.regPlace.split('-')[0]);
 							$('#cityInp').val(list.regPlace.split('-')[1]);
 							provVal = list.regPlace.split('-')[0];
@@ -737,7 +684,7 @@
 								if(idBehind == 'headXsz'){
 									_this.viewOriginImg(headXszSucc);
 								}else if(idBehind == 'gcXsz'){
-									_this.viewOriginImg(gxXszSucc);
+									_this.viewOriginImg(gcXszSucc);
 								}else if(idBehind == 'yyz'){
 									_this.viewOriginImg(clyxzSucc);
 								}else if(idBehind == 'jyz'){

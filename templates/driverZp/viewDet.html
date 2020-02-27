@@ -103,18 +103,25 @@
 						});
 					},
 					renderOrderInfo : function(list){
+						console.log(list)
+						var str = '';
 						$('#compName').html(list.companyName);
 						$('#compNameAdd').html(list.province + list.city + list.address);
 						$('#jzType').html(list.jzType);
-						$('#jlYear').html(list.jlYear + '年');
+						$('#jlYear').html(list.jlYear);
 						$('#zpNum').html(list.num + '人');
 						$('#xlTxt').html(list.education);
-						$('#ageRange').html(list.sjAge + '岁');
-						$('#workYear').html(list.workYear + '年');
-						$('#welftare').html(list.welftare);
+						$('#ageRange').html(list.sjAge);
+						$('#workYear').html(list.workYear);
 						$('#lxrName').html(list.lxName);
 						$('#lxTel').html(list.lxTel);
 						$('#checkTime').html(list.checkTime);
+						if(list.welftare.length > 0){
+							for(var i=0;i<list.welftare.length;i++){
+								str += '<span class="welfareSpan">'+ list.welftare[i] +'</span>';
+							}
+							$('#welftare').html(str);
+						}
 					}
 				};
 				page.init();
