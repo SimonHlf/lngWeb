@@ -107,7 +107,7 @@
 					loadApplyCompList : function(){
 						var ycNameInp = $.trim($('#ycNameInp').val()),
 							ycPyInp = $.trim($('#ycPyInp').val());
-						var field = {gfName:ycNameInp,gfNamePy:ycPyInp,checkStatus:checkSta,limit:1};
+						var field = {gfName:ycNameInp,gfNamePy:ycPyInp,checkStatus:checkSta};
 						table.render({
 							elem: '#lqFactTab',
 							height: 'full-180',
@@ -124,6 +124,8 @@
 							page : true,
 							even : true,
 							text: {none : '暂无相关数据'},
+							limit:20,
+							limits:[10,20,30,40],
 							cellMinWidth : 240,
 							cols : [
 								[
