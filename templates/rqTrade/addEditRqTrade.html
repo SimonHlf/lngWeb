@@ -322,7 +322,6 @@
 						$('#lqTypeInp').val(list.gasTypeId);
 						mainImgSucc = list.headImg.replace('_small','');
 						$('#thubImg_main').show().attr('src','../' + list.headImg);
-						console.log(mainImgSucc)
 						$('#viewMainBigImg').show();
 						$('#cardTitInp').val(list.cpNo.substr(0,1));
 						$('#cardWordsInp').val(list.cpNo.substr(1,1));
@@ -382,14 +381,14 @@
 							$('#thubImg_qfImg3').show().attr('src','../' + list.qfImg3);
 							$('#viewBigImg_qfImg3').show().css({'display':'block'});
 						}
-						for(var i=0;i<list.psArea.length;i++){
-							if(list.psArea[i].selFlag){
-								tmpProvNameArr.push(list.psArea[i].provName);
-								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psArea[i].provName +'" value="'+ list.psArea[i].provName +'" lay-skin="primary" checked';
+						for(var i=0;i<list.psAreaList.length;i++){
+							if(list.psAreaList[i].selFlag){
+								tmpProvNameArr.push(list.psAreaList[i].provName);
+								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psAreaList[i].provName +'" value="'+ list.psAreaList[i].provName +'" lay-skin="primary" checked';
 							}else{
-								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psArea[i].provName +'" value="'+ list.psArea[i].provName +'" lay-skin="primary"';
+								provInpStr += '<input type="checkbox" name="areaInp" lay-filter="areaFilter" title="'+ list.psAreaList[i].provName +'" value="'+ list.psAreaList[i].provName +'" lay-skin="primary"';
 							}
-							if(list.psArea[i].disableFlag){
+							if(list.psAreaList[i].disableFlag){
 								provInpStr += ' disabled/>';
 							}else{
 								provInpStr += '/>';
