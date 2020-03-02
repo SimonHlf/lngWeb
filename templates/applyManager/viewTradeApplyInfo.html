@@ -162,13 +162,13 @@
 						$('select[name=city]').html('<option>'+ list[0].city +'</option>');
 						$('select[name=area]').html('<option>'+ list[0].county +'</option>');
 						if(list[0].yyzzImg != ''){
-							$('#yyzz').html('<a href="javascript:void(0)"><img src="'+ list[0].yyzzImg +'"/></a>');
+							$('#yyzz').html('<a href="javascript:void(0)"><img src="../'+ list[0].yyzzImg +'"/></a>');
 						}else{
 							$('#yyzz').html('<p style="color:#999;line-height:38px;">暂未上传营业执照</p>');
 						}
 						if(list[0].zzImageList.length > 0){
 							for(var i=0;i<list[0].zzImageList.length;i++){
-								str += '<a href="javascript:void(0)"><img src="'+ list[0].zzImageList[i].czImage +'"/></a>';
+								str += '<a href="javascript:void(0)"><img src="../'+ list[0].zzImageList[i].czImage +'"/></a>';
 							}
 							$('#zzImg').html(str);
 						}else{
