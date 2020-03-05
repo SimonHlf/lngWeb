@@ -66,13 +66,13 @@
 				<label class="orderTit">期望薪资：</label>
 				<p id="wage" class="orderInfoTxt"></p>
 			</div>
-			<div class="infoItem">
-				<label class="orderTit">工作经验：</label>
-				<p id="workExp" class="orderInfoTxt"></p>
+			<div class="infoItem_spec">
+				<label class="orderTit_spec">工作经验：</label>
+				<p id="workExp" class="orderInfoTxt_spec"></p>
 			</div>
-			<div class="infoItem">
-				<label class="orderTit">备注：</label>
-				<p id="remark" class="orderInfoTxt"></p>
+			<div class="infoItem_spec">
+				<label class="orderTit_spec">备注：</label>
+				<p id="remark" class="orderInfoTxt_spec"></p>
 			</div>
 		</div>
 		
@@ -128,7 +128,7 @@
 						$('#workAdd').html(list.privince + list.city);
 						$('#workYear').html(list.workYear + '年');
 						$('#workExp').html(list.workExp + '年');
-						$('#wage').html(list.wage + 'K');
+						$('#wage').html(list.wage + '元');
 						$('#remark').html(list.remark);
 					}
 				};

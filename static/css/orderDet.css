@@ -7,6 +7,16 @@ body{
 	font-size: 15px;
 	font-weight: 620;
 }
+.orderInfoTxt_spec{
+	color: #333;
+	margin-left: 145px;
+	font-size: 15px;
+	font-weight: 620;
+	min-height: 50px;
+	display: flex;
+	align-items: center;
+	padding: 10px 0;
+}
 .closeBtns{
 	position:absolute;
 	right:15px;
@@ -34,6 +44,17 @@ body{
 	text-align: right;
 	margin-right: 25px;
 }
+.orderTit_spec{
+	width: 120px;
+	color: #666;
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
 #orderDiary{
 	padding: 20px;
 }
@@ -51,7 +72,13 @@ body{
 	line-height: 50px;
 	background: #fff;
 }
-.infoItem:nth-of-type(2n){
+.infoItem_spec{
+	width: 100%;
+	background: #fff;
+	position: relative;
+}
+.infoItem:nth-of-type(2n),
+.infoItem_spec:nth-of-type(2n){
 	background:#f0f5fb ;
 }
 .basicInfoTit{

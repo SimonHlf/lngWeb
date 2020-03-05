@@ -131,14 +131,14 @@
 									}},
 									{field : 'jzType', title: '驾照类型', align:'center'},
 									{field : 'jlYear', title: '驾龄',align:'center',templet:function(d){
-										return d.jlYear + '年';
+										return d.jlYear;
 									}},
 									{field : 'age', title: '要求学历',align:'center',templet:function(d){
-										return d.age + '岁';
+										return d.age;
 									}},
-									{field : 'education', title: '要求学历',align:'center'},
+									{field : 'education', title: '教育程度',align:'center'},
 									{field : 'wage', title: '薪资范围',align:'center',templet:function(d){
-										return d.wage + 'k';
+										return d.wage + '元';
 									}},
 									{field : '', title: '操作',  align:'center',fixed:'right',templet : function(d){
 										var str = '';
